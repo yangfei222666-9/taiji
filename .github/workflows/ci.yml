@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Secret scan
+        run: |
+          # Check for common secret patterns
+          FOUND=0
+          for pattern in '\d{6,12}:[A-Za-z0-9_-]{30,}' 'AKIA[0-9A-Z]{16}' 'ghp_[A-Za-z0-9]{36}' 'xox[baprs]-'; do
+            if grep -rP "$pattern" --include='*.py' --include='*.json' --include='*.yaml' --include='*.yml' . 2>/dev/null | grep -v '.git/'; then
+              echo "FAIL: Found potential secret matching $pattern"
+              FOUND=1
+            fi
+          done
+          if [ $FOUND -eq 1 ]; then exit 1; fi
+          echo "PASS: No secrets found"
+
+  import-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -e .
+      - name: Check core imports
+        run: |
+          python -c "from aios.core.event_bus import EventBus; print('OK: event_bus')"
+          python -c "from aios.core.circuit_breaker import CircuitBreaker; print('OK: circuit_breaker')"
+          python -c "from aios.gateway.errors import GatewayError; print('OK: gateway.errors')"
+          python -c "from github_learning.discoverer import discover; print('OK: discoverer')"
+          python -c "from github_learning.gate import list_pending; print('OK: gate')"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-asyncio pytest-cov numpy opencv-python-headless edge-tts redis
+          pip install -e .
+      - name: Run tests
+        run: python -m pytest tests/ -q --tb=short
+      - name: Coverage check
+        run: |
+          python -m pytest tests/ -q --cov=aios --cov-report=term-missing --cov-fail-under=50
