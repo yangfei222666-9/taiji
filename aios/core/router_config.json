@@ -1,0 +1,53 @@
+# aios/core/router_config.json - 模型路由配置
+{
+  "enabled": true,
+  "default_local_model": "qwen2.5:3b",
+  "default_cloud_model": "claude",
+  "timeout": {
+    "ollama": 30,
+    "claude": 60
+  },
+  "fallback": {
+    "enabled": true,
+    "max_retries": 1
+  },
+  "complexity_rules": {
+    "simple": {
+      "max_tokens": 500,
+      "keywords": ["总结", "摘要", "简单", "是什么", "解释", "翻译"],
+      "prefer": "ollama"
+    },
+    "medium": {
+      "max_tokens": 2000,
+      "keywords": ["分析", "对比", "生成", "补全"],
+      "prefer": "ollama_with_fallback"
+    },
+    "complex": {
+      "min_tokens": 2000,
+      "keywords": ["推理", "规划", "决策", "审查", "设计"],
+      "prefer": "claude"
+    }
+  },
+  "task_mapping": {
+    "greeting": "simple",
+    "translation": "simple",
+    "summarize_short": "simple",
+    "classification": "simple",
+    "keyword_extraction": "simple",
+    "simple_qa": "simple",
+    "code_completion": "medium",
+    "text_generation": "medium",
+    "data_analysis": "medium",
+    "summarize_long": "medium",
+    "reasoning": "complex",
+    "planning": "complex",
+    "code_review": "complex",
+    "creative_writing": "complex",
+    "decision_making": "complex"
+  },
+  "monitoring": {
+    "log_all_calls": true,
+    "log_file": "events/router_calls.jsonl",
+    "metrics_file": "events/router_metrics.json"
+  }
+}
