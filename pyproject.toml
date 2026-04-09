@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taijios"
+version = "0.1.0"
+description = "AI Operating System — self-improving, autonomous agent framework"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.28",
+    "httpx>=0.24",
+    "numpy>=1.24",
+    "fastapi>=0.100",
+    "uvicorn>=0.22",
+    "aiosqlite>=0.19",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "aios*",
+    "worker*",
+    "self_improving_loop*",
+    "github_learning*",
+    "skill_auto_creation*",
+    "match_analysis*",
+    "rpa_vision*",
+]
