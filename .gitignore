@@ -69,6 +69,9 @@ desktop.ini
 *.wav
 *.mp4
 *.mov
+
+# ── Allow doc images ──
+!docs/*.png
 *.zip
 *.7z
 *.tar
