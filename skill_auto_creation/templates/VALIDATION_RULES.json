@@ -1,0 +1,96 @@
+{
+  "version": "1.0.0",
+  "layers": {
+    "format": {
+      "description": "Validate SKILL.md structure and required fields",
+      "rules": [
+        {
+          "id": "frontmatter_required",
+          "severity": "error",
+          "check": "YAML frontmatter must exist and be valid"
+        },
+        {
+          "id": "required_fields",
+          "severity": "error",
+          "check": "name, version, created, risk_level must be present"
+        },
+        {
+          "id": "required_sections",
+          "severity": "error",
+          "check": "Must have: When to Use, Procedure, Verification"
+        },
+        {
+          "id": "trigger_conditions",
+          "severity": "warning",
+          "check": "Should have Trigger Conditions section (for dynamic activation)"
+        }
+      ]
+    },
+    "security": {
+      "description": "Scan for security risks and malicious patterns",
+      "rules": [
+        {
+          "id": "no_rm_rf",
+          "severity": "critical",
+          "pattern": "rm -rf|Remove-Item -Recurse -Force",
+          "check": "No destructive file deletion commands"
+        },
+        {
+          "id": "no_curl_pipe_sh",
+          "severity": "critical",
+          "pattern": "curl.*\\|.*sh|wget.*\\|.*bash",
+          "check": "No piping remote scripts to shell"
+        },
+        {
+          "id": "no_eval",
+          "severity": "high",
+          "pattern": "eval\\(|exec\\(",
+          "check": "No dynamic code execution"
+        },
+        {
+          "id": "no_credential_exposure",
+          "severity": "critical",
+          "pattern": "password=|api_key=|token=|secret=",
+          "check": "No hardcoded credentials"
+        },
+        {
+          "id": "no_prompt_injection",
+          "severity": "high",
+          "pattern": "ignore previous instructions|disregard all",
+          "check": "No prompt injection attempts"
+        }
+      ]
+    },
+    "risk": {
+      "description": "Assess operational risk level",
+      "rules": [
+        {
+          "id": "file_modification",
+          "severity": "medium",
+          "check": "Does this skill modify files outside workspace?"
+        },
+        {
+          "id": "network_access",
+          "severity": "low",
+          "check": "Does this skill make external network calls?"
+        },
+        {
+          "id": "privilege_escalation",
+          "severity": "critical",
+          "check": "Does this skill require elevated permissions?"
+        },
+        {
+          "id": "data_exfiltration",
+          "severity": "critical",
+          "check": "Could this skill leak sensitive data?"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "critical": "immediate_reject",
+    "high": "manual_review_required",
+    "medium": "warning_only",
+    "low": "pass"
+  }
+}

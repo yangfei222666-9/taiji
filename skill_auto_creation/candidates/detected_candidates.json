@@ -1,0 +1,42 @@
+[
+  {
+    "pattern_id": "analyst_analysis",
+    "pattern_type": "agent_task_combo",
+    "frequency": 64,
+    "confidence": 1.0,
+    "suggested_skill_name": "auto_analyst_analysis",
+    "reasoning": "analyst agent runs analysis tasks 64 times, high repeatability"
+  },
+  {
+    "pattern_id": "coder_code",
+    "pattern_type": "agent_task_combo",
+    "frequency": 58,
+    "confidence": 1.0,
+    "suggested_skill_name": "auto_coder_code",
+    "reasoning": "coder agent runs code tasks 58 times, high repeatability"
+  },
+  {
+    "pattern_id": "monitor_monitor",
+    "pattern_type": "agent_task_combo",
+    "frequency": 58,
+    "confidence": 1.0,
+    "suggested_skill_name": "auto_monitor_monitor",
+    "reasoning": "monitor agent runs monitor tasks 58 times, high repeatability"
+  },
+  {
+    "pattern_id": "coder_tool",
+    "pattern_type": "agent_task_combo",
+    "frequency": 18,
+    "confidence": 0.9,
+    "suggested_skill_name": "auto_coder_tool",
+    "reasoning": "coder agent runs tool tasks 18 times, high repeatability"
+  },
+  {
+    "pattern_id": "coder_stress",
+    "pattern_type": "agent_task_combo",
+    "frequency": 9,
+    "confidence": 0.45,
+    "suggested_skill_name": "auto_coder_stress",
+    "reasoning": "coder agent runs stress tasks 9 times, high repeatability"
+  }
+]
