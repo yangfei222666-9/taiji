@@ -1,0 +1,102 @@
+{
+  "fixture": {
+    "fixture_id": 1035000,
+    "league_name": "Premier League",
+    "league_id": 39,
+    "league_type": "league",
+    "country": "England",
+    "season": "2025-26",
+    "round": "Regular Season - 30",
+    "stage": "",
+    "home_team": "Arsenal",
+    "home_team_id": 42,
+    "away_team": "Chelsea",
+    "away_team_id": 49,
+    "match_date": "2026-03-28T17:30:00+00:00",
+    "venue": "Emirates Stadium",
+    "referee": "Michael Oliver"
+  },
+  "home_profile": {
+    "team_name": "Arsenal",
+    "team_id": 42,
+    "league_rank": 1,
+    "points": 72,
+    "overall": { "played": 29, "wins": 22, "draws": 4, "losses": 3, "goals_for": 62, "goals_against": 22 },
+    "home": { "played": 15, "wins": 13, "draws": 1, "losses": 1, "goals_for": 38, "goals_against": 8 },
+    "away": { "played": 14, "wins": 9, "draws": 3, "losses": 2, "goals_for": 24, "goals_against": 14 },
+    "goal_diff": 40,
+    "clean_sheets": 12
+  },
+  "away_profile": {
+    "team_name": "Chelsea",
+    "team_id": 49,
+    "league_rank": 4,
+    "points": 55,
+    "overall": { "played": 29, "wins": 16, "draws": 7, "losses": 6, "goals_for": 52, "goals_against": 33 },
+    "home": { "played": 14, "wins": 9, "draws": 3, "losses": 2, "goals_for": 30, "goals_against": 14 },
+    "away": { "played": 15, "wins": 7, "draws": 4, "losses": 4, "goals_for": 22, "goals_against": 19 },
+    "goal_diff": 19,
+    "clean_sheets": 7
+  },
+  "home_form": {
+    "team_name": "Arsenal",
+    "last_n": 5,
+    "matches": [
+      { "date": "2026-03-21", "opponent": "Brighton", "home_away": "A", "score": "2-0", "result": "W", "league": "Premier League" },
+      { "date": "2026-03-14", "opponent": "Wolves", "home_away": "H", "score": "3-1", "result": "W", "league": "Premier League" },
+      { "date": "2026-03-07", "opponent": "Man City", "home_away": "A", "score": "1-1", "result": "D", "league": "Premier League" },
+      { "date": "2026-02-28", "opponent": "Bournemouth", "home_away": "H", "score": "2-0", "result": "W", "league": "Premier League" },
+      { "date": "2026-02-21", "opponent": "Aston Villa", "home_away": "H", "score": "1-0", "result": "W", "league": "Premier League" }
+    ],
+    "wins": 4, "draws": 1, "losses": 0,
+    "goals_for": 9, "goals_against": 2,
+    "form_string": "WWDWW",
+    "trend": "稳定"
+  },
+  "away_form": {
+    "team_name": "Chelsea",
+    "last_n": 5,
+    "matches": [
+      { "date": "2026-03-21", "opponent": "Everton", "home_away": "H", "score": "2-2", "result": "D", "league": "Premier League" },
+      { "date": "2026-03-14", "opponent": "Newcastle", "home_away": "A", "score": "0-1", "result": "L", "league": "Premier League" },
+      { "date": "2026-03-07", "opponent": "Fulham", "home_away": "H", "score": "3-1", "result": "W", "league": "Premier League" },
+      { "date": "2026-02-28", "opponent": "Tottenham", "home_away": "A", "score": "2-1", "result": "W", "league": "Premier League" },
+      { "date": "2026-02-21", "opponent": "Crystal Palace", "home_away": "H", "score": "1-1", "result": "D", "league": "Premier League" }
+    ],
+    "wins": 2, "draws": 2, "losses": 1,
+    "goals_for": 8, "goals_against": 6,
+    "form_string": "DLWWD",
+    "trend": "波动"
+  },
+  "head_to_head": {
+    "team1": "Arsenal",
+    "team2": "Chelsea",
+    "total_matches": 5,
+    "team1_wins": 2,
+    "team2_wins": 2,
+    "draws": 1,
+    "matches": [
+      { "date": "2025-10-25", "home_team": "Chelsea", "away_team": "Arsenal", "score": "1-1", "league": "Premier League" },
+      { "date": "2025-04-20", "home_team": "Arsenal", "away_team": "Chelsea", "score": "2-1", "league": "Premier League" },
+      { "date": "2024-10-28", "home_team": "Chelsea", "away_team": "Arsenal", "score": "0-1", "league": "Premier League" },
+      { "date": "2024-04-13", "home_team": "Arsenal", "away_team": "Chelsea", "score": "3-2", "league": "Premier League" },
+      { "date": "2023-10-21", "home_team": "Chelsea", "away_team": "Arsenal", "score": "2-0", "league": "Premier League" }
+    ]
+  },
+  "home_availability": {
+    "team_name": "Arsenal",
+    "absences": [
+      { "player_name": "Bukayo Saka", "reason": "injury", "detail": "Hamstring Injury", "expected_return": "2026-04-10" },
+      { "player_name": "Takehiro Tomiyasu", "reason": "injury", "detail": "Knee Injury", "expected_return": null }
+    ],
+    "total_absent": 2
+  },
+  "away_availability": {
+    "team_name": "Chelsea",
+    "absences": [
+      { "player_name": "Reece James", "reason": "injury", "detail": "Calf Injury", "expected_return": "2026-04-05" },
+      { "player_name": "Wesley Fofana", "reason": "suspension", "detail": "Red Card Accumulation", "expected_return": "2026-04-01" }
+    ],
+    "total_absent": 2
+  }
+}

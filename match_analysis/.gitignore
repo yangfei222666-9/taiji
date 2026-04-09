@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# 环境
+.env
+.env.*
+
+# 报告（本地生成）
+reports/
+
+# 调试脚本
+test_cross.py
+
+# IDE
+.vscode/
+.idea/
