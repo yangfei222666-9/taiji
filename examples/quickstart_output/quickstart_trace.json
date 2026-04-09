@@ -1,0 +1,245 @@
+[
+  {
+    "task_id": "quickstart-001",
+    "status": "succeeded",
+    "started_at": 1775630810.1867013,
+    "ended_at": 1775630810.1867013,
+    "steps": [
+      {
+        "name": "generate:rev1",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 1,
+          "guidance": {},
+          "content_hash": "efc5fafb4fe885e1"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev1",
+        "status": "failed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.35,
+          "passed": false,
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        },
+        "error": {
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        }
+      },
+      {
+        "name": "generate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 2,
+          "guidance": {
+            "stable_style": true,
+            "stable_character": true
+          },
+          "content_hash": "7d211d40c5c1b38e"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.9,
+          "passed": true,
+          "failed_checks": [],
+          "reason_code": "OK"
+        },
+        "error": null
+      },
+      {
+        "name": "deliver",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "delivered": true,
+          "final_score": 0.9
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "task_id": "quickstart-002",
+    "status": "succeeded",
+    "started_at": 1775630810.1867013,
+    "ended_at": 1775630810.1867013,
+    "steps": [
+      {
+        "name": "generate:rev1",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 1,
+          "guidance": {},
+          "content_hash": "6183bde88822f0df"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev1",
+        "status": "failed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.35,
+          "passed": false,
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        },
+        "error": {
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        }
+      },
+      {
+        "name": "generate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 2,
+          "guidance": {
+            "stable_style": true,
+            "stable_character": true
+          },
+          "content_hash": "e7c3ad8bc64f7f99"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.9,
+          "passed": true,
+          "failed_checks": [],
+          "reason_code": "OK"
+        },
+        "error": null
+      },
+      {
+        "name": "deliver",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "delivered": true,
+          "final_score": 0.9
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "task_id": "quickstart-003",
+    "status": "succeeded",
+    "started_at": 1775630810.1867013,
+    "ended_at": 1775630810.1867013,
+    "steps": [
+      {
+        "name": "generate:rev1",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 1,
+          "guidance": {},
+          "content_hash": "26012253e123f5c6"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev1",
+        "status": "failed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.35,
+          "passed": false,
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        },
+        "error": {
+          "failed_checks": [
+            "style_consistency",
+            "character_consistency"
+          ],
+          "reason_code": "coherent.validator.style_consistency"
+        }
+      },
+      {
+        "name": "generate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "revision": 2,
+          "guidance": {
+            "stable_style": true,
+            "stable_character": true
+          },
+          "content_hash": "af4256eb5967ce45"
+        },
+        "error": null
+      },
+      {
+        "name": "validate:rev2",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "score": 0.9,
+          "passed": true,
+          "failed_checks": [],
+          "reason_code": "OK"
+        },
+        "error": null
+      },
+      {
+        "name": "deliver",
+        "status": "completed",
+        "started_at": 1775630810.1867013,
+        "ended_at": 1775630810.1867013,
+        "output": {
+          "delivered": true,
+          "final_score": 0.9
+        },
+        "error": null
+      }
+    ]
+  }
+]
