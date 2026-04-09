@@ -223,6 +223,17 @@ export TAIJI_TELEGRAM_CHAT_ID=your-chat-id
 
 Dashboard 展示了完整的任务执行流：提交 → 验证 → 卦象决策 → 交付，包含四维检查评分和执行轨迹。
 
+## Private Modules 私有模块
+
+以下模块由合作伙伴提供，未包含在开源版本中：
+
+| 模块 | 说明 | 状态 |
+|------|------|------|
+| 神针引擎 | 高精度决策引擎 | 🔒 私有 |
+| EchoCore 智驱系统 | 智能驱动核心 | 🔒 私有 |
+
+相关接口已预留抽象基类，开发者可自行实现替代方案。
+
 ## Contributing 贡献
 
 详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
