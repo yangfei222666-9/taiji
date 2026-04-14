@@ -5,6 +5,8 @@ Reads task_executions_v2.jsonl and calculates lifecycle scores for agents
 """
 import json
 import sys
+import threading
+import tempfile
 from pathlib import Path
 from collections import deque
 from datetime import datetime, timedelta
@@ -17,6 +19,7 @@ from paths import TASK_EXECUTIONS, AGENTS_STATE
 # Config
 WINDOW_SIZE = 10
 FAILURE_THRESHOLD = 0.7
+_agents_state_lock = threading.Lock()
 
 COOLDOWN_PERIODS = {
     "active_to_shadow": timedelta(hours=24),
@@ -52,7 +55,7 @@ def load_recent_executions(agent_id: str, window_size: int = WINDOW_SIZE) -> deq
                         'success': record.get('status') == 'completed',
                         'timestamp': record.get('completed_at') or record.get('created_at'),
                     })
-            except:
+            except Exception:
                 pass
     
     return executions
@@ -231,9 +234,11 @@ def write_lifecycle_states(scores: dict) -> int:
             agent['routable'] = score.get('routable', False)
             updated += 1
     
-    with open(AGENTS_STATE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    
+    with _agents_state_lock:
+        tmp = Path(str(AGENTS_STATE) + ".tmp")
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(AGENTS_STATE)
+
     return updated
 
 

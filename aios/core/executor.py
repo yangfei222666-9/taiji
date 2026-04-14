@@ -9,7 +9,7 @@
 每次执行结果写入 execution_log.jsonl 供审计。
 """
 
-import json, time, re, subprocess, sys
+import json, time, re, subprocess, sys, threading
 from pathlib import Path
 from typing import Optional
 
@@ -21,6 +21,7 @@ from core.engine import emit, LAYER_TOOL
 EXEC_LOG = Path(__file__).resolve().parent.parent / "events" / "execution_log.jsonl"
 DEDUP_STATE = Path(__file__).resolve().parent.parent / "events" / "dedup_state.json"
 DEFAULT_DEDUP_WINDOW = 60  # 秒
+_exec_log_lock = threading.Lock()
 
 # 不可重试的错误模式（正则）
 NON_RETRYABLE_PATTERNS = [
@@ -65,8 +66,9 @@ def _log_execution(
         "latency_ms": latency_ms,
     }
     EXEC_LOG.parent.mkdir(parents=True, exist_ok=True)
-    with EXEC_LOG.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    with _exec_log_lock:
+        with EXEC_LOG.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     # 同步 emit 到事件流
     status = (
@@ -289,7 +291,7 @@ if __name__ == "__main__":
                     print(
                         f"[{r['ts']}] {r['command_key']}: {r['terminal_state']} ({r['reason_code']})"
                     )
-                except:
+                except Exception:
                     pass
         else:
             print("无执行日志")

@@ -67,9 +67,9 @@ class SkillManager:
                     line = line.strip()
                     if line and not line.startswith("#"):
                         return line[:200]  # 最多 200 字符
-        except:
+        except Exception:
             pass
-        
+
         return "No description"
     
     def list_skills(self) -> List[Dict]:
@@ -243,7 +243,7 @@ class SkillManager:
         try:
             with open(skill_md, "r", encoding="utf-8") as f:
                 return f.read()
-        except:
+        except Exception:
             return "No usage documentation available"
 
 

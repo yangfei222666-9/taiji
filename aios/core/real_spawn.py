@@ -50,7 +50,7 @@ class RealAgentSpawner:
             for line in f:
                 try:
                     history.append(json.loads(line))
-                except:
+                except Exception:
                     pass
         return history
     

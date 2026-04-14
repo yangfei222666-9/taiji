@@ -33,9 +33,9 @@ class RealPlaybooks:
                     cpu = proc.info['cpu_percent']
                     if cpu and cpu > 10:  # 只处理占用超过 10% 的
                         processes.append((proc.info['pid'], proc.info['name'], cpu))
-                except:
+                except Exception:
                     pass
-            
+
             # 按 CPU 占用排序
             processes.sort(key=lambda x: x[2], reverse=True)
             
@@ -52,9 +52,9 @@ class RealPlaybooks:
                         fixed_count += 1
                         if fixed_count >= 3:
                             break
-                    except:
+                    except Exception:
                         pass
-            
+
             return {
                 "success": fixed_count > 0,
                 "action": f"降低了 {fixed_count} 个进程的优先级",

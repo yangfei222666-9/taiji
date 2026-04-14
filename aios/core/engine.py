@@ -14,7 +14,7 @@ v0.2 Schema:
 向后兼容: 旧的 log_event/log_tool_event 仍可用，自动映射到新 schema。
 """
 
-import json, time, os, sys
+import json, time, os, sys, threading
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -37,11 +37,15 @@ def _events_path() -> Path:
     )
 
 
+_jsonl_lock = threading.Lock()
+
+
 def append_jsonl(path: Path, obj: dict):
-    """通用 JSONL 追加"""
+    """通用 JSONL 追加（线程安全）"""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(obj, ensure_ascii=False) + "\n")
+    with _jsonl_lock:
+        with path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
 
 # ── 严重度标准化 ──
@@ -215,47 +219,52 @@ def load_events(days: int = 30, event_type: str = None, layer: str = None) -> li
         return []
     cutoff = time.time() - days * 86400
     out = []
-    for line in p.read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        try:
-            ev = json.loads(line)
-            raw_ts = ev.get("epoch")
-            if raw_ts is None:
-                raw_ts = ev.get("ts", 0)
-            ts = 0.0
-            if isinstance(raw_ts, (int, float)):
-                ts = float(raw_ts)
-            else:
-                s = str(raw_ts or "").strip()
-                if not s:
-                    ts = 0.0
-                else:
-                    try:
-                        ts = float(s)
-                    except Exception:
-                        try:
-                            s2 = s.replace("Z", "+00:00")
-                            dt = datetime.fromisoformat(s2)
-                            if dt.tzinfo is None:
-                                dt = dt.replace(tzinfo=timezone.utc)
-                            ts = dt.timestamp()
-                        except Exception:
-                            ts = 0.0
-            if ts and ts < cutoff:
-                continue
-            # v0.2 layer 过滤
-            if layer and ev.get("layer") != layer:
-                continue
-            # v0.1 兼容: type 过滤 (查 payload._v1_type 或旧 type 字段)
-            if event_type:
-                old_type = ev.get("type", "")
-                v1_type = (ev.get("payload") or {}).get("_v1_type", "")
-                if event_type not in (old_type, v1_type):
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            for line in f:  # 流式逐行读取，避免大文件 OOM
+                line = line.strip()
+                if not line:
                     continue
-            out.append(ev)
-        except Exception:
-            continue
+                try:
+                    ev = json.loads(line)
+                    raw_ts = ev.get("epoch")
+                    if raw_ts is None:
+                        raw_ts = ev.get("ts", 0)
+                    ts = 0.0
+                    if isinstance(raw_ts, (int, float)):
+                        ts = float(raw_ts)
+                    else:
+                        s = str(raw_ts or "").strip()
+                        if not s:
+                            ts = 0.0
+                        else:
+                            try:
+                                ts = float(s)
+                            except Exception:
+                                try:
+                                    s2 = s.replace("Z", "+00:00")
+                                    dt = datetime.fromisoformat(s2)
+                                    if dt.tzinfo is None:
+                                        dt = dt.replace(tzinfo=timezone.utc)
+                                    ts = dt.timestamp()
+                                except Exception:
+                                    ts = 0.0
+                    if ts and ts < cutoff:
+                        continue
+                    # v0.2 layer 过滤
+                    if layer and ev.get("layer") != layer:
+                        continue
+                    # v0.1 兼容: type 过滤 (查 payload._v1_type 或旧 type 字段)
+                    if event_type:
+                        old_type = ev.get("type", "")
+                        v1_type = (ev.get("payload") or {}).get("_v1_type", "")
+                        if event_type not in (old_type, v1_type):
+                            continue
+                    out.append(ev)
+                except Exception:
+                    continue
+    except IOError:
+        pass
     return out
 
 

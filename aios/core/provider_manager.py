@@ -250,9 +250,9 @@ class ProviderManager:
                     data = json.loads(line.strip())
                     if data["id"] != task_id:
                         tasks.append(line)
-                except:
+                except Exception:
                     pass
-        
+
         # 写回
         with open(self.dlq_path, "w", encoding="utf-8") as f:
             f.writelines(tasks)

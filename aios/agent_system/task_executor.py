@@ -1,11 +1,11 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
-AIOS Task Executor - 浠庨槦鍒楀彇浠诲姟骞堕€氳繃 sessions_spawn 鐪熷疄鎵ц
+AIOS Task Executor - 从队列取任务并通过 sessions_spawn 真实执行
 
-杩欎釜鑴氭湰鐢卞皬涔濆湪 OpenClaw 涓讳細璇濅腑璋冪敤锛?璇诲彇 heartbeat 鍒嗗彂鐨勪换鍔★紝鐢熸垚 spawn 鎸囦护銆?
-鐢ㄦ硶锛堝湪 OpenClaw 涓級:
-  python task_executor.py          # 杈撳嚭寰呮墽琛屼换鍔＄殑 JSON
-  python task_executor.py --count  # 浠呰緭鍑哄緟鎵ц鏁伴噺
+由小九在 OpenClaw 主会话中调用，读取 heartbeat 分发的任务，生成 spawn 指令。
+用法（在 OpenClaw 中）:
+  python task_executor.py          # 输出待执行任务的 JSON
+  python task_executor.py --count  # 仅输出待执行数量
 """
 
 import json
@@ -25,12 +25,15 @@ except ImportError:
     EXEC_LOG = BASE_DIR / "data" / "task_executions_v2.jsonl"
 MEMORY_LOG = BASE_DIR / "memory_retrieval_log.jsonl"
 
-# 鈹€鈹€ Memory Retrieval 寮€鍏?鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+# ── Memory Retrieval 开关 ──
 MEMORY_RETRIEVAL_ENABLED = os.environ.get("MEMORY_RETRIEVAL_ENABLED", "true").lower() == "true"
-MEMORY_TIMEOUT_MS = int(os.environ.get("MEMORY_TIMEOUT_MS", "400"))   # 闄嶇骇闃堝€?MEMORY_MAX_HINTS = int(os.environ.get("MEMORY_MAX_HINTS", "3"))        # 鏈€澶氭敞鍏ユ潯鏁?MEMORY_MAX_CHARS = int(os.environ.get("MEMORY_MAX_CHARS", "250"))      # 姣忔潯鎽樿瀛楃鏁?
+MEMORY_TIMEOUT_MS = int(os.environ.get("MEMORY_TIMEOUT_MS", "400"))
+MEMORY_MAX_HINTS = int(os.environ.get("MEMORY_MAX_HINTS", "3"))
+MEMORY_MAX_CHARS = int(os.environ.get("MEMORY_MAX_CHARS", "250"))
+
 
 def _retrieve_with_timeout(task_desc: str, task_type: str) -> dict:
-    """甯﹁秴鏃剁殑璁板繂妫€绱紝瓒呮椂闄嶇骇涓虹┖ context銆?""
+    """带超时的记忆检索，超时降级为空 context"""
     result = {"hits": [], "latency_ms": 0, "error": None}
     if not MEMORY_RETRIEVAL_ENABLED:
         result["error"] = "disabled"
@@ -63,13 +66,15 @@ def _retrieve_with_timeout(task_desc: str, task_type: str) -> dict:
 
 def build_memory_context(task_desc: str, task_type: str = "") -> dict:
     """
-    妫€绱㈣蹇嗗苟鏋勫缓 execution_context.memory_hints銆?    杩斿洖:
+    检索记忆并构建 execution_context.memory_hints。
+    返回:
       {
-        "memory_hints": [...],   # 娉ㄥ叆鍒?prompt 鐨勬憳瑕佸垪琛?        "memory_ids": [...],     # 鐢ㄤ簬 feedback 鍥炲啓
+        "memory_hints": [...],   # 注入到 prompt 的摘要列表
+        "memory_ids": [...],     # 用于 feedback 回写
         "retrieved_count": N,
         "used_count": N,
         "latency_ms": N,
-        "degraded": bool,        # True = 瓒呮椂/寮傚父闄嶇骇
+        "degraded": bool,        # True = 超时/异常降级
       }
     """
     ret = _retrieve_with_timeout(task_desc, task_type)
@@ -110,18 +115,19 @@ def write_execution_record(
     metadata: dict = None,
 ) -> None:
     """
-    鏍囧噯鍖栨墽琛岃褰曞啓鍏?task_executions_v2.jsonl
-    
-    瀛楁璇存槑锛?    - 鏍稿績瀛楁锛?涓級锛歵ask_id, agent_id, status, start_time, end_time, duration_ms, retry_count, side_effects
-    - 鏉′欢瀛楁锛歟rror锛坰tatus=failed鏃讹級, result锛坰tatus=completed鏃讹級, metadata锛堝彲閫夛級
-    
-    side_effects 鏍煎紡锛?    {
+    标准化执行记录写入 task_executions_v2.jsonl
+
+    字段说明:
+    - 核心字段(7个): task_id, agent_id, status, start_time, end_time, duration_ms, retry_count, side_effects
+    - 条件字段: error(status=failed时), result(status=completed时), metadata(可选)
+
+    side_effects 格式:
+    {
       "files_written": ["path1", "path2"],
       "tasks_created": ["task-id-1"],
       "api_calls": 3
     }
-    
-    TODO: auto-collect side_effects - 褰撳墠闇€瑕佹墜鍔ㄤ紶鍏ワ紝鏈潵搴斿湪 task_executor 閲?hook 鏂囦欢鍐欏叆鍜屼换鍔″垱寤虹殑璋冪敤鐐硅嚜鍔ㄦ敹闆?    """
+    """
     record = {
         "task_id": task_id,
         "agent_id": agent_id,
@@ -132,34 +138,31 @@ def write_execution_record(
         "retry_count": retry_count,
         "side_effects": side_effects or {"files_written": [], "tasks_created": [], "api_calls": 0},
     }
-    
-    # 鏉′欢瀛楁
+
+    # 条件字段
     if status == "failed" and error:
         record["error"] = error
     if status == "completed" and result:
         record["result"] = result
     if metadata:
         record["metadata"] = metadata
-    
+
     with open(EXEC_LOG, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
-    
-    # 鈹€鈹€ Skill Memory 闆嗘垚锛氳嚜鍔ㄨ拷韪?Skill 鎵ц 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
-    # 濡傛灉 agent_id 鏄?Skill锛堝寘鍚?"-skill" 鎴?"skill-"锛夛紝鑷姩璁板綍鍒?Skill Memory
+
+    # ── Skill Memory 集成：自动追踪 Skill 执行 ──
     if "-skill" in agent_id.lower() or "skill-" in agent_id.lower():
         try:
             from skill_memory import skill_memory
-            
-            # 鎻愬彇 skill_id锛堝幓鎺?-dispatcher 鍚庣紑锛?            skill_id = agent_id.replace("-dispatcher", "")
-            
-            # 鏋勫缓 command锛堜粠 metadata 鎴?result 涓彁鍙栵級
+
+            skill_id = agent_id.replace("-dispatcher", "")
+
             command = "unknown"
             if metadata and "command" in metadata:
                 command = metadata["command"]
             elif result and isinstance(result, dict) and "command" in result:
                 command = result["command"]
-            
-            # 璁板綍鎵ц
+
             skill_memory.track_execution(
                 skill_id=skill_id,
                 skill_name=skill_id.replace("-", " ").title(),
@@ -176,13 +179,13 @@ def write_execution_record(
                     "side_effects": side_effects
                 }
             )
-        except Exception as e:
-            # 闈欓粯澶辫触锛屼笉褰卞搷涓绘祦绋?            pass
+        except Exception:
+            pass  # 静默失败，不影响主流程
 
 
 def write_memory_feedback(task_id: str, memory_ids: list, helpful: bool,
                           score: float, reason: str) -> None:
-    """鎵ц鍚庡啓 feedback锛屾垚鍔?澶辫触閮藉啓锛堥伩鍏嶅彧瀛︿範鎴愬姛鏍锋湰锛夈€?""
+    """执行后写 feedback，成功/失败都写（避免只学习成功样本）"""
     if not memory_ids:
         return
     try:
@@ -191,7 +194,7 @@ def write_memory_feedback(task_id: str, memory_ids: list, helpful: bool,
             if mid:
                 mem_feedback(mid, helpful=helpful)
     except Exception:
-        pass  # feedback 澶辫触涓嶅奖鍝嶄富娴佺▼
+        pass  # feedback 失败不影响主流程
 
     entry = {
         "ts": datetime.now(timezone.utc).isoformat(),
@@ -206,7 +209,7 @@ def write_memory_feedback(task_id: str, memory_ids: list, helpful: bool,
 
 
 def _log_memory_event(task_id: str, ctx: dict, phase: str) -> None:
-    """缁撴瀯鍖栨棩蹇楋細retrieved_count, used_count, latency_ms, feedback_written"""
+    """结构化日志：retrieved_count, used_count, latency_ms"""
     tag = "DEGRADED" if ctx.get("degraded") else "OK"
     print(
         f"  [MEMORY:{phase}] {tag} | "
@@ -217,7 +220,7 @@ def _log_memory_event(task_id: str, ctx: dict, phase: str) -> None:
         flush=True,
     )
 
-# Agent prompt 妯℃澘
+# Agent prompt 模板
 AGENT_PROMPTS = {
     "coder": "You are a coding expert. Complete this task:\n{desc}\n\nWrite clean, tested code. Save output to test_runs/.",
     "analyst": "You are a data analyst. Complete this task:\n{desc}\n\nProvide data-driven insights. Save report to test_runs/.",
@@ -234,23 +237,23 @@ AGENT_PROMPTS = {
 }
 
 SPAWN_CONFIG = {
-    "coder":      {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},  # 澧炲姞鍒?180s (lesson-001)
-    "analyst":    {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 120},  # 澧炲姞鍒?120s
-    "monitor":    {"model": "claude-sonnet-4-6",                       "timeout": 90},   # 澧炲姞鍒?90s
-    "reactor":    {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 120},  # 澧炲姞鍒?120s
-    "researcher": {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},  # 澧炲姞鍒?180s (lesson-001)
-    "designer":   {"model": "claude-sonnet-4-6", "thinking": "high",   "timeout": 180},  # 澧炲姞鍒?180s (lesson-001)
-    "evolution":  {"model": "claude-sonnet-4-6", "thinking": "high",   "timeout": 120},  # 澧炲姞鍒?120s
-    "security":   {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 90},   # 澧炲姞鍒?90s
-    "automation": {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 120},  # 澧炲姞鍒?120s
-    "document":   {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 90},   # 澧炲姞鍒?90s
-    "tester":     {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 120},  # 澧炲姞鍒?120s
-    "game-dev":   {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},  # 澧炲姞鍒?180s (lesson-001)
+    "coder":      {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},
+    "analyst":    {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 120},
+    "monitor":    {"model": "claude-sonnet-4-6",                       "timeout": 90},
+    "reactor":    {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 120},
+    "researcher": {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},
+    "designer":   {"model": "claude-sonnet-4-6", "thinking": "high",   "timeout": 180},
+    "evolution":  {"model": "claude-sonnet-4-6", "thinking": "high",   "timeout": 120},
+    "security":   {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 90},
+    "automation": {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 120},
+    "document":   {"model": "claude-sonnet-4-6", "thinking": "low",    "timeout": 90},
+    "tester":     {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 120},
+    "game-dev":   {"model": "claude-sonnet-4-6", "thinking": "medium", "timeout": 180},
 }
 
 
 def get_pending_tasks():
-    """鑾峰彇寰呮墽琛屼换鍔★紙status=running锛屽凡琚?heartbeat 鍒嗗彂锛?""
+    """获取待执行任务（status=running，已被 heartbeat 分发）"""
     if not QUEUE_PATH.exists():
         return []
     tasks = []
@@ -266,18 +269,18 @@ def get_pending_tasks():
 
 
 def generate_spawn_commands(tasks):
-    """鐢熸垚 spawn 鍛戒护鍒楄〃锛堥泦鎴?Memory Retrieval锛?""
+    """生成 spawn 命令列表（集成 Memory Retrieval）"""
     commands = []
     for task in tasks:
         agent_id = task["agent_id"]
         desc = task["description"]
         task_type = task.get("type", "")
 
-        # 鈹€鈹€ 1. 妫€绱㈣蹇?鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+        # 1. 检索记忆
         mem_ctx = build_memory_context(desc, task_type)
         _log_memory_event(task["id"], mem_ctx, "BUILD")
 
-        # 鈹€鈹€ 2. 鏋勫缓 prompt锛堟敞鍏?memory_hints锛夆攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+        # 2. 构建 prompt（注入 memory_hints）
         config = SPAWN_CONFIG.get(agent_id, {"model": "claude-sonnet-4-6", "timeout": 90})
         prompt_template = AGENT_PROMPTS.get(agent_id, "Complete this task:\n{desc}")
         base_prompt = prompt_template.format(desc=desc)
@@ -291,7 +294,7 @@ def generate_spawn_commands(tasks):
         else:
             injected_prompt = base_prompt
 
-        # 鈹€鈹€ 3. 鐢熸垚 spawn 鍛戒护 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+        # 3. 生成 spawn 命令
         cmd = {
             "task": injected_prompt,
             "label": f"agent-{agent_id}",
@@ -306,13 +309,13 @@ def generate_spawn_commands(tasks):
             "agent_id": agent_id,
             "model_used": config.get("model", "claude-sonnet-4-6"),
             "spawn": cmd,
-            "memory_context": mem_ctx,  # 淇濈暀鐢ㄤ簬 feedback
+            "memory_context": mem_ctx,
         })
     return commands
 
 
 def mark_tasks_dispatched(task_ids):
-    """鏍囪浠诲姟涓哄凡鍒嗗彂"""
+    """标记任务为已分发"""
     if not QUEUE_PATH.exists():
         return
     lines = QUEUE_PATH.read_text(encoding="utf-8").strip().split("\n")
@@ -343,17 +346,17 @@ def main():
 
     commands = generate_spawn_commands(tasks)
 
-    # 杈撳嚭 JSON锛堜緵 OpenClaw 璇诲彇锛?    output = {
+    # 输出 JSON（供 OpenClaw 读取）
+    output = {
         "status": "ready",
         "count": len(commands),
         "commands": commands,
     }
     print(json.dumps(output, ensure_ascii=False, indent=2))
 
-    # 鏍囪涓哄凡鍒嗗彂
+    # 标记为已分发
     mark_tasks_dispatched([t["id"] for t in tasks])
 
 
 if __name__ == "__main__":
     main()
-

@@ -41,7 +41,7 @@ DATA_DIR = AIOS_ROOT / "data"
 REACTION_LOG = DATA_DIR / "reactions.jsonl"
 FUSE_FILE = DATA_DIR / "reactor_fuse.json"
 PLAYBOOK_STATS_FILE = DATA_DIR / "playbook_stats.json"
-PYTHON = r"sys.executable"
+PYTHON = r"C:\Program Files\Python312\python.exe"
 
 sys.path.insert(0, str(AIOS_ROOT))
 
@@ -436,7 +436,7 @@ def dashboard_metrics():
                 success += 1
             elif r.get("status") == "pending_confirm":
                 pending_confirm += 1
-        except:
+        except Exception:
             continue
 
     # 验证通过率从 verify_log 读
@@ -453,7 +453,7 @@ def dashboard_metrics():
                     verify_total += 1
                     if v.get("passed"):
                         verify_passed += 1
-                except:
+                except Exception:
                     continue
 
     # 自动关闭率从 alerts_history 读
@@ -476,7 +476,7 @@ def dashboard_metrics():
                             or "converge" in reason.lower()
                         ):
                             auto_closed += 1
-                except:
+                except Exception:
                     continue
 
     acted = auto_exec + pending_confirm

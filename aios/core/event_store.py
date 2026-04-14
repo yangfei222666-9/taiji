@@ -199,9 +199,9 @@ class EventStore:
             for fh in date_files.values():
                 try:
                     fh.close()
-                except:
+                except Exception:
                     pass
-        
+
         return count
     
     # ========== 内部方法 ==========

@@ -69,7 +69,7 @@ class OptimizedEventBus:
                     try:
                         event = self.event_queue.get(timeout=0.1)
                         batch.append(event)
-                    except:
+                    except Exception:
                         break
                 
                 # 批量写入

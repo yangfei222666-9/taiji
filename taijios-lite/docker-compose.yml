@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  telegram-bot:
+    build: .
+    container_name: taijios-telegram
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    command: ["python", "bot_telegram.py"]
+
+  feishu-bot:
+    build: .
+    container_name: taijios-feishu
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${FEISHU_BOT_PORT:-9090}:9090"
+    volumes:
+      - ./data:/app/data
+    command: ["python", "bot_feishu.py"]
+    profiles:
+      - feishu
+
+  # 交互式命令行（调试用）
+  cli:
+    build: .
+    container_name: taijios-cli
+    stdin_open: true
+    tty: true
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    command: ["python", "taijios.py"]
+    profiles:
+      - cli

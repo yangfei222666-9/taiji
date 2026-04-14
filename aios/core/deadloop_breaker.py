@@ -66,7 +66,7 @@ def _load_breaker_state() -> dict:
     if BREAKER_STATE_FILE.exists():
         try:
             return json.loads(BREAKER_STATE_FILE.read_text(encoding="utf-8"))
-        except:
+        except Exception:
             pass
     return {"tripped": {}}
 

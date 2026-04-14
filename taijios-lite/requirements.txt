@@ -1,0 +1,4 @@
+python-docx
+openai>=1.0.0
+python-dotenv
+aiohttp>=3.9.0

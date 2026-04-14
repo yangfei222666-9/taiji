@@ -39,7 +39,7 @@ def compute_base_score():
 
         result = snapshot()
         return result.get("evolution_score", 0.4)
-    except:
+    except Exception:
         return 0.4  # 默认 healthy
 
 
@@ -63,7 +63,7 @@ def compute_reactor_score():
                         total_reactions += 1
                         if r.get("status") == "success":
                             success_reactions += 1
-                except:
+                except Exception:
                     continue
 
     auto_fix_rate = success_reactions / total_reactions if total_reactions > 0 else 0
@@ -81,7 +81,7 @@ def compute_reactor_score():
                     v_total += 1
                     if not v.get("passed"):
                         v_failed += 1
-                except:
+                except Exception:
                     continue
 
     false_positive_rate = v_failed / v_total if v_total > 0 else 0
@@ -101,7 +101,7 @@ def compute_reactor_score():
                         reason = h.get("reason", "")
                         if "auto" in reason.lower() or "reactor" in reason.lower():
                             auto_closed += 1
-                except:
+                except Exception:
                     continue
 
     auto_close_rate = auto_closed / total_resolved if total_resolved > 0 else 0
@@ -176,7 +176,7 @@ def get_trend(days=7):
                 r = json.loads(line)
                 if r.get("ts", "") >= cutoff:
                     records.append(r)
-            except:
+            except Exception:
                 continue
     return records
 

@@ -49,7 +49,7 @@ def _load_jsonl(path, since_hours=168):
                 r = json.loads(line)
                 if r.get("ts", "") >= cutoff:
                     records.append(r)
-            except:
+            except Exception:
                 continue
     return records
 

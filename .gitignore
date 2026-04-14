@@ -6,6 +6,7 @@ echocore/
 # ── Secrets ──
 .env
 .env.*
+!.env.example
 *.pem
 *.key
 auth.json
