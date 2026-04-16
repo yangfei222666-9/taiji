@@ -367,6 +367,7 @@ class TaijiBot:
         # 8. 调用 AI（强制两阶段：DeepSeek 生成 → GPT-5.4 验证）
         _t0 = time.time()
         used_model = "deepseek→gpt"
+        val_meta = None
         try:
             if self.multi_models:
                 reply, val_meta = validated_call(system, session.history, message)
@@ -450,6 +451,19 @@ class TaijiBot:
             parts.append(guide_text)
         if achieve_text:
             parts.append(achieve_text)
+
+        # 15. 状态行 — 让用户看到管道运行情况
+        elapsed = time.time() - _t0
+        status_parts = [f"[{used_model}]"]
+        if val_meta:
+            if val_meta.get("modified"):
+                status_parts.append("GPT已修正")
+            elif val_meta.get("step2") == "skipped":
+                status_parts.append("验证跳过")
+            elif val_meta.get("step2") == "gpt_error":
+                status_parts.append("验证超时")
+        status_parts.append(f"{elapsed:.1f}s")
+        parts.append(f"\n---\n{'｜'.join(status_parts)}")
 
         return "\n".join(parts)
 

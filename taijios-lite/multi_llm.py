@@ -239,6 +239,29 @@ def init_models():
     return _registry
 
 
+def health_check() -> dict[str, str]:
+    """快速健康检查：每个模型发一个 'hi' 测试连通性"""
+    results = {}
+    for name, client in _registry.items():
+        try:
+            t0 = time.time()
+            client.call("test", [], "hi", max_tokens=5, temperature=0)
+            ms = int((time.time() - t0) * 1000)
+            results[name] = f"OK ({ms}ms)"
+        except Exception as e:
+            err = str(e)[:60]
+            results[name] = f"FAIL: {err}"
+    return results
+
+
+def get_status_summary() -> str:
+    """一行式状态摘要，给用户看"""
+    if not _registry:
+        return "模型: 未初始化"
+    names = list(_registry.keys())
+    return f"模型: {', '.join(names)} ({len(names)}个就绪)"
+
+
 def get_model(name: str) -> Optional[LLMClient]:
     """获取指定模型"""
     return _registry.get(name)
