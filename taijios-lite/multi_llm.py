@@ -283,15 +283,15 @@ def init_models():
             model="gpt-5.4",
         )
 
-    # Claude Opus 4.6（GPT分组中转，OpenAI-compat；官方 ANTHROPIC_API_KEY 作保底）
+    # Claude Opus 4.7（GPT分组中转，OpenAI-compat；官方 ANTHROPIC_API_KEY 作保底）
     claude_key = os.getenv("CLAUDE_RELAY_KEY") or os.getenv("ANTHROPIC_API_KEY", "")
     claude_base = os.getenv("CLAUDE_RELAY_BASE", "https://apiport.cc.cd/v1")
     if claude_key:
         _registry["claude"] = LLMClient(
-            name="Claude Opus 4.6", provider="openai_compat",
+            name="Claude Opus 4.7", provider="openai_compat",
             api_key=claude_key,
             base_url=claude_base,
-            model="claude-opus-4-6",
+            model="claude-opus-4-7",
             max_tokens=4096,
             temperature=0.7,
         )
