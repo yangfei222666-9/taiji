@@ -63,7 +63,7 @@ class LLMClient:
         }
         for attempt in range(2):
             try:
-                r = requests.post(url, headers=headers, json=payload, timeout=60)
+                r = requests.post(url, headers=headers, json=payload, timeout=120)
                 r.raise_for_status()
                 data = r.json()
                 return data["content"][0]["text"]
@@ -95,7 +95,7 @@ class LLMClient:
                     f"{self.base_url}/chat/completions",
                     headers=headers,
                     json=payload,
-                    timeout=60,
+                    timeout=120,
                 )
                 r.raise_for_status()
                 data = r.json()
@@ -174,6 +174,35 @@ class LLMClient:
 def _is_transient(e):
     err = str(e).lower()
     return any(kw in err for kw in ["timeout", "connect", "rate", "429", "503"])
+
+
+# ── 验证健康度跟踪（R5规则）──────────────────────────────────────────────────
+from collections import deque
+
+_validation_history: deque = deque(maxlen=20)
+
+
+def _track_validation(result: str):
+    """记录验证结果用于超时率统计"""
+    _validation_history.append(result)
+
+
+def _validation_timeout_rate() -> float:
+    """最近20次验证中GPT失败的比率"""
+    if not _validation_history:
+        return 0.0
+    fails = sum(1 for r in _validation_history if r == "gpt_error")
+    return fails / len(_validation_history)
+
+
+def get_validation_health() -> dict:
+    """获取验证管道健康状态"""
+    rate = _validation_timeout_rate()
+    return {
+        "timeout_rate": f"{rate:.0%}",
+        "status": "DEGRADED" if rate > 0.3 else "HEALTHY",
+        "recent": list(_validation_history),
+    }
 
 
 # ── 全局模型注册表 ──────────────────────────────────────────────────────────
@@ -374,37 +403,60 @@ def validated_call(system: str, history: list, user_input: str,
                 pass
         return f"[错误] DeepSeek 不可用: {e}", {"step1": "error", "step2": "skipped", "modified": False}
 
-    # ── Step 2: GPT-5.4 审核 ──────────────────────────────────────
+    # ── Step 2: GPT-5.4 审核（精简prompt + 降级策略）──────────────
     gpt = _registry.get("gpt")
     if not gpt:
         logger.info("[validated_call] GPT 未注册，跳过验证，直接返回 DeepSeek 结果")
         return ds_reply, {"step1": "deepseek", "step2": "skipped", "modified": False}
 
+    # 精简验证prompt：只发核心内容，减少token和延迟
     validator_system = (
-        "你是一个严格的决策质检员。你会收到用户问题和DeepSeek的初稿回答。\n"
-        "你的任务：\n"
-        "1. 如果回答准确、完整、建议可行 → 直接输出（可优化措辞，不改核心内容）\n"
-        "2. 如果有明显错误、遗漏重要角度、或建议有风险 → 输出修正后的完整版本\n"
-        "规则：保持相同语言和风格。不要解释审核过程，直接输出最终内容。"
+        "质检员。审核初稿，有错则修正后输出完整版，无错则原样输出。"
+        "保持语言风格一致，不解释审核过程。"
     )
-    validator_prompt = (
-        f"【用户问题】\n{user_input}\n\n"
-        f"【DeepSeek初稿】\n{ds_reply}"
-    )
+    # 截断过长的初稿（>2000字时只发前1500+后500，减少验证延迟）
+    if len(ds_reply) > 2000:
+        trimmed = ds_reply[:1500] + "\n...(中间省略)...\n" + ds_reply[-500:]
+    else:
+        trimmed = ds_reply
+    validator_prompt = f"问：{user_input}\n\n初稿：\n{trimmed}"
 
-    try:
-        gpt_reply = gpt.call(
+    def _do_validate(client, name):
+        """执行验证并返回结果"""
+        reply = client.call(
             validator_system, [], validator_prompt,
             max_tokens=max_tokens, temperature=0.3
         )
-        # 判断是否被修改（word-level diff > 15% 视为有修正）
         ds_words = set(ds_reply.split())
-        gpt_words = set(gpt_reply.split())
-        diff_ratio = len(gpt_words - ds_words) / max(len(ds_words), 1)
+        v_words = set(reply.split())
+        diff_ratio = len(v_words - ds_words) / max(len(ds_words), 1)
         modified = diff_ratio > 0.15
         if modified:
-            logger.info(f"[validated_call] GPT 修正了 DeepSeek 回答 (diff={diff_ratio:.0%})")
+            logger.info(f"[validated_call] {name} 修正了 DeepSeek 回答 (diff={diff_ratio:.0%})")
+        return reply, modified
+
+    # 主验证：GPT-5.4
+    try:
+        gpt_reply, modified = _do_validate(gpt, "GPT-5.4")
+        _track_validation("gpt_ok")
         return gpt_reply, {"step1": "deepseek", "step2": "gpt", "modified": modified}
     except Exception as e:
-        logger.warning(f"[validated_call] GPT 验证失败: {e}，返回 DeepSeek 原始回答")
-        return ds_reply, {"step1": "deepseek", "step2": "gpt_error", "modified": False}
+        logger.warning(f"[validated_call] GPT 验证失败: {e}")
+        _track_validation("gpt_error")
+
+    # 降级验证：GPT连续失败时尝试Claude（但L3样本>2时Ising规则禁止降级）
+    if _validation_timeout_rate() < 0.3:  # 非系统性故障时才降级
+        for fallback_name in ["claude", "gemini"]:
+            fb = _registry.get(fallback_name)
+            if not fb:
+                continue
+            try:
+                fb_reply, modified = _do_validate(fb, fallback_name)
+                return fb_reply, {"step1": "deepseek", "step2": fallback_name, "modified": modified}
+            except Exception as e2:
+                logger.warning(f"[validated_call] {fallback_name} 降级验证也失败: {e2}")
+                continue
+
+    # 全部失败：返回DeepSeek原始回答
+    logger.warning("[validated_call] 所有验证模型均失败，返回 DeepSeek 原始回答")
+    return ds_reply, {"step1": "deepseek", "step2": "all_failed", "modified": False}
