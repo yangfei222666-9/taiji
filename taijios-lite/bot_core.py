@@ -43,7 +43,7 @@ from evolution.premium import PremiumManager
 from evolution.safe_io import safe_json_save, safe_json_load
 from taijios import (build_quick_system, chat, detect_intent,
                      KnowledgeBase, KNOWLEDGE_DIR)
-from multi_llm import init_models, get_model, ensemble_call, get_available_names
+from multi_llm import init_models, get_model, ensemble_call, validated_call, get_available_names
 from model_router import ModelRouter
 
 logger = logging.getLogger("bot_core")
@@ -364,24 +364,22 @@ class TaijiBot:
             intent_prompt,
             kb_prompt)
 
-        # 8. 调用 AI（多模型路由 + 计时 + 写入 Ising 数据源）
+        # 8. 调用 AI（强制两阶段：DeepSeek 生成 → GPT-5.4 验证）
         _t0 = time.time()
-        used_model = "legacy"
+        used_model = "deepseek→gpt"
         try:
-            if self.router and self.multi_models:
-                # ── 多模型智能路由 ──
-                primary, fallbacks = self.router.route(message, intent_prompt)
-                reply, used_model = ensemble_call(
-                    system, session.history, message,
-                    primary=primary, fallbacks=fallbacks)
-                if used_model == "none":
-                    raise RuntimeError("所有模型均不可用")
+            if self.multi_models:
+                reply, val_meta = validated_call(system, session.history, message)
+                used_model = f"{val_meta['step1']}→{val_meta['step2']}"
+                if val_meta.get("modified"):
+                    logger.info(f"[chat] GPT-5.4 修正了 DeepSeek 回答")
             else:
-                # ── 降级：单模型模式 ──
+                # 降级：多模型未初始化，单模型兜底
                 reply = chat(system, session.history, message, self.model_config)
+                used_model = "legacy"
             _log_task_execution(user_id, intent_prompt[:30], _t0, time.time(),
                                 True, len(reply))
-            logger.info(f"[chat] user={user_id} model={used_model} "
+            logger.info(f"[chat] user={user_id} pipeline={used_model} "
                         f"len={len(reply)} time={time.time()-_t0:.1f}s")
         except Exception as e:
             _log_task_execution(user_id, intent_prompt[:30], _t0, time.time(),

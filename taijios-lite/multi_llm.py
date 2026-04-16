@@ -317,3 +317,71 @@ def ensemble_call(system: str, history: list, user_input: str,
             continue
 
     return "[错误] 所有模型均不可用", "none"
+
+
+def validated_call(system: str, history: list, user_input: str,
+                   max_tokens: int = 2000) -> tuple[str, dict]:
+    """
+    强制两阶段流水线：DeepSeek 生成 → GPT-5.4 审核/修正。
+
+    Step 1 — DeepSeek 作为主力生成完整回答
+    Step 2 — GPT-5.4 作为质检员审核，有问题则修正后输出
+
+    Returns:
+        (最终回答, meta)
+        meta = {"step1": "deepseek", "step2": "gpt"|"skipped", "modified": bool}
+    """
+    # ── Step 1: DeepSeek 生成 ──────────────────────────────────────
+    ds = _registry.get("deepseek")
+    if not ds:
+        # DeepSeek 不可用，降级到 ensemble_call
+        reply, model = ensemble_call(system, history, user_input)
+        return reply, {"step1": model, "step2": "skipped", "modified": False}
+
+    try:
+        ds_reply = ds.call(system, history, user_input, max_tokens=max_tokens)
+    except Exception as e:
+        logger.warning(f"[validated_call] DeepSeek failed: {e}, fallback to gpt direct")
+        gpt = _registry.get("gpt")
+        if gpt:
+            try:
+                reply = gpt.call(system, history, user_input, max_tokens=max_tokens)
+                return reply, {"step1": "gpt_direct", "step2": "skipped", "modified": False}
+            except Exception:
+                pass
+        return f"[错误] DeepSeek 不可用: {e}", {"step1": "error", "step2": "skipped", "modified": False}
+
+    # ── Step 2: GPT-5.4 审核 ──────────────────────────────────────
+    gpt = _registry.get("gpt")
+    if not gpt:
+        logger.info("[validated_call] GPT 未注册，跳过验证，直接返回 DeepSeek 结果")
+        return ds_reply, {"step1": "deepseek", "step2": "skipped", "modified": False}
+
+    validator_system = (
+        "你是一个严格的决策质检员。你会收到用户问题和DeepSeek的初稿回答。\n"
+        "你的任务：\n"
+        "1. 如果回答准确、完整、建议可行 → 直接输出（可优化措辞，不改核心内容）\n"
+        "2. 如果有明显错误、遗漏重要角度、或建议有风险 → 输出修正后的完整版本\n"
+        "规则：保持相同语言和风格。不要解释审核过程，直接输出最终内容。"
+    )
+    validator_prompt = (
+        f"【用户问题】\n{user_input}\n\n"
+        f"【DeepSeek初稿】\n{ds_reply}"
+    )
+
+    try:
+        gpt_reply = gpt.call(
+            validator_system, [], validator_prompt,
+            max_tokens=max_tokens, temperature=0.3
+        )
+        # 判断是否被修改（word-level diff > 15% 视为有修正）
+        ds_words = set(ds_reply.split())
+        gpt_words = set(gpt_reply.split())
+        diff_ratio = len(gpt_words - ds_words) / max(len(ds_words), 1)
+        modified = diff_ratio > 0.15
+        if modified:
+            logger.info(f"[validated_call] GPT 修正了 DeepSeek 回答 (diff={diff_ratio:.0%})")
+        return gpt_reply, {"step1": "deepseek", "step2": "gpt", "modified": modified}
+    except Exception as e:
+        logger.warning(f"[validated_call] GPT 验证失败: {e}，返回 DeepSeek 原始回答")
+        return ds_reply, {"step1": "deepseek", "step2": "gpt_error", "modified": False}
