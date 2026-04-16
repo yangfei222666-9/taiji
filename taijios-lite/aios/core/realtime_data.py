@@ -16,36 +16,30 @@ logger = logging.getLogger("realtime_data")
 
 # ── 天气（OpenWeatherMap 免费版）──────────────────────────────
 
-OWM_BASE = "https://api.openweathermap.org/data/2.5"
-
-
 def _key(name: str) -> str:
     """延迟读取环境变量（确保 dotenv 已加载）"""
     return os.getenv(name, "")
 
 
-def get_weather(city: str = "Kuala Lumpur", lang: str = "zh_cn") -> Optional[str]:
+def get_weather(city: str = "Kuala Lumpur") -> Optional[str]:
     """获取指定城市天气
 
-    免费 API: https://openweathermap.org/api (60次/分钟)
-    需要环境变量 OPENWEATHER_API_KEY
+    免费 API: wttr.in（完全免费，无需 API key）
     """
-    if not _key("OPENWEATHER_API_KEY"):
-        return None
     try:
-        r = requests.get(f"{OWM_BASE}/weather", params={
-            "q": city, "appid": _key("OPENWEATHER_API_KEY"), "units": "metric", "lang": lang
-        }, timeout=10)
+        r = requests.get(f"https://wttr.in/{city}?format=j1", timeout=10,
+                         headers={"User-Agent": "TaijiOS/1.0"})
         r.raise_for_status()
         d = r.json()
-        desc = d["weather"][0]["description"]
-        temp = d["main"]["temp"]
-        feels = d["main"]["feels_like"]
-        humidity = d["main"]["humidity"]
-        wind = d["wind"]["speed"]
+        cur = d["current_condition"][0]
+        temp = cur["temp_C"]
+        feels = cur["FeelsLikeC"]
+        desc = cur.get("lang_zh", [{}])[0].get("value", cur["weatherDesc"][0]["value"])
+        humidity = cur["humidity"]
+        wind = cur["windspeedKmph"]
         return (f"📍 {city} 天气\n"
                 f"  {desc}，{temp}°C（体感{feels}°C）\n"
-                f"  湿度{humidity}% | 风速{wind}m/s\n"
+                f"  湿度{humidity}% | 风速{wind}km/h\n"
                 f"  更新时间：{datetime.now().strftime('%H:%M')}")
     except Exception as e:
         logger.warning(f"[天气] 获取失败: {e}")
@@ -86,31 +80,26 @@ def get_top_news(country: str = "cn", count: int = 5) -> Optional[str]:
 
 # ── 股价/汇率（Alpha Vantage 免费版）────────────────────────
 
-AV_BASE = "https://www.alphavantage.co/query"
-
-
 def get_exchange_rate(from_currency: str = "USD", to_currency: str = "CNY") -> Optional[str]:
     """获取汇率
 
-    免费 API: https://www.alphavantage.co (25次/天)
-    需要环境变量 ALPHAVANTAGE_API_KEY
+    免费 API: open.er-api.com（完全免费，无需 API key）
     """
-    if not _key("ALPHAVANTAGE_API_KEY"):
-        return None
     try:
-        r = requests.get(AV_BASE, params={
-            "function": "CURRENCY_EXCHANGE_RATE",
-            "from_currency": from_currency,
-            "to_currency": to_currency,
-            "apikey": _key("ALPHAVANTAGE_API_KEY"),
-        }, timeout=10)
+        r = requests.get(f"https://open.er-api.com/v6/latest/{from_currency}", timeout=10)
         r.raise_for_status()
-        data = r.json().get("Realtime Currency Exchange Rate", {})
-        if not data:
-            return None
-        rate = data.get("5. Exchange Rate", "?")
-        time_str = data.get("6. Last Refreshed", "?")
-        return f"💱 {from_currency}/{to_currency}: {float(rate):.4f}\n  更新：{time_str}"
+        rates = r.json().get("rates", {})
+        if to_currency in rates:
+            rate = rates[to_currency]
+            return f"💱 {from_currency}/{to_currency}: {rate:.4f}\n  更新时间：{datetime.now().strftime('%H:%M')}"
+        # 如果指定了单一货币，返回常用货币汇率
+        if to_currency == "ALL":
+            lines = [f"💱 {from_currency} 汇率 ({datetime.now().strftime('%H:%M')})"]
+            for cur in ["CNY", "MYR", "JPY", "EUR", "GBP", "HKD"]:
+                if cur in rates:
+                    lines.append(f"  {from_currency}/{cur}: {rates[cur]:.4f}")
+            return "\n".join(lines)
+        return None
     except Exception as e:
         logger.warning(f"[汇率] 获取失败: {e}")
         return None
@@ -119,15 +108,17 @@ def get_exchange_rate(from_currency: str = "USD", to_currency: str = "CNY") -> O
 def get_stock_quote(symbol: str = "AAPL") -> Optional[str]:
     """获取股票报价
 
-    免费 API: Alpha Vantage (25次/天)
+    免费 API: Alpha Vantage (25次/天，需 ALPHAVANTAGE_API_KEY)
+    无 key 时返回 None
     """
-    if not _key("ALPHAVANTAGE_API_KEY"):
+    av_key = _key("ALPHAVANTAGE_API_KEY")
+    if not av_key:
         return None
     try:
-        r = requests.get(AV_BASE, params={
+        r = requests.get("https://www.alphavantage.co/query", params={
             "function": "GLOBAL_QUOTE",
             "symbol": symbol,
-            "apikey": _key("ALPHAVANTAGE_API_KEY"),
+            "apikey": av_key,
         }, timeout=10)
         r.raise_for_status()
         quote = r.json().get("Global Quote", {})
@@ -368,13 +359,11 @@ def query_realtime(user_input: str) -> Optional[str]:
 
 def get_available_sources() -> list[str]:
     """返回当前可用的数据源列表"""
-    sources = []
-    if _key("OPENWEATHER_API_KEY"):
-        sources.append("天气(OpenWeather)")
+    sources = ["天气(wttr.in)", "汇率(er-api)"]  # 这两个免费无key
     if _key("NEWSAPI_KEY"):
         sources.append("新闻(NewsAPI)")
     if _key("ALPHAVANTAGE_API_KEY"):
-        sources.append("股价汇率(AlphaVantage)")
+        sources.append("股价(AlphaVantage)")
     if _key("API_FOOTBALL_KEY") or _key("FOOTBALL_DATA_API_KEY"):
         sources.append("足球(API-Football)")
     return sources
