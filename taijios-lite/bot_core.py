@@ -364,6 +364,15 @@ class TaijiBot:
             intent_prompt,
             kb_prompt)
 
+        # 7.5 信息稀疏检查 — 输入太短时先反问，不进生成
+        try:
+            from aios.core.output_guard import sparse_input_check
+            probe = sparse_input_check(message)
+            if probe:
+                return probe
+        except ImportError:
+            pass
+
         # 8. 调用 AI（强制两阶段：DeepSeek 生成 → GPT-5.4 验证）
         _t0 = time.time()
         used_model = "deepseek→gpt"
@@ -441,6 +450,13 @@ class TaijiBot:
         session.prev_reply = reply
 
         # 14. 组装最终回复
+        # 14.1 象征化输出硬闸 — 无事实锚点的象征表达追加提醒
+        try:
+            from aios.core.output_guard import symbolic_output_guard
+            reply, guard_warnings = symbolic_output_guard(reply, message)
+        except ImportError:
+            guard_warnings = []
+
         parts = []
         if divine_text:
             parts.append(divine_text)
