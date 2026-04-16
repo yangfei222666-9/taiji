@@ -31,6 +31,11 @@ try:
 except ImportError:
     ValidationMeta = None
 
+try:
+    from aios.core.latency_logger import log_meta as _log_meta
+except ImportError:
+    _log_meta = None
+
 logger = logging.getLogger("multi_llm")
 
 
@@ -406,6 +411,16 @@ def ensemble_call(system: str, history: list, user_input: str,
     return "[错误] 所有模型均不可用", "none"
 
 
+def _return_with_log(reply: str, meta) -> tuple:
+    """validated_call 统一出口：写延迟日志后返回"""
+    if _log_meta and meta:
+        try:
+            _log_meta(meta)
+        except Exception as e:
+            logger.warning(f"[validated_call] latency log 写入异常: {e}")
+    return reply, meta
+
+
 def _run_rules_safe(original: str, verified: str, val_meta) -> list[dict]:
     """安全调用失败样本库规则引擎，返回完整结构化结果"""
     if _run_failure_rules is None:
@@ -465,7 +480,7 @@ def validated_call(system: str, history: list, user_input: str,
             model_chain=model, verification_status="skipped",
             total_ms=elapsed,
         )
-        return reply, meta
+        return _return_with_log(reply, meta)
 
     ds_reply = None
     _t_gen = time.time()
@@ -485,7 +500,7 @@ def validated_call(system: str, history: list, user_input: str,
                     model_chain="gpt_direct", verification_status="skipped",
                     generation_ms=gen_ms, total_ms=elapsed,
                 )
-                return reply, meta
+                return _return_with_log(reply, meta)
             except Exception:
                 pass
         elapsed = (time.time() - _t0) * 1000
@@ -495,7 +510,7 @@ def validated_call(system: str, history: list, user_input: str,
             model_chain="error", verification_status="error",
             generation_ms=gen_ms, total_ms=elapsed,
         )
-        return err_msg, meta
+        return _return_with_log(err_msg, meta)
 
     gen_ms = (time.time() - _t_gen) * 1000
 
@@ -511,7 +526,7 @@ def validated_call(system: str, history: list, user_input: str,
             generation_ms=gen_ms, total_ms=elapsed,
         )
         meta.triggered_rules = _run_rules_safe(ds_reply, ds_reply, meta) if ValidationMeta else []
-        return ds_reply, meta
+        return _return_with_log(ds_reply, meta)
 
     # 精简验证prompt
     validator_system = (
@@ -552,7 +567,7 @@ def validated_call(system: str, history: list, user_input: str,
             generation_ms=gen_ms, verification_ms=val_ms, total_ms=elapsed,
         )
         meta.triggered_rules = _run_rules_safe(ds_reply, gpt_reply, meta)
-        return gpt_reply, meta
+        return _return_with_log(gpt_reply, meta)
     except Exception as e:
         logger.warning(f"[validated_call] GPT 验证失败: {e}")
         _track_validation("gpt_error")
@@ -579,7 +594,7 @@ def validated_call(system: str, history: list, user_input: str,
                     degradation_ms=val_ms, total_ms=elapsed,
                 )
                 meta.triggered_rules = _run_rules_safe(ds_reply, fb_reply, meta)
-                return fb_reply, meta
+                return _return_with_log(fb_reply, meta)
             except Exception as e2:
                 logger.warning(f"[validated_call] {fb_name} 降级验证也失败: {e2}")
                 _track_validation(f"{fb_name}_error")
@@ -598,4 +613,4 @@ def validated_call(system: str, history: list, user_input: str,
         generation_ms=gen_ms, total_ms=elapsed,
     )
     meta.triggered_rules = _run_rules_safe(ds_reply, ds_reply, meta)
-    return ds_reply, meta
+    return _return_with_log(ds_reply, meta)
