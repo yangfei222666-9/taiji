@@ -129,13 +129,16 @@ def detect_error_propagation(original: str, verified: str,
                 flags.append("self_reference_detected")
                 break
 
-    # 简化版错误传播：数字全保留 + R1未触发 + 至少2个数字时才标记
+    # 简化版错误传播：数字全保留 + R1未触发 + 至少2个数字 + 长文本时才标记
+    # 短文本（<50字符）排除：数学题/简短问答数字密度高，全保留是正常行为
     orig_nums = _extract_numbers(original)
     veri_nums = _extract_numbers(verified)
     preserved = orig_nums & veri_nums
     if r1_result is None:
         r1_result = detect_factual_drift(original, verified)
-    if (len(orig_nums) >= 2
+    is_long_enough = len(original) >= 50
+    if (is_long_enough
+            and len(orig_nums) >= 2
             and len(preserved) == len(orig_nums)
             and not r1_result["triggered"]):
         flags.append("all_numbers_preserved")

@@ -203,7 +203,7 @@ class TestScenario4_MathExpressionSafety:
         assert should_block_fallback() is False
 
     def test_repeated_math_no_block(self):
-        """连续多次短数学表达式的 R3 误触发不应累积到阻断阈值"""
+        """连续多次短数学表达式不应累积到阻断阈值（R3 长度感知已修复）"""
         _reset_l3_history()
         for _ in range(10):
             run_failure_rules(
@@ -211,14 +211,8 @@ class TestScenario4_MathExpressionSafety:
                 "2+3=5，答案正确，没有问题",
                 {"step2": "gpt"}
             )
-        # R3 可能每次都触发，但 R3 关联的 L3 样本中
-        # 只有 status=active 且 detector_type=runtime 的才计入
-        # 即使累积，也要看实际关联样本数
-        # 关键断言：不应因为数学题误报就阻断系统
-        count = get_active_l3_count()
-        # 如果 count 超过阈值，说明 R3 误报确实会打穿 → 这是需要修的 bug
-        if count > L3_ISING_THRESHOLD:
-            pytest.skip(f"R3 短数学误触发累积到 {count}，需要修复 R3 长度/密度感知")
+        # R3 短文本（<50字符）不再触发 all_numbers_preserved
+        assert should_block_fallback() is False
 
     def test_long_text_r3_legitimate(self):
         """长文本中数字全保留是合理的 R3 触发"""

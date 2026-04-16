@@ -105,10 +105,10 @@ class TestR3ErrorPropagation:
         assert r["triggered"] is False
 
     def test_all_numbers_preserved_triggers(self):
-        """所有数字原样保留可能意味着未做实质验证"""
+        """长文本中所有数字原样保留可能意味着未做实质验证"""
         r = detect_error_propagation(
-            "GDP是12万亿，增长率3.5%",
-            "GDP是12万亿美元，增长率为3.5%左右",
+            "根据2024年世界银行数据，中国GDP总量约为18万亿美元，增长率5.2%，人均GDP约1.3万美元，位列全球第二大经济体",
+            "根据2024年世界银行数据，中国GDP总量约为18万亿美元，增长率5.2%，人均GDP约1.3万美元，位列全球第二大经济体，以上数据准确无误",
         )
         assert r["triggered"] is True
         assert "all_numbers_preserved" in r["flags"]
