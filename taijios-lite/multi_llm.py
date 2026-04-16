@@ -8,8 +8,10 @@ import os
 import json
 import time
 import logging
+import threading
 import requests
 from typing import Optional
+from collections import deque
 
 logger = logging.getLogger("multi_llm")
 
@@ -177,22 +179,24 @@ def _is_transient(e):
 
 
 # ── 验证健康度跟踪（R5规则）──────────────────────────────────────────────────
-from collections import deque
 
 _validation_history: deque = deque(maxlen=20)
+_validation_lock = threading.Lock()
 
 
 def _track_validation(result: str):
-    """记录验证结果用于超时率统计"""
-    _validation_history.append(result)
+    """记录验证结果用于超时率统计（线程安全）"""
+    with _validation_lock:
+        _validation_history.append(result)
 
 
 def _validation_timeout_rate() -> float:
-    """最近20次验证中GPT失败的比率"""
-    if not _validation_history:
-        return 0.0
-    fails = sum(1 for r in _validation_history if r == "gpt_error")
-    return fails / len(_validation_history)
+    """最近20次验证中GPT失败的比率（线程安全）"""
+    with _validation_lock:
+        if not _validation_history:
+            return 0.0
+        fails = sum(1 for r in _validation_history if r in ("gpt_error", "all_failed"))
+        return fails / len(_validation_history)
 
 
 def get_validation_health() -> dict:
@@ -311,26 +315,28 @@ def get_available_names() -> list[str]:
 def cross_validate(prompt: str, models: list[str] = None,
                    max_tokens: int = 800, temperature: float = 0) -> dict:
     """
-    多模型交叉验证：同一个问题发给多个模型，返回各自结果。
+    多模型交叉验证：并发调用多个模型，返回各自结果。
     用于易经知识验证、卦象计算校验等场景。
     """
     if not models:
         models = list(_registry.keys())
 
     results = {}
-    for name in models:
+    results_lock = threading.Lock()
+
+    def _call_one(name):
         client = _registry.get(name)
         if not client:
-            results[name] = {"error": f"Model {name} not available"}
-            continue
+            with results_lock:
+                results[name] = {"error": f"Model {name} not available"}
+            return
         try:
             if client.provider == "gemini":
-                # Gemini thinking模型短回复不稳定，用临时非thinking客户端
                 lite = LLMClient(
                     name=f"{client.name}_validate",
                     provider="gemini",
                     api_key=client.api_key,
-                    model="gemini-2.5-flash-lite",  # 非thinking，稳定
+                    model="gemini-2.5-flash-lite",
                 )
                 answer = lite.call("", [], prompt,
                                    max_tokens=max_tokens, temperature=temperature)
@@ -338,9 +344,20 @@ def cross_validate(prompt: str, models: list[str] = None,
                 answer = client.call(
                     "You are a precise knowledge validator. Answer concisely.",
                     [], prompt, max_tokens=max_tokens, temperature=temperature)
-            results[name] = {"answer": answer, "model": client.model}
+            with results_lock:
+                results[name] = {"answer": answer, "model": client.model}
         except Exception as e:
-            results[name] = {"error": str(e)}
+            with results_lock:
+                results[name] = {"error": str(e)}
+
+    # 并发调用，总超时 max(单模型120s, 不超过180s)
+    threads = []
+    for name in models:
+        t = threading.Thread(target=_call_one, args=(name,), daemon=True)
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join(timeout=180)
 
     return results
 
@@ -387,6 +404,7 @@ def validated_call(system: str, history: list, user_input: str,
     ds = _registry.get("deepseek")
     if not ds:
         # DeepSeek 不可用，降级到 ensemble_call
+        _track_validation("ds_unavailable")
         reply, model = ensemble_call(system, history, user_input)
         return reply, {"step1": model, "step2": "skipped", "modified": False}
 
@@ -394,6 +412,7 @@ def validated_call(system: str, history: list, user_input: str,
         ds_reply = ds.call(system, history, user_input, max_tokens=max_tokens)
     except Exception as e:
         logger.warning(f"[validated_call] DeepSeek failed: {e}, fallback to gpt direct")
+        _track_validation("ds_failed")
         gpt = _registry.get("gpt")
         if gpt:
             try:
@@ -407,6 +426,7 @@ def validated_call(system: str, history: list, user_input: str,
     gpt = _registry.get("gpt")
     if not gpt:
         logger.info("[validated_call] GPT 未注册，跳过验证，直接返回 DeepSeek 结果")
+        _track_validation("gpt_unavailable")
         return ds_reply, {"step1": "deepseek", "step2": "skipped", "modified": False}
 
     # 精简验证prompt：只发核心内容，减少token和延迟
@@ -452,11 +472,14 @@ def validated_call(system: str, history: list, user_input: str,
                 continue
             try:
                 fb_reply, modified = _do_validate(fb, fallback_name)
+                _track_validation(f"{fallback_name}_ok")
                 return fb_reply, {"step1": "deepseek", "step2": fallback_name, "modified": modified}
             except Exception as e2:
                 logger.warning(f"[validated_call] {fallback_name} 降级验证也失败: {e2}")
+                _track_validation(f"{fallback_name}_error")
                 continue
 
     # 全部失败：返回DeepSeek原始回答
+    _track_validation("all_failed")
     logger.warning("[validated_call] 所有验证模型均失败，返回 DeepSeek 原始回答")
     return ds_reply, {"step1": "deepseek", "step2": "all_failed", "modified": False}

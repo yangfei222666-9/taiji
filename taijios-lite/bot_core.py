@@ -456,12 +456,15 @@ class TaijiBot:
         elapsed = time.time() - _t0
         status_parts = [f"[{used_model}]"]
         if val_meta:
+            step2 = val_meta.get("step2", "")
             if val_meta.get("modified"):
-                status_parts.append("GPT已修正")
-            elif val_meta.get("step2") == "skipped":
+                status_parts.append("已修正")
+            elif step2 == "skipped":
                 status_parts.append("验证跳过")
-            elif val_meta.get("step2") == "gpt_error":
-                status_parts.append("验证超时")
+            elif step2 == "all_failed":
+                status_parts.append("⚠未验证")
+            elif step2 in ("gpt", "claude", "gemini"):
+                status_parts.append("验证通过")
         status_parts.append(f"{elapsed:.1f}s")
         parts.append(f"\n---\n{'｜'.join(status_parts)}")
 
