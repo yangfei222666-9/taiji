@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="docs/hud_screenshot.png" alt="TaijiOS HUD — Five Engine Real-time Monitor" width="700" />
+</p>
+
+<p align="center">
   <img src="docs/logo.png" alt="TaijiOS" width="120" />
 </p>
 
@@ -24,6 +28,22 @@
 > 这个项目由一个不会写代码的人，用多 AI 协作搭建而成。
 >
 > This project was built by a non-programmer through multi-AI collaboration.
+
+---
+
+## Why I Ching? 为什么用易经
+
+太极OS 的五引擎不是随便取的名字——每个引擎对应一个卦象，卦象定义了它的**职责边界**和**行为哲学**。
+
+| 引擎 | 卦象 | 卦义 | 系统职责 |
+|------|------|------|----------|
+| 情势引擎 | ☰ 乾卦 | 天行健，自强不息 | 6维态势感知（时机/资源/主动/位置/关系/能量），张力检测与干预决策 |
+| 震卦引擎 | ⚡ 震卦 | 震来虩虩，笑言哑哑 | 故障恢复：爻位逐级升级，熔断器三级保护，惊后自愈 |
+| 师卦引擎 | 🏴 师卦 | 地中有水，师 | 集群调度：小队编组、阵型切换、任务分配，治众如治寡 |
+| 人格引擎 | 🎭 随卦 | 泽中有雷，随 | Persona 热切换：根据任务匹配最佳人格，随时而动 |
+| 颐卦引擎 | 📚 颐卦 | 山下有雷，颐 | 经验学习：高权重经验沉淀、命中率追踪、知识消化，慎言语节饮食 |
+
+**卦象不是装饰，是约束。** 震卦引擎只管恢复不管调度，师卦引擎只管集群不管学习——卦义划定了每个引擎"能做什么"和"不该做什么"的边界。系统运行时，后端实时计算六爻卦象，将18维系统指标映射为卦辞和爻变，HUD 前端只做展示。
 
 ---
 
@@ -99,6 +119,49 @@ graph TB
 | Match Analysis 赔率交叉验证 | 多数据源比赛分析 + 赔率交叉验证框架 | ✅ |
 | Skill Auto-Creation 技能自动创建 | 从日志检测可重复模式 → 生成技能草案 → 三层验证 | 🔄 |
 | Pattern Recognition 模式识别 | 从运行数据中识别可优化模式 | ✅ |
+| Ising Heartbeat 物理心跳引擎 | 统计物理 Ising 模型 + 六爻映射，追踪系统状态动力学，346 次心跳实验验证 | ✅ |
+| Multi-LLM Router 多模型路由 | DeepSeek / Gemini / GPT / Claude 四路调用 + 自动降级 + 交叉验证 | ✅ |
+| FastAPI Server REST 接口 | `/api/chat` `/api/hexagram` `/api/cognitive_map` 等，TaijiBot 接入 | ✅ |
+
+> **🔄 Roadmap — Skill Auto-Creation:**
+> 检测模块已完成，草案生成和三层验证（语法/沙箱/回归）进行中。
+> 目标：2026 Q2 末完成端到端闭环，届时 🔄 → ✅。
+
+## Ising Heartbeat 物理心跳引擎
+
+> 用物理学中的 Ising 模型，给 AI 操作系统装一颗会演化的"心脏"。
+
+TaijiOS 将 6 个系统维度映射为 6 个量子自旋（σ = ±1），用 Ising 模型追踪系统状态动力学：
+
+| 爻位 | 系统维度 | σ=+1（阳）| σ=-1（阴）|
+|------|---------|----------|----------|
+| 初爻 | infra（基础设施）| 稳定 | 不稳定 |
+| 二爻 | exec（执行层）| 高效 | 滞后 |
+| 三爻 | learn（学习层）| 活跃 | 停滞 |
+| 四爻 | route（路由层）| 准确 | 混乱 |
+| 五爻 | collab（协作层）| 顺畅 | 阻塞 |
+| 上爻 | govern（治理层）| 收敛 | 失控 |
+
+6 个自旋的组合 = 64 种可能 = 正好对应易经 64 卦。
+
+**Hebbian 学习**使耦合矩阵 J 随时间自适应：
+```
+ΔJᵢⱼ = η · reward · σᵢ · (σⱼ - σⱼ_prev)
+```
+
+**18.8 小时 / 346 次心跳实验结论：**
+- 系统在第 37 tick 经历一次干净的相变（ΔH = +0.30），之后 99% 时间锁定新稳态
+- 外场自适应自发学出"抑刚强流通"格局，与易经坤德高度吻合
+- 易经"应"关系（初↔四等）在 Hebbian 学习中**未**自发增强——物理邻近性比功能对应性更强
+
+```bash
+# 启动心跳引擎
+cd aios/agent_system
+python ising_heartbeat.py --loop --interval 60
+
+# 查看实时状态
+python ising_heartbeat.py --status
+```
 
 ## Tech Stack 技术栈
 
@@ -180,7 +243,8 @@ TaijiOS/
 |--------|-------------|------|
 | `aios/core/` | Event engine, scheduler, reactor, memory, circuit breaker, model router, Safe Click | 事件引擎、调度器、反应器、记忆、熔断器、模型路由、安全点击 |
 | `aios/gateway/` | Unified LLM Gateway — auth, rate limiting, provider failover, audit, streaming | 统一 LLM 网关 — 认证、限流、故障转移、审计、流式传输 |
-| `aios/agent_system/` | Task queue, agent lifecycle, experience harvesting, meta-agent, evolution | 任务队列、智能体生命周期、经验收割、元智能体、进化 |
+| `aios/agent_system/` | Task queue, agent lifecycle, experience harvesting, meta-agent, evolution, Ising heartbeat | 任务队列、智能体生命周期、经验收割、元智能体、进化、Ising 心跳引擎 |
+| `taijios-lite/` | Lightweight server — FastAPI `/api/chat`, multi-LLM router, Feishu/Telegram bot | 轻量服务 — FastAPI 接口、多模型路由、飞书/Telegram Bot |
 | `self_improving_loop/` | Safe self-modification with rollback and threshold gates | 安全自修改 + 回滚 + 阈值门控 |
 | `github_learning/` | Learn from GitHub: discover, analyze, digest, gate, solidify | 从 GitHub 学习：发现、分析、提炼、门控、固化 |
 | `match_analysis/` | Multi-source match analysis with odds cross-validation | 多数据源比赛分析 + 赔率交叉验证 |
@@ -189,19 +253,33 @@ TaijiOS/
 
 ## Configuration 配置
 
-所有敏感信息通过环境变量配置：
+所有敏感信息通过环境变量配置（参考 `taijios-lite/.env.example`）：
 
 ```bash
-# LLM Gateway
-export TAIJIOS_GATEWAY_ENABLED=1
-export TAIJIOS_API_TOKEN=your-token
+# ── AI 模型（选填，至少配一个）──────────────────────
+# DeepSeek（推荐，便宜）
+DEEPSEEK_API_KEY=sk-...
 
-# GitHub Learning
-export GITHUB_TOKEN=your-github-token
+# Gemini
+GEMINI_API_KEY=AIza...
 
-# Optional: Telegram notifications
-export TAIJI_TELEGRAM_BOT_TOKEN=your-bot-token
-export TAIJI_TELEGRAM_CHAT_ID=your-chat-id
+# Claude（官方 Anthropic 保底）
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Claude 中转站（可选，比官方便宜）
+CLAUDE_RELAY_KEY=sk-...
+CLAUDE_RELAY_BASE=https://your-relay.com/v1
+
+# ── 飞书 Bot（可选）──────────────────────────────
+FEISHU_APP_ID=cli_...
+FEISHU_APP_SECRET=...
+
+# ── LLM Gateway ──────────────────────────────────
+TAIJIOS_GATEWAY_ENABLED=1
+TAIJIOS_API_TOKEN=your-token
+
+# ── GitHub Learning ───────────────────────────────
+GITHUB_TOKEN=ghp_...
 ```
 
 ## Design Principles 设计原则
@@ -215,13 +293,28 @@ export TAIJI_TELEGRAM_CHAT_ID=your-chat-id
 | Graceful degradation | 优雅降级 | 组件降级到兜底方案，永不崩溃系统 |
 | Default deny | 默认拒绝 | Safe Click 四闸门全过才允许执行 |
 
+## Live Demo 在线演示
+
+> **不想跑代码？直接看效果：**
+
+| Demo | 说明 |
+|------|------|
+| [HUD 五引擎监控面板](https://taijios-hud.netlify.app) | CRT 像素风实时仪表盘，模拟模式可直接体验 |
+| [CyberPet 赛博宠物](https://taijios-cyberpet.netlify.app) | 太极OS 内置的 AI 像素宠物，双击 HTML 也能跑 |
+
+> Netlify 托管，纯前端，零依赖，无需安装。HUD 连接后端后自动从 SIM 切换为 LIVE 真实数据。
+
 ## Screenshots 截图
 
 <p align="center">
-  <img src="docs/dashboard_demo.png" alt="TaijiOS Dashboard" width="400" />
+  <img src="docs/hud_screenshot.png" alt="TaijiOS HUD — CRT pixel五引擎监控" width="700" />
+  <br><em>HUD 五引擎实时监控面板 — 情势/震卦/师卦/人格/颐卦 + 系统层</em>
 </p>
 
-Dashboard 展示了完整的任务执行流：提交 → 验证 → 卦象决策 → 交付，包含四维检查评分和执行轨迹。
+<p align="center">
+  <img src="docs/dashboard_demo.png" alt="TaijiOS Dashboard" width="400" />
+  <br><em>Dashboard 任务执行流：提交 → 验证 → 卦象决策 → 交付</em>
+</p>
 
 ## Private Modules 私有模块
 
