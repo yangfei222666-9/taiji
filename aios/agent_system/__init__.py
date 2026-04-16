@@ -10,8 +10,21 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
-from .core.agent_manager import AgentManager
-from .unified_router_v1 import UnifiedRouter, TaskContext, TaskType, RiskLevel, Decision, ExecutionMode
+try:
+    from .core.agent_manager import AgentManager
+except ImportError:
+    AgentManager = None
+
+try:
+    from .unified_router_v1 import UnifiedRouter, TaskContext, TaskType, RiskLevel, Decision, ExecutionMode
+except ImportError:
+    UnifiedRouter = None
+    TaskContext = None
+    TaskType = None
+    RiskLevel = None
+    Decision = None
+    ExecutionMode = None
+
 # from .evolution import AgentEvolution  # 临时注释，evolution.py 有语法错误
 
 
@@ -41,9 +54,9 @@ class AgentSystem:
         with open(self.log_file, "a", encoding="utf-8") as f:
             f.write(log_entry)
 
-    def handle_task(self, message: str, auto_create: bool = True, 
+    def handle_task(self, message: str, auto_create: bool = True,
                    task_type: TaskType = None, complexity: int = 5,
-                   risk_level: RiskLevel = RiskLevel.MEDIUM) -> Dict:
+                   risk_level=None) -> Dict:
         """
         处理任务（主入口）- 使用智能路由
 
@@ -288,7 +301,7 @@ class AgentSystem:
     def _update_system_state(self):
         """更新系统状态（从事件日志计算）"""
         try:
-            from paths import EVENTS_LOG
+            from .paths import EVENTS_LOG
             # 读取最近的事件
             events_file = EVENTS_LOG
             if not events_file.exists():

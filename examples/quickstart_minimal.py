@@ -7,6 +7,9 @@ This demo shows the core TaijiOS loop:
   2. A pipeline processes it (with self-healing retry)
   3. Evidence and trace are generated
 
+When the aios package is installed (pip install -e .), the demo also
+creates real aios.core.event.Event objects to prove the package works.
+
 Run:
     pip install -e .
     python examples/quickstart_minimal.py
@@ -17,6 +20,13 @@ import time
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# ── Try importing real aios package ──
+try:
+    from aios.core.event import Event, EventType
+    AIOS_AVAILABLE = True
+except ImportError:
+    AIOS_AVAILABLE = False
 
 OUTPUT_DIR = Path(__file__).parent / "quickstart_output"
 
@@ -249,10 +259,28 @@ def main():
     event_log_path = OUTPUT_DIR / "quickstart_events.json"
     event_log_path.write_text(json.dumps(bus.log, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    # ── Real aios package verification ──
+    if AIOS_AVAILABLE:
+        evt = Event.create(
+            EventType.PIPELINE_COMPLETED,
+            source="quickstart",
+            payload={
+                "total_tasks": evidence["total_tasks"],
+                "succeeded": evidence["succeeded"],
+                "self_healed": evidence["self_healed"],
+            },
+        )
+        evidence["aios_event"] = evt.to_dict()
+        evidence_path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8")
+
     print("\n" + "=" * 60)
     print(f"  Results: {evidence['succeeded']}/{evidence['total_tasks']} succeeded")
     print(f"  Self-healed: {evidence['self_healed']}/{evidence['total_tasks']}")
     print(f"  Events logged: {evidence['event_log_count']}")
+    if AIOS_AVAILABLE:
+        print(f"\n  [aios] Real Event created: {evt.type} (id={evt.id[:8]}...)")
+    else:
+        print(f"\n  [aios] Package not installed — ran in standalone mode")
     print(f"\n  Evidence:   {evidence_path}")
     print(f"  Traces:     {trace_path}")
     print(f"  Event log:  {event_log_path}")

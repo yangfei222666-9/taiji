@@ -2,14 +2,14 @@
   {
     "task_id": "quickstart-001",
     "status": "succeeded",
-    "started_at": 1775630810.1867013,
-    "ended_at": 1775630810.1867013,
+    "started_at": 1775841214.902611,
+    "ended_at": 1775841214.9031155,
     "steps": [
       {
         "name": "generate:rev1",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.902611,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 1,
           "guidance": {},
@@ -20,8 +20,8 @@
       {
         "name": "validate:rev1",
         "status": "failed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.35,
           "passed": false,
@@ -42,8 +42,8 @@
       {
         "name": "generate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 2,
           "guidance": {
@@ -57,8 +57,8 @@
       {
         "name": "validate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.9,
           "passed": true,
@@ -70,8 +70,8 @@
       {
         "name": "deliver",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "delivered": true,
           "final_score": 0.9
@@ -83,14 +83,14 @@
   {
     "task_id": "quickstart-002",
     "status": "succeeded",
-    "started_at": 1775630810.1867013,
-    "ended_at": 1775630810.1867013,
+    "started_at": 1775841214.9031155,
+    "ended_at": 1775841214.9031155,
     "steps": [
       {
         "name": "generate:rev1",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 1,
           "guidance": {},
@@ -101,8 +101,8 @@
       {
         "name": "validate:rev1",
         "status": "failed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.35,
           "passed": false,
@@ -123,8 +123,8 @@
       {
         "name": "generate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 2,
           "guidance": {
@@ -138,8 +138,8 @@
       {
         "name": "validate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.9,
           "passed": true,
@@ -151,8 +151,8 @@
       {
         "name": "deliver",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "delivered": true,
           "final_score": 0.9
@@ -164,14 +164,14 @@
   {
     "task_id": "quickstart-003",
     "status": "succeeded",
-    "started_at": 1775630810.1867013,
-    "ended_at": 1775630810.1867013,
+    "started_at": 1775841214.9031155,
+    "ended_at": 1775841214.9031155,
     "steps": [
       {
         "name": "generate:rev1",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 1,
           "guidance": {},
@@ -182,8 +182,8 @@
       {
         "name": "validate:rev1",
         "status": "failed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.35,
           "passed": false,
@@ -204,8 +204,8 @@
       {
         "name": "generate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "revision": 2,
           "guidance": {
@@ -219,8 +219,8 @@
       {
         "name": "validate:rev2",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "score": 0.9,
           "passed": true,
@@ -232,8 +232,8 @@
       {
         "name": "deliver",
         "status": "completed",
-        "started_at": 1775630810.1867013,
-        "ended_at": 1775630810.1867013,
+        "started_at": 1775841214.9031155,
+        "ended_at": 1775841214.9031155,
         "output": {
           "delivered": true,
           "final_score": 0.9
