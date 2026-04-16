@@ -88,19 +88,25 @@ MODEL_CONFIG = {
 TG_API = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
 
-async def tg_request(session: aiohttp.ClientSession, method: str, data: dict = None) -> dict:
-    """Telegram Bot API 请求（非阻塞）"""
+async def tg_request(session: aiohttp.ClientSession, method: str, data: dict = None,
+                     max_retries: int = 3) -> dict:
+    """Telegram Bot API 请求（非阻塞，自动重试）"""
     url = f"{TG_API}/{method}"
-    try:
-        if data:
-            async with session.post(url, json=data, timeout=aiohttp.ClientTimeout(total=60)) as resp:
-                return await resp.json()
-        else:
-            async with session.get(url, timeout=aiohttp.ClientTimeout(total=60)) as resp:
-                return await resp.json()
-    except Exception as e:
-        logger.error(f"TG API 错误: {e}")
-        return {}
+    for attempt in range(max_retries):
+        try:
+            if data:
+                async with session.post(url, json=data, timeout=aiohttp.ClientTimeout(total=60)) as resp:
+                    return await resp.json()
+            else:
+                async with session.get(url, timeout=aiohttp.ClientTimeout(total=60)) as resp:
+                    return await resp.json()
+        except Exception as e:
+            logger.warning(f"TG API 错误 (尝试{attempt+1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(3 * (attempt + 1))  # 3s, 6s 递增等待
+            else:
+                logger.error(f"TG API 最终失败: {method} - {e}")
+                return {}
 
 
 async def send_message(session: aiohttp.ClientSession, chat_id: int, text: str, reply_to: int = None):
@@ -237,6 +243,27 @@ async def main():
                         await send_message(session, chat_id, reply, msg_id)
                         continue
 
+                    if text in ("/upgrade", "/升级"):
+                        reply = await asyncio.to_thread(bot.handle_message, user_id, user_name, "upgrade")
+                        await send_message(session, chat_id, reply, msg_id)
+                        continue
+
+                    if text in ("/export", "/导出"):
+                        reply = await asyncio.to_thread(bot.handle_message, user_id, user_name, "export")
+                        await send_message(session, chat_id, reply, msg_id)
+                        continue
+
+                    if text in ("/deep", "/深度分析"):
+                        reply = await asyncio.to_thread(bot.handle_message, user_id, user_name, "深度分析")
+                        await send_message(session, chat_id, reply, msg_id)
+                        continue
+
+                    if text.startswith("/match ") or text.startswith("/比赛 "):
+                        await send_typing(session, chat_id)
+                        reply = await asyncio.to_thread(bot.handle_message, user_id, user_name, text.lstrip("/"))
+                        await send_message(session, chat_id, reply, msg_id)
+                        continue
+
                     # 去掉命令前缀
                     if text.startswith("/"):
                         text = text.lstrip("/")
@@ -255,8 +282,8 @@ async def main():
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"主循环错误: {e}")
-                await asyncio.sleep(5)
+                logger.error(f"主循环错误: {e}，10秒后重连...")
+                await asyncio.sleep(10)
 
 
 if __name__ == "__main__":
