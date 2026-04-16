@@ -207,7 +207,7 @@ class TestR6RoleLeakage:
 
 class TestFailureSamples:
     def test_total_count(self):
-        assert len(ALL_SAMPLES) == 21
+        assert len(ALL_SAMPLES) == 23
 
     def test_l3_definitions(self):
         l3 = get_samples_by_level("L3")
