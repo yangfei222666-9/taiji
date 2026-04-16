@@ -79,7 +79,8 @@ from evolution.ecosystem import EcosystemManager
 
 # ── 配置 ─────────────────────────────────────────────────────────────────────
 
-load_dotenv(APP_DIR / ".env")
+load_dotenv(APP_DIR.parent / ".env")
+load_dotenv(APP_DIR / ".env", override=True)
 
 DATA_DIR     = APP_DIR / "data"
 HISTORY_DIR  = DATA_DIR / "history"

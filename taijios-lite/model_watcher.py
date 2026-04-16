@@ -21,7 +21,7 @@ os.environ["PYTHONUTF8"] = "1"
 sys.path.insert(0, os.path.dirname(__file__))
 
 from dotenv import load_dotenv
-load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=True)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
 logger = logging.getLogger("model_watcher")
