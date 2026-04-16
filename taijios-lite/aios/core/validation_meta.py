@@ -71,22 +71,30 @@ class ValidationMeta:
         """完整序列化，用于 latency_breakdown.jsonl"""
         return asdict(self)
 
-    def format_status_line(self) -> str:
-        """生成状态行文本，供 bot_core.py 消费"""
-        parts = [f"[{self.model_chain}]"]
+    def format_status_line(self, show_internal: bool = False) -> str:
+        """生成状态行文本，供 bot_core.py 消费
+
+        Args:
+            show_internal: True 显示具体模型名（调试用），False 隐藏（面向用户）
+        """
+        if show_internal:
+            parts = [f"[{self.model_chain}]"]
+        else:
+            # 用户友好：不暴露具体模型名
+            parts = ["[小九]"]
 
         if self.modified:
-            parts.append("已修正")
+            parts.append("已校验修正")
         elif self.verification_status == "passed":
-            parts.append("验证通过")
+            parts.append("已校验")
         elif self.verification_status == "degraded":
-            parts.append(f"降级→{self.validator_model}")
+            parts.append("已校验(备用)")
         elif self.verification_status == "skipped":
-            parts.append("验证跳过")
+            parts.append("快速回复")
         elif self.verification_status == "failed":
-            parts.append("⚠未验证")
+            parts.append("⚠未校验")
         elif self.verification_status == "error":
-            parts.append("⚠生成失败")
+            parts.append("⚠回复异常")
 
         # 延迟归因
         if self.generation_ms > 0 and self.verification_ms > 0:

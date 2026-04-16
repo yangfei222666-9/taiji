@@ -473,19 +473,19 @@ class TaijiBot:
             # P2: ValidationMeta 自带格式化
             status_line = val_meta.format_status_line()
         else:
-            # 兼容旧 dict 格式
+            # 兼容旧 dict 格式（不暴露模型名）
             elapsed = time.time() - _t0
-            status_parts = [f"[{used_model}]"]
+            status_parts = ["[小九]"]
             if val_meta:
                 step2 = val_meta.get("step2", "")
                 if val_meta.get("modified"):
-                    status_parts.append("已修正")
+                    status_parts.append("已校验修正")
                 elif step2 == "skipped":
-                    status_parts.append("验证跳过")
+                    status_parts.append("快速回复")
                 elif step2 == "all_failed":
-                    status_parts.append("⚠未验证")
+                    status_parts.append("⚠未校验")
                 elif step2 in ("gpt", "claude", "gemini"):
-                    status_parts.append("验证通过")
+                    status_parts.append("已校验")
             status_parts.append(f"{elapsed:.1f}s")
             status_line = "｜".join(status_parts)
         parts.append(f"\n---\n{status_line}")
