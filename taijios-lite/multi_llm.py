@@ -114,13 +114,22 @@ class LLMClient:
             contents.append({"role": role, "parts": [{"text": msg["content"]}]})
         contents.append({"role": "user", "parts": [{"text": user_input}]})
 
+        # 思考模型（gemini-2.5-pro 等）用完 token 后 content.parts 为空
+        # 保底 1024 token 确保思考 + 正文都有空间
+        is_thinking_model = "pro" in self.model or "think" in self.model
+        effective_tokens = max(max_tokens, 1024) if is_thinking_model else max_tokens
+
         payload = {
             "contents": contents,
             "generationConfig": {
-                "maxOutputTokens": max_tokens,
+                "maxOutputTokens": effective_tokens,
                 "temperature": temperature,
             }
         }
+        # 思考模型限制思考预算，避免思考吃完所有 token
+        if is_thinking_model:
+            payload["generationConfig"]["thinkingConfig"] = {"thinkingBudget": 512}
+
         # Gemini 原生 system instruction（不用假 user/model 轮）
         if system:
             payload["systemInstruction"] = {"parts": [{"text": system}]}
@@ -139,21 +148,15 @@ class LLMClient:
                     raise RuntimeError(f"Gemini empty response: {data}")
                 content = candidates[0].get("content", {})
                 parts = content.get("parts", [])
-                # 提取文本（有些模型返回 thoughtSignature 而非 text）
-                texts = [p["text"] for p in parts if "text" in p]
+                # 过滤掉 thought=True 的思考过程，只取正文
+                texts = [p["text"] for p in parts
+                         if "text" in p and not p.get("thought", False)]
                 if not texts:
-                    # Gemini thinking model 可能只有 thoughtSignature
-                    # 尝试把最后一个 part 当文本
-                    for p in reversed(parts):
-                        if isinstance(p, dict):
-                            for key in ("text", "thoughtSignature"):
-                                if key in p and isinstance(p[key], str) and len(p[key]) < 500:
-                                    texts = [p[key]]
-                                    break
-                        if texts:
-                            break
+                    # 降级：取所有 text（含思考）
+                    texts = [p["text"] for p in parts if "text" in p]
                 if not texts:
-                    raise RuntimeError(f"Gemini no extractable content")
+                    finish = candidates[0].get("finishReason", "")
+                    raise RuntimeError(f"Gemini no extractable content (finishReason={finish})")
                 return "\n".join(texts)
             except Exception as e:
                 if attempt == 0 and _is_transient(e):

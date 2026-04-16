@@ -653,7 +653,7 @@ class Pulse:
         )
 
         try:
-            results = cross_validate(prompt, models=["claude", "deepseek", "gemini"],
+            results = cross_validate(prompt, models=["claude", "deepseek", "gemini", "gpt"],
                                      max_tokens=100, temperature=0)
             plausible_count = sum(
                 1 for r in results.values()
