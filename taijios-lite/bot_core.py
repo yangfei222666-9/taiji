@@ -373,6 +373,17 @@ class TaijiBot:
         except ImportError:
             pass
 
+        # 7.6 实时数据注入 — 检测到实时意图时自动查询并注入 system prompt
+        realtime_context = ""
+        try:
+            from aios.core.realtime_data import query_realtime
+            rt = query_realtime(message)
+            if rt:
+                realtime_context = f"\n\n## 实时数据（刚刚查询，可直接引用）\n{rt}\n"
+                system = system + realtime_context
+        except ImportError:
+            pass
+
         # 8. 调用 AI（强制两阶段：DeepSeek 生成 → GPT-5.4 验证）
         _t0 = time.time()
         used_model = "deepseek→gpt"
