@@ -1,6 +1,9 @@
 """
 TaijiOS 失败样本库 — 结构化数据
-20个样本 + L3活跃计数接口（Ising心跳联动）
+21个样本 + L3活跃计数接口（Ising心跳联动）
+
+依赖方向：failure_samples ← failure_rules ← multi_llm
+failure_samples 禁止 import failure_rules，避免循环依赖
 """
 
 from dataclasses import dataclass, field

@@ -21,8 +21,15 @@ except ImportError:
 
 try:
     from aios.core.failure_samples import should_force_full_validation as _should_force_full
+    from aios.core.failure_samples import get_active_l3_count as _get_l3_count
 except ImportError:
     _should_force_full = None
+    _get_l3_count = None
+
+try:
+    from aios.core.validation_meta import ValidationMeta
+except ImportError:
+    ValidationMeta = None
 
 logger = logging.getLogger("multi_llm")
 
@@ -399,67 +406,118 @@ def ensemble_call(system: str, history: list, user_input: str,
     return "[错误] 所有模型均不可用", "none"
 
 
-def _run_rules_safe(original: str, verified: str, val_meta: dict) -> list[dict]:
+def _run_rules_safe(original: str, verified: str, val_meta) -> list[dict]:
     """安全调用失败样本库规则引擎，返回完整结构化结果"""
     if _run_failure_rules is None:
         return []
     try:
-        return _run_failure_rules(original, verified, val_meta)
+        # val_meta 可能是 ValidationMeta 或 dict，统一转 dict 给规则引擎
+        if hasattr(val_meta, '_to_compat_dict'):
+            meta_dict = val_meta._to_compat_dict()
+        elif isinstance(val_meta, dict):
+            meta_dict = val_meta
+        else:
+            meta_dict = {}
+        return _run_failure_rules(original, verified, meta_dict)
     except Exception as e:
         logger.warning(f"[validated_call] failure_rules 执行异常: {e}")
         return []
 
 
 def validated_call(system: str, history: list, user_input: str,
-                   max_tokens: int = 2000) -> tuple[str, dict]:
+                   max_tokens: int = 2000) -> tuple[str, "ValidationMeta | dict"]:
     """
     强制两阶段流水线：DeepSeek 生成 → GPT-5.4 审核/修正。
     集成失败样本库检测规则 + Ising心跳联动。
 
     Returns:
-        (最终回答, meta)
-        meta 包含 step1/step2/modified/triggered_rules
+        (最终回答, ValidationMeta) — ValidationMeta 支持 meta["step1"] 兼容访问
     """
-    # ── Ising 心跳检查：L3 活跃数超阈值时禁止降级 ──────────────
-    block_fallback = _should_force_full() if _should_force_full else False
+    _t0 = time.time()
+
+    # ── Ising 心跳检查 ──────────────────────────────────────────
+    _block = _should_force_full() if _should_force_full else False
+    _l3_count = _get_l3_count() if _get_l3_count else 0
+
+    def _make_meta(**kwargs) -> "ValidationMeta | dict":
+        """构建 ValidationMeta，缺失时降级为 dict"""
+        if ValidationMeta is None:
+            return {
+                "step1": kwargs.get("primary_model", ""),
+                "step2": kwargs.get("validator_model") or "skipped",
+                "modified": kwargs.get("modified", False),
+                "triggered_rules": kwargs.get("triggered_rules", []),
+            }
+        return ValidationMeta(
+            block_fallback=_block,
+            active_l3_count_at_call=_l3_count,
+            **kwargs,
+        )
 
     # ── Step 1: DeepSeek 生成 ──────────────────────────────────────
     ds = _registry.get("deepseek")
     if not ds:
         _track_validation("ds_unavailable")
         reply, model = ensemble_call(system, history, user_input)
-        return reply, {"step1": model, "step2": "skipped", "modified": False, "triggered_rules": []}
+        elapsed = (time.time() - _t0) * 1000
+        meta = _make_meta(
+            final_content=reply, primary_model=model,
+            model_chain=model, verification_status="skipped",
+            total_ms=elapsed,
+        )
+        return reply, meta
 
     ds_reply = None
+    _t_gen = time.time()
     try:
         ds_reply = ds.call(system, history, user_input, max_tokens=max_tokens)
     except Exception as e:
         logger.warning(f"[validated_call] DeepSeek failed: {e}, fallback to gpt direct")
         _track_validation("ds_failed")
+        gen_ms = (time.time() - _t_gen) * 1000
         gpt = _registry.get("gpt")
         if gpt:
             try:
                 reply = gpt.call(system, history, user_input, max_tokens=max_tokens)
-                return reply, {"step1": "gpt_direct", "step2": "skipped", "modified": False, "triggered_rules": []}
+                elapsed = (time.time() - _t0) * 1000
+                meta = _make_meta(
+                    final_content=reply, primary_model="gpt_direct",
+                    model_chain="gpt_direct", verification_status="skipped",
+                    generation_ms=gen_ms, total_ms=elapsed,
+                )
+                return reply, meta
             except Exception:
                 pass
-        return f"[错误] DeepSeek 不可用: {e}", {"step1": "error", "step2": "skipped", "modified": False, "triggered_rules": []}
+        elapsed = (time.time() - _t0) * 1000
+        err_msg = f"[错误] DeepSeek 不可用: {e}"
+        meta = _make_meta(
+            final_content=err_msg, primary_model="error",
+            model_chain="error", verification_status="error",
+            generation_ms=gen_ms, total_ms=elapsed,
+        )
+        return err_msg, meta
 
-    # ── Step 2: GPT-5.4 审核（精简prompt + 降级策略）──────────────
+    gen_ms = (time.time() - _t_gen) * 1000
+
+    # ── Step 2: GPT-5.4 审核 ──────────────────────────────────────
     gpt = _registry.get("gpt")
     if not gpt:
-        logger.info("[validated_call] GPT 未注册，跳过验证，直接返回 DeepSeek 结果")
+        logger.info("[validated_call] GPT 未注册，跳过验证")
         _track_validation("gpt_unavailable")
-        meta = {"step1": "deepseek", "step2": "skipped", "modified": False}
-        meta["triggered_rules"] = _run_rules_safe(ds_reply, ds_reply, meta)
+        elapsed = (time.time() - _t0) * 1000
+        meta = _make_meta(
+            final_content=ds_reply, primary_model="deepseek",
+            model_chain="deepseek", verification_status="skipped",
+            generation_ms=gen_ms, total_ms=elapsed,
+        )
+        meta.triggered_rules = _run_rules_safe(ds_reply, ds_reply, meta) if ValidationMeta else []
         return ds_reply, meta
 
-    # 精简验证prompt：只发核心内容，减少token和延迟
+    # 精简验证prompt
     validator_system = (
         "质检员。审核初稿，有错则修正后输出完整版，无错则原样输出。"
         "保持语言风格一致，不解释审核过程。"
     )
-    # 截断过长的初稿（>2000字时只发前1500+后500，减少验证延迟）
     if len(ds_reply) > 2000:
         trimmed = ds_reply[:1500] + "\n...(中间省略)...\n" + ds_reply[-500:]
     else:
@@ -467,7 +525,6 @@ def validated_call(system: str, history: list, user_input: str,
     validator_prompt = f"问：{user_input}\n\n初稿：\n{trimmed}"
 
     def _do_validate(client, name):
-        """执行验证并返回结果"""
         reply = client.call(
             validator_system, [], validator_prompt,
             max_tokens=max_tokens, temperature=0.3
@@ -481,39 +538,64 @@ def validated_call(system: str, history: list, user_input: str,
         return reply, modified
 
     # 主验证：GPT-5.4
+    _t_val = time.time()
     try:
         gpt_reply, modified = _do_validate(gpt, "GPT-5.4")
         _track_validation("gpt_ok")
-        meta = {"step1": "deepseek", "step2": "gpt", "modified": modified}
-        meta["triggered_rules"] = _run_rules_safe(ds_reply, gpt_reply, meta)
+        val_ms = (time.time() - _t_val) * 1000
+        elapsed = (time.time() - _t0) * 1000
+        status = "modified" if modified else "passed"
+        meta = _make_meta(
+            final_content=gpt_reply, primary_model="deepseek",
+            validator_model="gpt", model_chain="deepseek→gpt",
+            verification_status=status, modified=modified,
+            generation_ms=gen_ms, verification_ms=val_ms, total_ms=elapsed,
+        )
+        meta.triggered_rules = _run_rules_safe(ds_reply, gpt_reply, meta)
         return gpt_reply, meta
     except Exception as e:
         logger.warning(f"[validated_call] GPT 验证失败: {e}")
         _track_validation("gpt_error")
 
-    # 降级验证：GPT失败时尝试Claude/Gemini
-    # Ising心跳：block_fallback=True 时禁止降级
-    if not block_fallback and _validation_timeout_rate() < 0.3:
-        for fallback_name in ["claude", "gemini"]:
-            fb = _registry.get(fallback_name)
+    # 降级验证
+    if not _block and _validation_timeout_rate() < 0.3:
+        for fb_name in ["claude", "gemini"]:
+            fb = _registry.get(fb_name)
             if not fb:
                 continue
+            _t_fb = time.time()
             try:
-                fb_reply, modified = _do_validate(fb, fallback_name)
-                _track_validation(f"{fallback_name}_ok")
-                meta = {"step1": "deepseek", "step2": fallback_name, "modified": modified}
-                meta["triggered_rules"] = _run_rules_safe(ds_reply, fb_reply, meta)
+                fb_reply, modified = _do_validate(fb, fb_name)
+                _track_validation(f"{fb_name}_ok")
+                val_ms = (time.time() - _t_fb) * 1000
+                elapsed = (time.time() - _t0) * 1000
+                status = "modified" if modified else "degraded"
+                meta = _make_meta(
+                    final_content=fb_reply, primary_model="deepseek",
+                    validator_model=fb_name, model_chain=f"deepseek→{fb_name}",
+                    verification_status=status, modified=modified,
+                    degraded=True, degradation_reason="gpt_timeout",
+                    generation_ms=gen_ms, verification_ms=val_ms,
+                    degradation_ms=val_ms, total_ms=elapsed,
+                )
+                meta.triggered_rules = _run_rules_safe(ds_reply, fb_reply, meta)
                 return fb_reply, meta
             except Exception as e2:
-                logger.warning(f"[validated_call] {fallback_name} 降级验证也失败: {e2}")
-                _track_validation(f"{fallback_name}_error")
+                logger.warning(f"[validated_call] {fb_name} 降级验证也失败: {e2}")
+                _track_validation(f"{fb_name}_error")
                 continue
-    elif block_fallback:
-        logger.warning("[validated_call] Ising心跳禁止降级（L3活跃数超阈值），返回未验证原文")
+    elif _block:
+        logger.warning("[validated_call] Ising心跳禁止降级（L3活跃数超阈值）")
 
-    # 全部失败：返回DeepSeek原始回答
+    # 全部失败
     _track_validation("all_failed")
-    logger.warning("[validated_call] 所有验证模型均失败，返回 DeepSeek 原始回答")
-    meta = {"step1": "deepseek", "step2": "all_failed", "modified": False}
-    meta["triggered_rules"] = _run_rules_safe(ds_reply, ds_reply, meta)
+    logger.warning("[validated_call] 所有验证模型均失败，返回未验证原文")
+    elapsed = (time.time() - _t0) * 1000
+    meta = _make_meta(
+        final_content=ds_reply, primary_model="deepseek",
+        model_chain="deepseek→all_failed", verification_status="failed",
+        degraded=True, degradation_reason="all_failed",
+        generation_ms=gen_ms, total_ms=elapsed,
+    )
+    meta.triggered_rules = _run_rules_safe(ds_reply, ds_reply, meta)
     return ds_reply, meta

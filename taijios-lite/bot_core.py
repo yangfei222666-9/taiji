@@ -453,20 +453,26 @@ class TaijiBot:
             parts.append(achieve_text)
 
         # 15. 状态行 — 让用户看到管道运行情况
-        elapsed = time.time() - _t0
-        status_parts = [f"[{used_model}]"]
-        if val_meta:
-            step2 = val_meta.get("step2", "")
-            if val_meta.get("modified"):
-                status_parts.append("已修正")
-            elif step2 == "skipped":
-                status_parts.append("验证跳过")
-            elif step2 == "all_failed":
-                status_parts.append("⚠未验证")
-            elif step2 in ("gpt", "claude", "gemini"):
-                status_parts.append("验证通过")
-        status_parts.append(f"{elapsed:.1f}s")
-        parts.append(f"\n---\n{'｜'.join(status_parts)}")
+        if val_meta and hasattr(val_meta, 'format_status_line'):
+            # P2: ValidationMeta 自带格式化
+            status_line = val_meta.format_status_line()
+        else:
+            # 兼容旧 dict 格式
+            elapsed = time.time() - _t0
+            status_parts = [f"[{used_model}]"]
+            if val_meta:
+                step2 = val_meta.get("step2", "")
+                if val_meta.get("modified"):
+                    status_parts.append("已修正")
+                elif step2 == "skipped":
+                    status_parts.append("验证跳过")
+                elif step2 == "all_failed":
+                    status_parts.append("⚠未验证")
+                elif step2 in ("gpt", "claude", "gemini"):
+                    status_parts.append("验证通过")
+            status_parts.append(f"{elapsed:.1f}s")
+            status_line = "｜".join(status_parts)
+        parts.append(f"\n---\n{status_line}")
 
         return "\n".join(parts)
 
