@@ -371,8 +371,8 @@ class TaijiBot:
         try:
             if self.multi_models:
                 reply, val_meta = validated_call(system, session.history, message)
-                used_model = f"{val_meta['step1']}→{val_meta['step2']}"
-                if val_meta.get("modified"):
+                used_model = val_meta.model_chain if hasattr(val_meta, 'model_chain') else f"{val_meta['step1']}→{val_meta['step2']}"
+                if (hasattr(val_meta, 'modified') and val_meta.modified) or (isinstance(val_meta, dict) and val_meta.get("modified")):
                     logger.info(f"[chat] GPT-5.4 修正了 DeepSeek 回答")
             else:
                 # 降级：多模型未初始化，单模型兜底

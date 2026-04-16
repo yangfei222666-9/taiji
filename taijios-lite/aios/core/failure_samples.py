@@ -299,11 +299,12 @@ def get_active_l3_count(window_seconds: int = None) -> int:
         return sum(1 for e in _l3_trigger_history if e["ts"] > cutoff)
 
 
-def should_force_full_validation() -> bool:
-    """Ising联动：是否应强制4模型验证禁止降级
-    消费端只调这个函数，不直接读阈值。
-    """
+def should_block_fallback() -> bool:
+    """Ising联动：L3触发活跃数超过阈值时是否禁止降级到单模型"""
     return get_active_l3_count() > L3_ISING_THRESHOLD
+
+# 兼容旧调用点
+should_force_full_validation = should_block_fallback
 
 
 def _reset_l3_history():

@@ -20,10 +20,10 @@ except ImportError:
     _run_failure_rules = None
 
 try:
-    from aios.core.failure_samples import should_force_full_validation as _should_force_full
+    from aios.core.failure_samples import should_block_fallback as _should_block_fallback
     from aios.core.failure_samples import get_active_l3_count as _get_l3_count
 except ImportError:
-    _should_force_full = None
+    _should_block_fallback = None
     _get_l3_count = None
 
 try:
@@ -436,7 +436,7 @@ def validated_call(system: str, history: list, user_input: str,
     _t0 = time.time()
 
     # ── Ising 心跳检查 ──────────────────────────────────────────
-    _block = _should_force_full() if _should_force_full else False
+    _block = _should_block_fallback() if _should_block_fallback else False
     _l3_count = _get_l3_count() if _get_l3_count else 0
 
     def _make_meta(**kwargs) -> "ValidationMeta | dict":
