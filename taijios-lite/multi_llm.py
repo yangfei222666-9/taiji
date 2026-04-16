@@ -13,6 +13,17 @@ import requests
 from typing import Optional
 from collections import deque
 
+# 失败样本库规则引擎（可选依赖，缺失不影响主流程）
+try:
+    from aios.core.failure_rules import run_failure_rules as _run_failure_rules
+except ImportError:
+    _run_failure_rules = None
+
+try:
+    from aios.core.failure_samples import should_force_full_validation as _should_force_full
+except ImportError:
+    _should_force_full = None
+
 logger = logging.getLogger("multi_llm")
 
 
@@ -388,14 +399,12 @@ def ensemble_call(system: str, history: list, user_input: str,
     return "[错误] 所有模型均不可用", "none"
 
 
-def _run_rules_safe(original: str, verified: str, val_meta: dict) -> list[str]:
-    """安全调用失败样本库规则引擎，失败时不影响主流程"""
-    try:
-        from aios.core.failure_rules import run_failure_rules
-        results = run_failure_rules(original, verified, val_meta)
-        return [r["rule"] for r in results]
-    except ImportError:
+def _run_rules_safe(original: str, verified: str, val_meta: dict) -> list[dict]:
+    """安全调用失败样本库规则引擎，返回完整结构化结果"""
+    if _run_failure_rules is None:
         return []
+    try:
+        return _run_failure_rules(original, verified, val_meta)
     except Exception as e:
         logger.warning(f"[validated_call] failure_rules 执行异常: {e}")
         return []
@@ -412,11 +421,7 @@ def validated_call(system: str, history: list, user_input: str,
         meta 包含 step1/step2/modified/triggered_rules
     """
     # ── Ising 心跳检查：L3 活跃数超阈值时禁止降级 ──────────────
-    try:
-        from aios.core.failure_samples import should_force_full_validation
-        force_full = should_force_full_validation()
-    except ImportError:
-        force_full = False
+    block_fallback = _should_force_full() if _should_force_full else False
 
     # ── Step 1: DeepSeek 生成 ──────────────────────────────────────
     ds = _registry.get("deepseek")
@@ -487,8 +492,8 @@ def validated_call(system: str, history: list, user_input: str,
         _track_validation("gpt_error")
 
     # 降级验证：GPT失败时尝试Claude/Gemini
-    # Ising心跳：force_full=True 时禁止降级到单模型
-    if not force_full and _validation_timeout_rate() < 0.3:
+    # Ising心跳：block_fallback=True 时禁止降级
+    if not block_fallback and _validation_timeout_rate() < 0.3:
         for fallback_name in ["claude", "gemini"]:
             fb = _registry.get(fallback_name)
             if not fb:
@@ -503,7 +508,7 @@ def validated_call(system: str, history: list, user_input: str,
                 logger.warning(f"[validated_call] {fallback_name} 降级验证也失败: {e2}")
                 _track_validation(f"{fallback_name}_error")
                 continue
-    elif force_full:
+    elif block_fallback:
         logger.warning("[validated_call] Ising心跳禁止降级（L3活跃数超阈值），返回未验证原文")
 
     # 全部失败：返回DeepSeek原始回答
