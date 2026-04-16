@@ -36,6 +36,11 @@ try:
 except ImportError:
     _log_meta = None
 
+try:
+    from aios.core.system_temperature import observe as _observe_temp
+except ImportError:
+    _observe_temp = None
+
 logger = logging.getLogger("multi_llm")
 
 
@@ -412,12 +417,17 @@ def ensemble_call(system: str, history: list, user_input: str,
 
 
 def _return_with_log(reply: str, meta) -> tuple:
-    """validated_call 统一出口：写延迟日志后返回"""
+    """validated_call 统一出口：写延迟日志 + 温度计观察"""
     if _log_meta and meta:
         try:
             _log_meta(meta)
         except Exception as e:
             logger.warning(f"[validated_call] latency log 写入异常: {e}")
+    if _observe_temp and meta:
+        try:
+            _observe_temp(meta)
+        except Exception as e:
+            logger.warning(f"[validated_call] temperature observe 异常: {e}")
     return reply, meta
 
 
