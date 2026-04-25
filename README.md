@@ -25,6 +25,20 @@
 
 ---
 
+## Public entry 公开入口
+
+This is the main TaijiOS repository.
+
+- Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
+- Legacy prototype: [TaijiOS](https://github.com/yangfei222666-9/TaijiOS)
+- Lite prototype / example pack: [TaijiOS-Lite](https://github.com/yangfei222666-9/TaijiOS-Lite)
+- Standalone reliability spin-off: [self-improving-loop](https://github.com/yangfei222666-9/self-improving-loop)
+- Standalone reasoning skill: [zhuge-skill](https://github.com/yangfei222666-9/zhuge-skill)
+
+If you are new here, start with the live HUD demo, then read this repository. The other repos are either spin-offs or historical prototypes.
+
+---
+
 > 这个项目由一个不会写代码的人，用多 AI 协作搭建而成。
 >
 > This project was built by a non-programmer through multi-AI collaboration.
