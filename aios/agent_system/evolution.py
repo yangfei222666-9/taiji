@@ -87,7 +87,13 @@ class AgentEvolution:
             }
         """
         if not self.task_log_file.exists():
-            return {"total_tasks": 0, "failed_tasks": 0, "failure_rate": 0.0}
+            return {
+                "total_tasks": 0,
+                "failed_tasks": 0,
+                "failure_rate": 0.0,
+                "failure_patterns": {},
+                "suggestions": [],
+            }
 
         cutoff_time = int(time.time()) - (lookback_hours * 3600)
         
@@ -134,11 +140,11 @@ class AgentEvolution:
         """鐢熸垚鏀硅繘寤鸿"""
         suggestions = []
 
-        # 楂樺け璐ョ巼 鈫?寤鸿璋冩暣 thinking level
+        # High failure rate -> raise reasoning depth.
         if failure_rate > 0.3:
-            suggestions.append("澶辫触鐜囪繃楂橈紙>30%锛夛紝寤鸿鎻愬崌 thinking level 鍒?'medium' 鎴?'high'")
+            suggestions.append("失败率超过 30%，建议将 thinking level 提升到 'medium' 或 'high'")
 
-        # 鐗瑰畾浠诲姟绫诲瀷澶辫触澶?鈫?寤鸿娣诲姞鎶€鑳芥垨璋冩暣宸ュ叿鏉冮檺
+        # Repeated failures in one task type -> suggest skill or permission changes.
         for task_type, data in failure_patterns.items():
             if data["count"] >= 3:
                 suggestions.append(f"{task_type} 任务失败 {data['count']} 次，建议：")
@@ -155,7 +161,7 @@ class AgentEvolution:
                     suggestions.append("  - 添加 'system-resource-monitor' 技能")
                     suggestions.append("  - 确保 'exec' 工具权限")
 
-        # 甯歌閿欒妯″紡鍒嗘瀽
+        # Common error pattern analysis.
         all_errors = []
         for data in failure_patterns.values():
             all_errors.extend(data["errors"])
@@ -260,69 +266,64 @@ class AgentEvolution:
                 if record["agent_id"] == agent_id:
                     history.append(record)
 
-        # 鎸夋椂闂村€掑簭
+        # Sort newest first.
         history.sort(key=lambda x: x["timestamp"], reverse=True)
         return history[:limit]
 
     def generate_evolution_report(self, agent_id: str) -> str:
-        """鐢熸垚 Agent 杩涘寲鎶ュ憡"""
+        """生成 Agent 进化报告"""
         analysis = self.analyze_failures(agent_id, lookback_hours=24)
         history = self.get_evolution_history(agent_id, limit=5)
         pending = self.get_pending_suggestions(agent_id)
 
-        report = f"# Agent {agent_id} 杩涘寲鎶ュ憡\n\n"
-        report += f"**鐢熸垚鏃堕棿锛?* {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        report = f"# Agent {agent_id} 进化报告\n\n"
+        report += f"**生成时间:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
-        # 鎬ц兘鍒嗘瀽
-        report += "## [REPORT] 鎬ц兘鍒嗘瀽锛堟渶杩?4灏忔椂锛塡n\n"
-        report += f"- 鎬讳换鍔℃暟锛歿analysis['total_tasks']}\n"
-        report += f"- 澶辫触浠诲姟鏁帮細{analysis['failed_tasks']}\n"
-        report += f"- 澶辫触鐜囷細{analysis['failure_rate']:.1%}\n\n"
+        report += "## [REPORT] 性能分析（最近 24 小时）\n\n"
+        report += f"- 总任务数: {analysis['total_tasks']}\n"
+        report += f"- 失败任务数: {analysis['failed_tasks']}\n"
+        report += f"- 失败率: {analysis['failure_rate']:.1%}\n\n"
 
-        # 澶辫触妯″紡
         if analysis['failure_patterns']:
-            report += "## [WARN] 澶辫触妯″紡\n\n"
+            report += "## [WARN] 失败模式\n\n"
             for task_type, data in analysis['failure_patterns'].items():
-                report += f"- **{task_type}**锛氬け璐?{data['count']} 娆n"
+                report += f"- **{task_type}**: 失败 {data['count']} 次\n"
             report += "\n"
 
-        # 鏀硅繘寤鸿
         if analysis['suggestions']:
-            report += "## [IDEA] 鏀硅繘寤鸿\n\n"
+            report += "## [IDEA] 改进建议\n\n"
             for i, suggestion in enumerate(analysis['suggestions'], 1):
                 report += f"{i}. {suggestion}\n"
             report += "\n"
 
-        # 寰呭鏍稿缓璁?
         if pending:
-            report += "## 馃搵 寰呭鏍稿缓璁甛n\n"
+            report += "## 待审核建议\n\n"
             for suggestion in pending:
-                report += f"- **{suggestion['type']}**锛歿suggestion['description']}\n"
+                report += f"- **{suggestion['type']}**: {suggestion['description']}\n"
             report += "\n"
 
-        # 杩涘寲鍘嗗彶
         if history:
-            report += "## 馃摐 杩涘寲鍘嗗彶锛堟渶杩?娆★級\n\n"
+            report += "## 进化历史（最近 5 次）\n\n"
             for record in history:
                 time_str = datetime.fromtimestamp(record['timestamp']).strftime('%Y-%m-%d %H:%M')
                 report += f"- **{time_str}** - {record['evolution_type']}\n"
-                report += f"  鍘熷洜锛歿record['reason']}\n"
+                report += f"  原因: {record.get('reason', '')}\n"
             report += "\n"
 
         return report
 
 
-# CLI 鎺ュ彛
+# CLI interface.
 def main():
     import sys
     
     if len(sys.argv) < 2:
-        print("鐢ㄦ硶锛歱ython -m aios.agent_system.evolution <command> [args]")
-        print("\n鍛戒护锛?)
-        print("  analyze <agent_id>     - 鍒嗘瀽 Agent 澶辫触妯″紡")
-        print("  report <agent_id>      - 鐢熸垚杩涘寲鎶ュ憡")
-        print("  suggestions [agent_id] - 鏌ョ湅寰呭鏍稿缓璁?)
-        print("  history <agent_id>     - 鏌ョ湅杩涘寲鍘嗗彶")
+        print("Usage: python -m aios.agent_system.evolution <command> [args]")
+        print("\nCommands:")
+        print("  analyze <agent_id>     - analyze agent failure patterns")
+        print("  report <agent_id>      - generate evolution report")
+        print("  suggestions [agent_id] - list pending suggestions")
+        print("  history <agent_id>     - list evolution history")
         return
 
     evolution = AgentEvolution()
@@ -330,7 +331,7 @@ def main():
 
     if command == "analyze":
         if len(sys.argv) < 3:
-            print("閿欒锛氶渶瑕佹彁渚?agent_id")
+            print("Error: agent_id is required")
             return
         
         agent_id = sys.argv[2]
@@ -339,7 +340,7 @@ def main():
 
     elif command == "report":
         if len(sys.argv) < 3:
-            print("閿欒锛氶渶瑕佹彁渚?agent_id")
+            print("Error: agent_id is required")
             return
         
         agent_id = sys.argv[2]
@@ -353,7 +354,7 @@ def main():
 
     elif command == "history":
         if len(sys.argv) < 3:
-            print("閿欒锛氶渶瑕佹彁渚?agent_id")
+            print("Error: agent_id is required")
             return
         
         agent_id = sys.argv[2]
@@ -361,9 +362,8 @@ def main():
         print(json.dumps(history, ensure_ascii=False, indent=2))
 
     else:
-        print(f"鏈煡鍛戒护锛歿command}")
+        print(f"Unknown command: {command}")
 
 
 if __name__ == "__main__":
     main()
-
