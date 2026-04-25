@@ -32,6 +32,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Agent system smoke
+        run: |
+          python -m compileall -q aios/agent_system
+          python -m aios.agent_system.evolution analyze ci-agent
+          python -m aios.agent_system.evolution report ci-agent
       - name: Compile check
         run: python -m compileall aios/ -q 2>&1 | head -30 || true
       - name: Install flake8
