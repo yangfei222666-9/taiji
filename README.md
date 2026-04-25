@@ -14,13 +14,13 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   <a href="https://github.com/yangfei222666-9/taiji/stargazers"><img src="https://img.shields.io/github/stars/yangfei222666-9/taiji?style=social" alt="Stars" /></a>
   <a href="https://github.com/yangfei222666-9/taiji/issues"><img src="https://img.shields.io/github/issues/yangfei222666-9/taiji" alt="Issues" /></a>
 </p>
 
 <p align="center">
-  <a href="#architecture-架构">架构</a> · <a href="#features-核心能力">能力</a> · <a href="#quick-start-快速开始">快速开始</a> · <a href="#modules-模块">模块</a> · <a href="#contributing-贡献">贡献</a>
+  <a href="#quick-start-快速开始">快速开始</a> · <a href="#why-i-ching-为什么用易经">易经状态机</a> · <a href="#architecture-架构">架构</a> · <a href="#features-核心能力">能力</a> · <a href="#modules-模块">模块</a>
 </p>
 
 ---
@@ -39,11 +39,41 @@ If you are new here, start with the live HUD demo, then read this repository. Th
 
 ---
 
-> 这个项目由一个不会写代码的人，用多 AI 协作搭建而成。
->
-> This project was built by a non-programmer through multi-AI collaboration.
+This is the canonical TaijiOS engineering entrypoint. Start by running the minimal local demo below; the larger I Ching / Ising architecture is documented after the runnable path.
 
 ---
+
+## Quick Start 快速开始
+
+```bash
+# 克隆主仓
+git clone https://github.com/yangfei222666-9/taiji.git
+cd taiji
+
+# 安装依赖
+pip install -e .
+
+# 运行最小示例（无需 API Key、无需 GPU）
+python examples/quickstart_minimal.py
+```
+
+你会看到：
+
+```text
+--- Task: quickstart-001 ---
+  Status: succeeded
+  Attempts: 2
+  Final score: 0.9
+  Self-healed: YES
+
+  Results: 3/3 succeeded
+  Self-healed: 3/3
+  Events logged: 18
+```
+
+发生了什么：3 个任务进入系统 → 首次验证失败(0.35) → 自动注入修复指导 → 重试成功(0.90) → 生成证据链。
+
+这就是太极OS的核心循环：**任务 → 验证 → 失败 → 指导 → 重试 → 交付 → 证据**。
 
 ## Why I Ching? 为什么用易经
 
@@ -131,15 +161,12 @@ graph TB
 | Safe Click 受控点击 | 四闸门安全点击执行器（窗口绑定 + 区域禁点 + 白名单 + OCR 置信度） | ✅ |
 | GitHub Learning 学习管道 | 从开源项目学习：发现 → 分析 → 提炼 → 人工门控 → 固化 | ✅ |
 | Match Analysis 赔率交叉验证 | 多数据源比赛分析 + 赔率交叉验证框架 | ✅ |
-| Skill Auto-Creation 技能自动创建 | 从日志检测可重复模式 → 生成技能草案 → 三层验证 | 🔄 |
 | Pattern Recognition 模式识别 | 从运行数据中识别可优化模式 | ✅ |
 | Ising Heartbeat 物理心跳引擎 | 统计物理 Ising 模型 + 六爻映射，追踪系统状态动力学，346 次心跳实验验证 | ✅ |
 | Multi-LLM Router 多模型路由 | DeepSeek / Gemini / GPT / Claude 四路调用 + 自动降级 + 交叉验证 | ✅ |
 | FastAPI Server REST 接口 | `/api/chat` `/api/hexagram` `/api/cognitive_map` 等，TaijiBot 接入 | ✅ |
 
-> **🔄 Roadmap — Skill Auto-Creation:**
-> 检测模块已完成，草案生成和三层验证（语法/沙箱/回归）进行中。
-> 目标：2026 Q2 末完成端到端闭环，届时 🔄 → ✅。
+> Roadmap items are tracked below instead of being mixed into the completed feature table.
 
 ## Ising Heartbeat 物理心跳引擎
 
@@ -182,38 +209,6 @@ python ising_heartbeat.py --status
 ```
 Python 3.12 · FastAPI · SQLite · pyautogui · edge-tts · Whisper
 ```
-
-## Quick Start 快速开始
-
-```bash
-# 克隆项目
-git clone https://github.com/yangfei222666-9/TaijiOS.git
-cd TaijiOS
-
-# 安装依赖
-pip install -e .
-
-# 运行最小示例（无需 API Key、无需 GPU）
-python examples/quickstart_minimal.py
-```
-
-你会看到：
-
-```
---- Task: quickstart-001 ---
-  Status: succeeded
-  Attempts: 2
-  Final score: 0.9
-  Self-healed: YES
-
-  Results: 3/3 succeeded
-  Self-healed: 3/3
-  Events logged: 18
-```
-
-发生了什么：3 个任务进入系统 → 首次验证失败(0.35) → 自动注入修复指导 → 重试成功(0.90) → 生成证据链。
-
-这就是太极OS的核心循环：**任务 → 验证 → 失败 → 指导 → 重试 → 交付 → 证据**。
 
 ### 启动 LLM Gateway
 
@@ -341,13 +336,25 @@ GITHUB_TOKEN=ghp_...
 
 相关接口已预留抽象基类，开发者可自行实现替代方案。
 
+开源版可独立完整运行；私有模块只用于特定部署的性能增强，不是运行主流程的必需依赖。
+
+## Roadmap 路线图
+
+| Item | Status |
+|------|--------|
+| Skill Auto-Creation 技能自动创建 | 检测模块已完成；草案生成和三层验证（语法/沙箱/回归）仍在推进 |
+
+## Background 背景
+
+TaijiOS was built through multi-AI collaboration. That origin explains the execution style, but it is not the product claim. The claim is the runnable evidence chain above.
+
 ## Contributing 贡献
 
 详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## License
 
-[Apache License 2.0](LICENSE)
+[MIT License](LICENSE)
 
 ---
 
