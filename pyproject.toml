@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "taijios"
 version = "0.1.0"
-description = "AI Operating System — self-improving, autonomous agent framework"
+description = "Hexagram-guided reliability and learning runtime for AI agents"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = {text = "MIT"}
 requires-python = ">=3.10"
 dependencies = [
     "requests>=2.28",

@@ -9,8 +9,8 @@
 <h1 align="center">TaijiOS 太极OS</h1>
 
 <p align="center">
-  融合易经哲学的自学型 AI 操作系统<br>
-  <em>A self-learning AI operating system inspired by I Ching philosophy</em>
+  六爻状态机驱动的 AI Agent 可靠性与学习运行时<br>
+  <em>A hexagram-guided reliability and learning runtime for AI agents</em>
 </p>
 
 <p align="center">
