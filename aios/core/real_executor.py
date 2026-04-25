@@ -5,6 +5,7 @@ Real Executor - 直接调用 Claude API 执行任务
 """
 import sys
 import json
+import os
 import time
 import requests
 from pathlib import Path
@@ -18,7 +19,7 @@ if sys.platform == 'win32':
         pass
 
 # 从 OpenClaw 配置读取 API Key
-CONFIG_FILE = Path.home() / ".openclaw" / "openclaw.json"
+CONFIG_FILE = Path(os.environ.get("OPENCLAW_CONFIG_FILE", Path.home() / ".openclaw" / "openclaw.json"))
 
 def get_api_config():
     """读取 API 配置"""

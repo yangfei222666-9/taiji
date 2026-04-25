@@ -5,6 +5,7 @@
 import json
 from pathlib import Path
 from datetime import datetime
+from aios.agent_system.config_center import agent_system_root
 from agent_status import (
     validate_status_object,
     is_production_ready,
@@ -14,7 +15,7 @@ from agent_status import (
 )
 
 def main():
-    base_path = Path('${TAIJIOS_HOME}/.openclaw/workspace/aios/agent_system')
+    base_path = agent_system_root()
 
     # 读取 agents.json
     agents_file = base_path / 'agents.json'

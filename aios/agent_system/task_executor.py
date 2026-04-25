@@ -32,6 +32,17 @@ MEMORY_MAX_HINTS = int(os.environ.get("MEMORY_MAX_HINTS", "3"))
 MEMORY_MAX_CHARS = int(os.environ.get("MEMORY_MAX_CHARS", "250"))
 
 
+def _warn_optional_failure(event: str, **fields) -> None:
+    """Emit a loud-but-nonblocking warning for optional integrations."""
+    entry = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "level": "warning",
+        "event": event,
+        **fields,
+    }
+    print(json.dumps(entry, ensure_ascii=False), file=sys.stderr, flush=True)
+
+
 def _retrieve_with_timeout(task_desc: str, task_type: str) -> dict:
     """带超时的记忆检索，超时降级为空 context"""
     result = {"hits": [], "latency_ms": 0, "error": None}
@@ -179,8 +190,13 @@ def write_execution_record(
                     "side_effects": side_effects
                 }
             )
-        except Exception:
-            pass  # 静默失败，不影响主流程
+        except Exception as e:
+            _warn_optional_failure(
+                "skill_memory_track_failed",
+                task_id=task_id,
+                agent_id=agent_id,
+                error=str(e),
+            )
 
 
 def write_memory_feedback(task_id: str, memory_ids: list, helpful: bool,
@@ -193,8 +209,12 @@ def write_memory_feedback(task_id: str, memory_ids: list, helpful: bool,
         for mid in memory_ids:
             if mid:
                 mem_feedback(mid, helpful=helpful)
-    except Exception:
-        pass  # feedback 失败不影响主流程
+    except Exception as e:
+        _warn_optional_failure(
+            "memory_feedback_failed",
+            task_id=task_id,
+            error=str(e),
+        )
 
     entry = {
         "ts": datetime.now(timezone.utc).isoformat(),

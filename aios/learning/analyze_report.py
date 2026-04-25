@@ -5,6 +5,8 @@
 import json
 import time
 import sys
+import os
+import subprocess
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -19,15 +21,20 @@ from learning.analyze import (
     AIOS_VERSION,
 )
 
+try:
+    from aios.agent_system.config_center import openclaw_workspace_root
+except ImportError:
+    from agent_system.config_center import openclaw_workspace_root
+
 
 def _get_git_commit() -> str:
     try:
-        import subprocess, os
-        git_exe = r"C:\Program Files\Git\cmd\git.exe"
+        git_exe = os.environ.get("GIT_EXE", "git")
+        workspace = openclaw_workspace_root()
         r = subprocess.run(
             [git_exe, "rev-parse", "--short", "HEAD"],
             capture_output=True, text=True, timeout=3,
-            cwd=os.path.join(os.environ.get("USERPROFILE", ""), ".openclaw", "workspace"),
+            cwd=str(workspace),
         )
         return r.stdout.strip() if r.returncode == 0 else "unknown"
     except Exception:

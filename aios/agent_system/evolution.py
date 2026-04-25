@@ -16,13 +16,15 @@ from typing import Dict, List, Optional
 from datetime import datetime
 from collections import defaultdict
 
+from aios.agent_system.config_center import agent_system_data_dir
+
 
 class AgentEvolution:
     """Agent 杩涘寲寮曟搸"""
 
     def __init__(self, data_dir: str = None):
         if data_dir is None:
-            data_dir = Path.home() / ".openclaw" / "workspace" / "aios" / "agent_system" / "data"
+            data_dir = agent_system_data_dir()
         
         self.data_dir = Path(data_dir)
         self.evolution_dir = self.data_dir / "evolution"

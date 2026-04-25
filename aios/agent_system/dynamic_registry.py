@@ -10,10 +10,13 @@ Dynamic Registry - 运行时 Agent 注册与管理
 """
 
 import json
+import sys
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime, timedelta
+
+from aios.agent_system.config_center import openclaw_workspace_root
 
 
 class DynamicRegistry:
@@ -22,7 +25,7 @@ class DynamicRegistry:
     MAX_AGENTS = 15
 
     def __init__(self, workspace: Optional[Path] = None):
-        self.workspace = Path(workspace or Path.home() / ".openclaw" / "workspace")
+        self.workspace = Path(workspace or openclaw_workspace_root())
         self.data_dir = self.workspace / "aios" / "agent_system" / "data"
         self.registry_file = self.data_dir / "dynamic_registry.json"
         self.configs_file = self.data_dir / "agent_configs.json"
@@ -30,14 +33,24 @@ class DynamicRegistry:
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self._registry = self._load_registry()
 
+    def _warn(self, event: str, **fields) -> None:
+        """Emit a warning without breaking optional registry operations."""
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "level": "warning",
+            "event": event,
+            **fields,
+        }
+        print(json.dumps(entry, ensure_ascii=False), file=sys.stderr, flush=True)
+
     def _load_registry(self) -> Dict:
         """加载注册表"""
         if self.registry_file.exists():
             try:
                 with open(self.registry_file, "r", encoding="utf-8") as f:
                     return json.load(f)
-            except (json.JSONDecodeError, IOError):
-                pass
+            except (json.JSONDecodeError, IOError) as e:
+                self._warn("dynamic_registry_load_failed", path=str(self.registry_file), error=str(e))
         return {"agents": {}, "created_at": datetime.now().isoformat(), "version": "1.0"}
 
     def _save_registry(self):
@@ -52,8 +65,8 @@ class DynamicRegistry:
             try:
                 with open(self.templates_file, "r", encoding="utf-8") as f:
                     return json.load(f)
-            except (json.JSONDecodeError, IOError):
-                pass
+            except (json.JSONDecodeError, IOError) as e:
+                self._warn("agent_templates_load_failed", path=str(self.templates_file), error=str(e))
         return {"templates": {}}
 
     def active_count(self) -> int:
@@ -233,8 +246,13 @@ class DynamicRegistry:
 
             with open(self.configs_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-        except Exception:
-            pass  # 非关键操作，静默失败
+        except Exception as e:
+            self._warn(
+                "agent_configs_sync_failed",
+                agent_id=agent_id,
+                path=str(self.configs_file),
+                error=str(e),
+            )
 
     def _remove_from_configs(self, agent_id: str):
         """从 agent_configs.json 移除"""

@@ -28,13 +28,14 @@ if str(_current_dir) not in sys.path:
     sys.path.insert(0, str(_current_dir))
 
 from dynamic_registry import DynamicRegistry
+from aios.agent_system.config_center import openclaw_workspace_root
 
 
 class MetaAgent:
     """Meta-Agent: 自动检测缺口并设计新 Agent"""
 
     def __init__(self, workspace: Optional[Path] = None):
-        self.workspace = Path(workspace or Path.home() / ".openclaw" / "workspace")
+        self.workspace = Path(workspace or openclaw_workspace_root())
         self.data_dir = self.workspace / "aios" / "agent_system" / "data"
         self.meta_dir = self.data_dir / "meta_agent"
         self.meta_dir.mkdir(parents=True, exist_ok=True)

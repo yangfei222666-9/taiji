@@ -42,7 +42,7 @@ SelfImprovingLoop = None
 try:
     from self_improving_loop import SelfImprovingLoop
 except ImportError as e:
-    pass  # 静默失败
+    print(f"[AutoDispatcher] Optional self_improving_loop unavailable: {e}", file=sys.stderr)
 
 # Workflow Engine（新增）
 WorkflowEngine = None
@@ -341,8 +341,13 @@ class AutoDispatcher:
             )
             task["trace_id"] = tracer.trace_id  # 注入 trace_id，后续步骤沿用
             tracer.created(result_summary=task.get("description", "")[:200])
-        except Exception:
-            pass  # trace 写失败不阻塞主流程
+        except Exception as e:
+            self._log(
+                "warning",
+                "Task tracing failed; continuing without trace_id",
+                task_id=task.get("id"),
+                error=str(e),
+            )
         
         # 通过统一入口写入（带幂等保护）
         queue_mgr = TaskQueueManager(queue_file=self.queue_file)

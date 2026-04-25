@@ -139,8 +139,16 @@ def _handle_app_event(event: Event):
 
         track_app_event(app, status, event.timestamp)
     except Exception as e:
-        # 静默失败，不影响主流程
-        pass
+        _append_action(
+            {
+                "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "trace_id": _current_trace_id,
+                "type": "handler_warning",
+                "priority": "low",
+                "summary": "app_event habit tracking failed",
+                "detail": {"app": app, "status": status, "error": str(e)},
+            }
+        )
 
 
 def _handle_lol_update(event: Event):
