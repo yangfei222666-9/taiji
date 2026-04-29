@@ -30,6 +30,7 @@
 This is the main TaijiOS repository.
 
 - Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
+- 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
 - Legacy prototype: [TaijiOS](https://github.com/yangfei222666-9/TaijiOS)
 - Lite prototype / example pack: [TaijiOS-Lite](https://github.com/yangfei222666-9/TaijiOS-Lite)
 - Standalone reliability spin-off: [self-improving-loop](https://github.com/yangfei222666-9/self-improving-loop)
