@@ -607,7 +607,7 @@ class TaijiBot:
 
         if not updated:
             return ("格式：设置资料 姓名/年龄/性别/职业/目标\n"
-                    "例如：设置资料 杨飞/31/男/创业者/做好TaijiOS")
+                    "例如：设置资料 示例用户/31/男/创业者/做好TaijiOS")
 
         # 保存
         s.save_profile(data)
