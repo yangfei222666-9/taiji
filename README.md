@@ -10,7 +10,8 @@
 
 <p align="center">
   六爻状态机驱动的 AI Agent 可靠性与学习运行时<br>
-  <em>A hexagram-guided reliability and learning runtime for AI agents</em>
+  <em>A hexagram-guided reliability and learning runtime for AI agents</em><br>
+  <strong>Turn agent runs into auditable evidence: verify, retry, recover, and review.</strong>
 </p>
 
 <p align="center">
