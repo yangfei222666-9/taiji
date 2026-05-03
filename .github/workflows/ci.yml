@@ -14,14 +14,37 @@ jobs:
       - name: Secret scan
         run: |
           FOUND=0
-          for pattern in 'AKIA[0-9A-Z]{16}' 'ghp_[A-Za-z0-9]{36}' 'xox[baprs]-'; do
-            if grep -rP "$pattern" --include='*.py' --include='*.json' --include='*.yaml' --include='*.yml' . 2>/dev/null | grep -v '.git/'; then
-              echo "WARNING: Found potential secret matching $pattern"
+          declare -A PATTERNS=(
+            ["aws_access_key"]='AKIA[0-9A-Z]{16}'
+            ["github_pat_legacy"]='ghp_[A-Za-z0-9_]{36}'
+            ["github_pat_fine_grained"]='github_pat_[A-Za-z0-9_]{20,}_[A-Za-z0-9_]{20,}'
+            ["slack_token"]='xox[baprs]-[A-Za-z0-9-]{10,}'
+            ["telegram_bot_token"]='[0-9]{8,10}:AA[A-Za-z0-9_-]{30,}'
+            ["anthropic_key"]='sk-ant-[A-Za-z0-9_-]{20,}'
+            ["openai_project_key"]='sk-proj-[A-Za-z0-9_-]{20,}'
+          )
+          for label in "${!PATTERNS[@]}"; do
+            pattern="${PATTERNS[$label]}"
+            if grep -RPIl "$pattern" \
+              --exclude-dir='.git' \
+              --exclude-dir='.pytest_cache' \
+              --exclude-dir='__pycache__' \
+              --include='*.py' \
+              --include='*.json' \
+              --include='*.yaml' \
+              --include='*.yml' \
+              --include='*.md' \
+              --include='*.txt' \
+              --include='*.toml' \
+              --include='*.ini' \
+              . 2>/dev/null; then
+              echo "::error::High-confidence secret pattern matched: $label"
               FOUND=1
             fi
           done
           if [ $FOUND -eq 1 ]; then
-            echo "::warning::Potential secrets detected — review above"
+            echo "FAIL: High-confidence secret detected. Only file paths were printed; rotate any exposed credential before retrying."
+            exit 1
           fi
           echo "PASS: Secret scan complete"
 
