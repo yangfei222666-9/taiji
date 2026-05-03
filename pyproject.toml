@@ -28,7 +28,6 @@ include = [
     "aios*",
     "worker*",
     "self_improving_loop*",
-    "github_learning*",
     "skill_auto_creation*",
     "match_analysis*",
     "rpa_vision*",

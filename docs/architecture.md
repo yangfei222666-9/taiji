@@ -9,12 +9,12 @@ TaijiOS is a layered AI operating system. Each layer has a clear responsibility 
 ## Layer Diagram 分层图
 
 ```
-Layer 5: GitHub Learning        外部学习层
-         discover → analyze → digest → gate → solidify
+Layer 5: External Learning      外部学习候选层
+         collect → analyze → digest → gate → apply
               │                                  │
               │         learns from               │ writes to
               ▼                                  ▼
-Layer 4: Self-Improving Loop    自进化层
+Layer 4: Reliability Learning   学习/回滚层
          feedback_loop ←→ evolution ←→ policy_learner
               │                │              │
               │ scores         │ evolves      │ rollback
@@ -81,9 +81,9 @@ Task execution with durable state and experience harvesting.
 
 Key design: every task execution produces a run trace. Failed tasks generate experience records that improve future runs.
 
-## Self-Improving Loop (Layer 4) 自进化层
+## Reliability Learning (Layer 4) 学习/回滚层
 
-Safe self-modification with evidence and rollback.
+Learning and rollback proposals with evidence and threshold gates.
 
 | Component | File | Role |
 | --------- | ---- | ---- |
@@ -92,38 +92,35 @@ Safe self-modification with evidence and rollback.
 | PolicyLearner | `aios/core/policy_learner.py` | Learns scheduling/routing policies from experience |
 | Rollback | `self_improving_loop/` | Safe rollback if a self-modification degrades performance |
 
-Key design: every self-modification is gated by a threshold. If the evolution score drops, the system rolls back automatically.
+Key design: learning output is evidence first. A proposal must pass explicit thresholds and tests before it can affect runtime behavior; otherwise it remains a review candidate.
 
-## GitHub Learning (Layer 5) 外部学习层
+## External Learning (Layer 5) 外部学习候选层
 
-Absorbs knowledge from the open-source ecosystem.
+Converts local event history and external research into review candidates. The current open-source repo ships local learning analytics under `aios/learning/`; it does not ship a top-level external GitHub mining package.
 
 | Step | File | Role |
 | ---- | ---- | ---- |
-| Discover | `github_learning/discoverer.py` | GitHub Search API with rotating daily topics |
-| Analyze | `github_learning/analyzer.py` | LLM answers 4 questions: root problem, pitfalls, mechanisms, gate plan |
-| Digest | `github_learning/digester.py` | Extracts concrete mechanisms with idempotent keys |
-| Gate | `github_learning/gate.py` | Human review CLI: list, review, approve, reject |
-| Solidify | `github_learning/solidifier.py` | Approved mechanisms become EchoCore experiences or skill scaffolds |
+| Analyze | `aios/learning/analyze.py` | Computes metrics, top issues, suggestions, and threshold warnings from local events |
+| Report | `aios/learning/analyze_report.py` | Writes structured JSON and daily Markdown reports |
+| Baseline | `aios/learning/baseline.py` | Snapshots metrics history and regression gate state |
+| Extract | `aios/learning/analyze_extract.py` | Normalizes event fields before analysis |
+| Gate | planned | External GitHub mining must feed human-review candidates before any runtime change |
 
-Key design: the gate is always manual. Auto-discovery feeds candidates, humans decide what enters TaijiOS. This prevents the system from "becoming someone else" — it absorbs external knowledge but maintains its own identity.
+Key design: the gate is always manual. External discovery may feed candidates, but humans decide what enters TaijiOS. This prevents the system from treating third-party patterns as verified local behavior.
 
 ## Data Flow 数据流
 
 ```
-External GitHub repos
+Local event logs / external research
        │
-       ▼ discover
-  discovered_repos.jsonl
+       ▼ analyze
+  metrics + top issues + suggestions
        │
-       ▼ analyze (LLM)
-  analyses.jsonl
-       │
-       ▼ digest
-  pending_review/*.json ──→ Human approves/rejects
+       ▼ report / baseline
+  daily_report.md + metrics_history.jsonl ──→ Human approves/rejects candidates
        │                         │
-       ▼ solidify                ▼
-  EchoCore experience      gate_decisions.jsonl
+       ▼ apply after gate         ▼
+  runtime config / tests    gate_decisions.jsonl
        │
        ▼ retrieve (next job)
   Injected into planner system prompt

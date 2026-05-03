@@ -129,45 +129,45 @@ graph TB
         G4[OCR置信度]
     end
 
-    subgraph Learning["Self-Improving 自进化"]
+    subgraph Learning["Reliability Learning 学习/回滚"]
         FB[Feedback 反馈环]
         EVO[Evolution 进化]
         PL[PolicyLearner 策略学习]
         RB[Rollback 安全回滚]
     end
 
-    subgraph GitHub["GitHub Learning 学习管道"]
-        DISC[Discover 发现]
+    subgraph ExternalLearning["External Learning 外部学习候选"]
+        DISC[Collect 收集]
         ANA[Analyze 分析]
         DIG[Digest 提炼]
         GATE[Gate 人工门控]
-        SOL[Solidify 固化]
+        SOL[Apply 审核后纳入]
     end
 
     Core --> Gateway
     Core --> Agent
     Agent --> SafeClick
     Agent --> Learning
-    Learning --> GitHub
+    Learning --> ExternalLearning
 ```
 
 ## Features 核心能力
 
 | 能力 | 说明 | Status |
 |------|------|--------|
-| Event-Driven Core 事件驱动核心 | EventBus + Scheduler + Reactor，所有行为由事件触发 | ✅ |
-| LLM Gateway 统一网关 | 认证、限流、多 Provider 故障转移、审计，12/12 极端场景通过 | ✅ |
-| Agent System 智能体框架 | 任务队列（原子状态转换）、生命周期管理、经验收割 | ✅ |
-| MetaAgent 元智能体 | 自动检测系统缺口 → 设计新 Agent → 沙箱测试 → 动态注册 | ✅ |
-| Self-Improving Loop 自进化环 | 反馈环 + 进化评分 + 策略学习 + 安全回滚 | ✅ |
-| Circuit Breaker 熔断器 | 故障隔离，防止级联崩溃 | ✅ |
-| Safe Click 受控点击 | 四闸门安全点击执行器（窗口绑定 + 区域禁点 + 白名单 + OCR 置信度） | ✅ |
-| GitHub Learning 学习管道 | 从开源项目学习：发现 → 分析 → 提炼 → 人工门控 → 固化 | ✅ |
-| Match Analysis 赔率交叉验证 | 多数据源比赛分析 + 赔率交叉验证框架 | ✅ |
-| Pattern Recognition 模式识别 | 从运行数据中识别可优化模式 | ✅ |
-| Ising Heartbeat 物理心跳引擎 | 统计物理 Ising 模型 + 六爻映射，追踪系统状态动力学，346 次心跳实验验证 | ✅ |
-| Multi-LLM Router 多模型路由 | DeepSeek / Gemini / GPT / Claude 四路调用 + 自动降级 + 交叉验证 | ✅ |
-| FastAPI Server REST 接口 | `/api/chat` `/api/hexagram` `/api/cognitive_map` 等，TaijiBot 接入 | ✅ |
+| Event-Driven Core 事件驱动核心 | EventBus + Scheduler + Reactor，所有行为由事件触发 | verified demo |
+| LLM Gateway 统一网关 | 认证、限流、多 Provider 故障转移、审计 | prototype |
+| Agent System 智能体框架 | 任务队列、生命周期管理、经验收割 | prototype |
+| MetaAgent 元智能体 | 缺口检测、Agent 草案和注册流程 | experimental |
+| Reliability Learning 学习/回滚骨架 | 反馈环 + 进化评分 + 策略学习 + 安全回滚接口 | prototype |
+| Circuit Breaker 熔断器 | 故障隔离，防止级联崩溃 | prototype |
+| Safe Click 受控点击 | 四闸门安全点击执行器（窗口绑定 + 区域禁点 + 白名单 + OCR 置信度） | prototype |
+| External Learning 外部学习候选 | 从外部项目提炼候选机制，人工 review 后才可纳入 | roadmap |
+| Match Analysis 交叉验证框架 | 多数据源分析和交叉验证框架 | prototype |
+| Pattern Recognition 模式识别 | 从运行数据中识别可优化模式 | prototype |
+| Ising Heartbeat 物理心跳引擎 | 统计物理 Ising 模型 + 六爻映射，追踪系统状态动力学 | experimental |
+| Multi-LLM Router 多模型路由 | DeepSeek / Gemini / GPT / Claude 路由与降级接口 | prototype |
+| FastAPI Server REST 接口 | `/api/chat` `/api/hexagram` `/api/cognitive_map` 等，TaijiBot 接入 | prototype |
 
 > Roadmap items are tracked below instead of being mixed into the completed feature table.
 
@@ -220,17 +220,18 @@ export TAIJIOS_GATEWAY_ENABLED=1
 python -m aios.gateway --port 9200
 ```
 
-### 启动 GitHub 学习管道
+### 运行本地学习分析
 
 ```bash
-export GITHUB_TOKEN=your-github-token
-python -m github_learning discover --limit 10
-python -m github_learning analyze
-python -m github_learning digest
-python -m github_learning gate list
-python -m github_learning gate approve <id>
-python -m github_learning solidify
+PYTHONPATH=aios python -m learning.analyze_report json
+PYTHONPATH=aios python -m learning.analyze_report report
+PYTHONPATH=aios python -m learning.baseline gate
 ```
+
+The current open-source repo ships local event analytics under `aios/learning/`.
+External GitHub mining is not shipped as a top-level package in this repo;
+external project research should enter as review candidates, not as automatic
+self-modification.
 
 ## Modules 模块
 
@@ -241,8 +242,8 @@ TaijiOS/
 │   ├── gateway/           # LLM 统一网关（认证、路由、故障转移、审计）
 │   ├── agent_system/      # 智能体框架（任务队列、执行器、经验引擎、元智能体）
 │   └── storage/           # SQLite 存储层
-├── self_improving_loop/   # 自进化环（反馈、进化、策略学习、回滚）
-├── github_learning/       # GitHub 学习管道（发现→分析→提炼→门控→固化）
+├── self_improving_loop/   # 学习/回滚骨架（反馈、策略学习、阈值、回滚）
+├── aios/learning/         # 本地事件分析、报告、基线和回归门禁
 ├── match_analysis/        # 赔率交叉验证框架
 ├── rpa_vision/            # Safe Click 受控点击验证器
 ├── skill_auto_creation/   # 技能自动创建（检测→草案→验证→反馈→注册）
@@ -257,8 +258,8 @@ TaijiOS/
 | `aios/gateway/` | Unified LLM Gateway — auth, rate limiting, provider failover, audit, streaming | 统一 LLM 网关 — 认证、限流、故障转移、审计、流式传输 |
 | `aios/agent_system/` | Task queue, agent lifecycle, experience harvesting, meta-agent, evolution, Ising heartbeat | 任务队列、智能体生命周期、经验收割、元智能体、进化、Ising 心跳引擎 |
 | `taijios-lite/` | Lightweight server — FastAPI `/api/chat`, multi-LLM router, Feishu/Telegram bot | 轻量服务 — FastAPI 接口、多模型路由、飞书/Telegram Bot |
-| `self_improving_loop/` | Safe self-modification with rollback and threshold gates | 安全自修改 + 回滚 + 阈值门控 |
-| `github_learning/` | Learn from GitHub: discover, analyze, digest, gate, solidify | 从 GitHub 学习：发现、分析、提炼、门控、固化 |
+| `self_improving_loop/` | Learning and rollback skeleton with threshold gates | 学习/回滚骨架 + 阈值门控 |
+| `aios/learning/` | Local event analytics, daily report, baseline, regression gate | 本地事件分析、日报、基线、回归门禁 |
 | `match_analysis/` | Multi-source match analysis with odds cross-validation | 多数据源比赛分析 + 赔率交叉验证 |
 | `rpa_vision/` | Safe Click validator — 4-gate controlled click executor | 安全点击验证器 — 四闸门受控点击执行器 |
 | `skill_auto_creation/` | Auto-detect patterns → draft skills → 3-layer validation | 自动检测模式 → 生成技能草案 → 三层验证 |
@@ -290,8 +291,9 @@ FEISHU_APP_SECRET=...
 TAIJIOS_GATEWAY_ENABLED=1
 TAIJIOS_API_TOKEN=your-token
 
-# ── GitHub Learning ───────────────────────────────
-GITHUB_TOKEN=ghp_...
+# ── External research (roadmap) ───────────────────
+# Current local learning commands do not require GITHUB_TOKEN.
+# If you build external GitHub mining, keep it review-only by default.
 ```
 
 ## Design Principles 设计原则
@@ -346,6 +348,7 @@ GITHUB_TOKEN=ghp_...
 | Item | Status |
 |------|--------|
 | Skill Auto-Creation 技能自动创建 | 检测模块已完成；草案生成和三层验证（语法/沙箱/回归）仍在推进 |
+| External GitHub Learning 外部开源学习 | 当前未随开源包发布；后续应先进入人工 review 队列，再谈固化 |
 
 ## Background 背景
 

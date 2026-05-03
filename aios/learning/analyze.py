@@ -261,8 +261,19 @@ def compute_threshold_warnings(days: int = 7) -> list:
     return warnings
 
 
-# 向后兼容：旧代码 `from learning.analyze import generate_daily_report` 仍可用
-from learning.analyze_report import generate_full_report, generate_daily_report  # noqa: E402, F401
+# 向后兼容：旧代码 `from learning.analyze import generate_daily_report` 仍可用。
+# Keep these imports lazy so `learning.analyze_report` can import this module
+# without hitting a circular import during module initialization.
+def generate_full_report(*args, **kwargs):
+    from learning.analyze_report import generate_full_report as _generate_full_report
+
+    return _generate_full_report(*args, **kwargs)
+
+
+def generate_daily_report(*args, **kwargs):
+    from learning.analyze_report import generate_daily_report as _generate_daily_report
+
+    return _generate_daily_report(*args, **kwargs)
 
 if __name__ == "__main__":
     import json

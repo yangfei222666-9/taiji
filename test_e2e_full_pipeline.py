@@ -2,9 +2,11 @@
 """
 TaijiOS 端到端全链路测试
 启动系统 → 提交任务 → 五引擎路由 → Agent 执行 → 结果写回
-+ taijios-lite 多轮对话（DeepSeek API）
++ taijios-lite 多轮对话（DeepSeek API，可选 live 阶段）
 
-用法: python test_e2e_full_pipeline.py
+用法:
+  python test_e2e_full_pipeline.py                    # 默认跑无 key 阶段
+  DEEPSEEK_API_KEY=sk-... python test_e2e_full_pipeline.py  # 追加 live DeepSeek 阶段
 """
 import sys, os, io, json, time, tempfile, shutil
 from pathlib import Path
@@ -23,7 +25,8 @@ sys.path.insert(0, str(LITE_DIR))
 sys.path.insert(0, str(AGENT_SYS))
 sys.path.insert(0, str(AIOS_DIR))
 
-DEEPSEEK_KEY = os.getenv("DEEPSEEK_API_KEY", "YOUR_DEEPSEEK_API_KEY")
+DEEPSEEK_KEY = os.getenv("DEEPSEEK_API_KEY", "").strip()
+LIVE_DEEPSEEK_ENABLED = bool(DEEPSEEK_KEY)
 MODEL_CONFIG = {
     "provider": "DeepSeek",
     "base_url": "https://api.deepseek.com",
@@ -389,13 +392,21 @@ if __name__ == "__main__":
     print("╚" + "═" * 58 + "╝")
 
     t_start = time.time()
+    live_deepseek_skipped = False
 
     try:
         test_phase1_core_engine()
         test_phase2_router()
         test_phase3_execute_writeback()
         test_phase4_lifecycle()
-        test_phase5_live_conversation()
+        if LIVE_DEEPSEEK_ENABLED:
+            test_phase5_live_conversation()
+        else:
+            live_deepseek_skipped = True
+            print("\n" + "═" * 60)
+            print("  PHASE 5: TaijiOS-Lite 多轮对话（DeepSeek API）")
+            print("═" * 60)
+            print("  跳过: 未设置 DEEPSEEK_API_KEY；默认 e2e 只跑无 key 可复现阶段。")
     except Exception as e:
         print(f"\n💥 致命错误: {e}")
         import traceback
@@ -414,7 +425,9 @@ if __name__ == "__main__":
             print(f"    • {e}")
     print(f"{'═' * 60}")
 
-    if results["failed"] == 0:
+    if results["failed"] == 0 and live_deepseek_skipped:
+        print("\n  🟡 无 key 阶段全绿；live DeepSeek 阶段未验证，不能宣称完整 live e2e。")
+    elif results["failed"] == 0:
         print("\n  🟢 全链路全绿，可以打 tag")
     else:
         print(f"\n  🔴 有 {results['failed']} 项失败，修复后再打 tag")
