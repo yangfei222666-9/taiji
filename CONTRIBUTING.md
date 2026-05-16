@@ -15,8 +15,8 @@
 
 ```bash
 # 1. Fork & Clone
-git clone https://github.com/<your-username>/TaijiOS.git
-cd TaijiOS
+git clone https://github.com/<your-username>/taiji.git
+cd taiji
 
 # 2. 创建分支
 git checkout -b feature/your-feature
@@ -45,6 +45,8 @@ git push origin feature/your-feature
 - **风格**: 遵循你修改的模块的现有风格
 - **日志**: 可观测操作加结构化日志（`logging.info` + JSON payload）
 - **测试**: 新功能需附带测试，修 bug 需附带回归测试
+- **外部 API**: 默认测试和 demo 不依赖 live provider；需要外部 API 时必须显式配置环境变量
+- **审计**: 影响运行时、学习、自动化或验证的改动应留下 event flow、JSONL audit log 或等价证据
 
 ## Commit Convention 提交约定
 
@@ -65,6 +67,8 @@ chore: 构建/工具链
 - [ ] 没有提交 API Key / Token / 密钥
 - [ ] 新功能有对应测试
 - [ ] 改动有清晰的 commit message
+- [ ] 默认路径不需要 live external API
+- [ ] `learning_only` / `degraded` 没有被提升为 judgment、paper-buy、trade 或 promote
 
 ## 五引擎贡献须知
 
@@ -86,9 +90,19 @@ chore: 构建/工具链
 - 密钥访问统一走 `secret_manager.py`
 - 安全问题请私信报告，不要开公开 Issue（详见 [SECURITY.md](SECURITY.md)）
 
+## Demo constraints
+
+The public demo path must remain reproducible:
+
+- learning-only by default
+- deterministic without API keys
+- JSONL audit logs for traceability
+- hard gates before any judgment path
+- graceful degradation when optional integrations are unavailable
+
 ## License
 
-贡献即表示同意以 [Apache License 2.0](LICENSE) 授权你的代码。
+贡献即表示同意以 [MIT License](LICENSE) 授权你的代码。
 
 ---
 
