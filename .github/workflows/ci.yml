@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master, main]
 
+permissions:
+  contents: read
+
 jobs:
   secret-scan:
     runs-on: ubuntu-latest
@@ -83,20 +86,40 @@ jobs:
           python -c "from aios.gateway.errors import GatewayError; print('OK: gateway.errors')"
 
   test:
+    name: Test / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
+          cache: pip
       - name: Install dependencies
         run: |
-          pip install pytest pytest-asyncio
+          pip install pytest pytest-asyncio pytest-cov
           pip install -e .
       - name: Run tests
         run: |
           if [ -d tests ]; then
-            python -m pytest tests/ -q --tb=short
+            python -m pytest tests/ -q --tb=short --cov=aios --cov-report=xml --cov-report=term-missing
           else
             echo "No tests/ directory — skipping"
           fi
+      - name: Upload coverage artifact
+        if: always() && hashFiles('coverage.xml') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml-${{ matrix.python-version }}
+          path: coverage.xml
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.12' && hashFiles('coverage.xml') != ''
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

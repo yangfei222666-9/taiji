@@ -15,6 +15,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/yangfei222666-9/taiji/actions/workflows/ci.yml"><img src="https://github.com/yangfei222666-9/taiji/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   <a href="https://github.com/yangfei222666-9/taiji/stargazers"><img src="https://img.shields.io/github/stars/yangfei222666-9/taiji?style=social" alt="Stars" /></a>
   <a href="https://github.com/yangfei222666-9/taiji/issues"><img src="https://img.shields.io/github/issues/yangfei222666-9/taiji" alt="Issues" /></a>
@@ -43,6 +44,8 @@ If you are new here, start with the live HUD demo, then read this repository. Th
 ---
 
 This is the canonical TaijiOS engineering entrypoint. Start by running the minimal local demo below; the larger I Ching / Ising architecture is documented after the runnable path.
+
+Repository slug is `taiji`; the installable package is currently `taijios` and exposes the `aios` Python modules.
 
 ---
 
@@ -77,6 +80,27 @@ python examples/quickstart_minimal.py
 发生了什么：3 个任务进入系统 → 首次验证失败(0.35) → 自动注入修复指导 → 重试成功(0.90) → 生成证据链。
 
 这就是太极OS的核心循环：**任务 → 验证 → 失败 → 指导 → 重试 → 交付 → 证据**。
+
+### Learning-only demo
+
+Run the audit-log demo without external providers:
+
+```bash
+python examples/demo_app.py
+```
+
+The default path is learning-only and writes JSONL audit evidence. External APIs are disabled unless explicitly enabled:
+
+```bash
+export TAIJI_ENABLE_EXTERNAL_API=false
+```
+
+Run the same demo with Docker:
+
+```bash
+docker build -t taiji-demo .
+docker run --rm taiji-demo
+```
 
 ## Why I Ching? 为什么用易经
 
