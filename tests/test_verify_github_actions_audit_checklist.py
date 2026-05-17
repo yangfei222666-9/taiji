@@ -64,6 +64,14 @@ def test_required_sections_are_consecutive():
     assert [number for number, _ in REQUIRED_SECTIONS] == list(range(21))
 
 
+def test_verifier_avoids_python_311_datetime_utc_symbol():
+    source = VERIFY.read_text(encoding="utf-8")
+
+    assert "from datetime import UTC" not in source
+    assert "datetime.UTC" not in source
+    assert "now(UTC)" not in source
+
+
 def test_cli_writes_artifacts(tmp_path):
     output_dir = tmp_path / "out"
     result = subprocess.run(

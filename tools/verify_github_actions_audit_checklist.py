@@ -5,7 +5,7 @@ import argparse
 import json
 import re
 import subprocess
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -385,7 +385,7 @@ def _safety() -> dict[str, bool]:
 
 
 def _utc_now() -> str:
-    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
