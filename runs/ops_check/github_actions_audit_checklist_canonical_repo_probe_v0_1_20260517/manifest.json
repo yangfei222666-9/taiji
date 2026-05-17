@@ -1,0 +1,13 @@
+{
+  "artifacts": [
+    "summary.json",
+    "event_flow.jsonl",
+    "manifest.json",
+    "snapshot.json",
+    "closeout.md",
+    "github_actions_audit_checklist_verification.json"
+  ],
+  "contract": "AUDIT_CHECKLIST.md",
+  "run_id": "github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517",
+  "scope": "github_actions_audit_checklist_canonical_repo_probe_v0_1"
+}

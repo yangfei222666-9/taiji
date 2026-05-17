@@ -1,0 +1,23 @@
+{
+  "checklist_path": "/Users/weiwei/Desktop/taiji/AUDIT_CHECKLIST.md",
+  "checks": {
+    "all_sections_present_in_order": true,
+    "checklist_exists": true,
+    "code_fences_balanced": true,
+    "forbidden_pass_claims_absent": true,
+    "required_terms_present": true,
+    "secret_patterns_absent": true,
+    "title_present": true
+  },
+  "contract": "AUDIT_CHECKLIST.md",
+  "git": {
+    "dirty_count": 4,
+    "git_available": true,
+    "git_status_available": true,
+    "is_git_repo": true,
+    "staged_count": 0
+  },
+  "run_id": "github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517",
+  "scope": "github_actions_audit_checklist_canonical_repo_probe_v0_1",
+  "verdict": "partial_github_actions_audit_checklist_verified_dirty_tree"
+}

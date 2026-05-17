@@ -1,0 +1,63 @@
+{
+  "artifact_bundle": {
+    "content_echoed": false,
+    "missing": [],
+    "parse_errors": [],
+    "verdict": "local_artifact_bundle_verified"
+  },
+  "artifact_downloaded": false,
+  "audit_pass": false,
+  "can_claim_single_scope_pass": false,
+  "checklist_path": "/Users/weiwei/Desktop/taiji/AUDIT_CHECKLIST.md",
+  "checks": {
+    "all_sections_present_in_order": true,
+    "checklist_exists": true,
+    "code_fences_balanced": true,
+    "forbidden_pass_claims_absent": true,
+    "required_terms_present": true,
+    "secret_patterns_absent": true,
+    "title_present": true
+  },
+  "contract": "AUDIT_CHECKLIST.md",
+  "cosign_verified": false,
+  "deployment_verified": false,
+  "errors": [],
+  "forbidden_pass_claims": [],
+  "gates_defined": 20,
+  "git": {
+    "dirty_count": 4,
+    "git_available": true,
+    "git_status_available": true,
+    "is_git_repo": true,
+    "staged_count": 0
+  },
+  "github_api_called": false,
+  "missing": {
+    "sections": [],
+    "terms": []
+  },
+  "ok": true,
+  "oras_verified": false,
+  "release_verified": false,
+  "repo_pass": false,
+  "runtime_metrics_verified": false,
+  "safety": {
+    "artifact_downloaded": false,
+    "broker_connected": false,
+    "cosign_run": false,
+    "deployed": false,
+    "external_api_called": false,
+    "gh_run": false,
+    "github_token_read": false,
+    "judgment": false,
+    "oras_run": false,
+    "paper_buy": false,
+    "promote": false,
+    "secret_accessed": false,
+    "stage_commit_push": false,
+    "trade_or_order": false
+  },
+  "scope": "github_actions_audit_checklist_canonical_repo_probe_v0_1",
+  "secret_matches": [],
+  "verdict": "partial_github_actions_audit_checklist_verified_dirty_tree"
+}
