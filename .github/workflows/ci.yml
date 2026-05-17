@@ -85,7 +85,7 @@ jobs:
           python -c "from aios.core.circuit_breaker import CircuitBreaker; print('OK: circuit_breaker')"
           python -c "from aios.gateway.errors import GatewayError; print('OK: gateway.errors')"
 
-  test:
+  python-test:
     name: Test / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
@@ -123,3 +123,17 @@ jobs:
           fail_ci_if_error: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: python-test
+    if: always()
+    steps:
+      - name: Check Python matrix result
+        run: |
+          if [ "${{ needs.python-test.result }}" != "success" ]; then
+            echo "Python test matrix did not pass: ${{ needs.python-test.result }}"
+            exit 1
+          fi
+          echo "Python test matrix passed"
