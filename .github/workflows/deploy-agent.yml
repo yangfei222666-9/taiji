@@ -1,0 +1,70 @@
+name: deploy-agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Container image tag
+        required: true
+        default: latest
+      create_or_update_job:
+        description: Create/update the Cloud Run Job after pushing the image
+        required: true
+        type: choice
+        default: 'false'
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-agent:
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
+      GCP_ARTIFACT_REPOSITORY: ${{ vars.GCP_ARTIFACT_REPOSITORY || 'taiji' }}
+      CLOUD_RUN_JOB: ${{ vars.CLOUD_RUN_JOB || 'taiji-agent' }}
+      AGENT_IMAGE_NAME: ${{ vars.AGENT_IMAGE_NAME || 'taiji-agent' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Validate deployment variables
+        run: |
+          test -n "${GCP_PROJECT_ID}"
+          test -n "${GCP_REGION}"
+          test -n "${GCP_ARTIFACT_REPOSITORY}"
+          test -n "${CLOUD_RUN_JOB}"
+          test -n "${AGENT_IMAGE_NAME}"
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker "${GCP_REGION}-docker.pkg.dev" --quiet
+      - name: Build and push agent image
+        run: |
+          IMAGE="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GCP_ARTIFACT_REPOSITORY}/${AGENT_IMAGE_NAME}:${{ github.event.inputs.image_tag }}"
+          docker build -t "${IMAGE}" agent
+          docker push "${IMAGE}"
+          echo "IMAGE=${IMAGE}" >> "$GITHUB_ENV"
+      - name: Create or update Cloud Run Job
+        if: ${{ github.event.inputs.create_or_update_job == 'true' }}
+        run: |
+          if gcloud run jobs describe "${CLOUD_RUN_JOB}" --region="${GCP_REGION}" >/dev/null 2>&1; then
+            gcloud run jobs update "${CLOUD_RUN_JOB}" \
+              --image="${IMAGE}" \
+              --region="${GCP_REGION}" \
+              --task-timeout=30s \
+              --max-retries=0 \
+              --set-env-vars=ARTIFACT_BUCKET=taiji-artifacts,DEMO_RUN_TIMEOUT_SECONDS=30,ARTIFACT_TTL_HOURS=24
+          else
+            gcloud run jobs create "${CLOUD_RUN_JOB}" \
+              --image="${IMAGE}" \
+              --region="${GCP_REGION}" \
+              --task-timeout=30s \
+              --max-retries=0 \
+              --set-env-vars=ARTIFACT_BUCKET=taiji-artifacts,DEMO_RUN_TIMEOUT_SECONDS=30,ARTIFACT_TTL_HOURS=24
+          fi
