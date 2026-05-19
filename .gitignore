@@ -28,6 +28,12 @@ validation_reports/
 jobs/
 audit_logs/
 
+# ── Local ops evidence ──
+# Per-run TaijiOS ops_check evidence is local-only unless explicitly promoted.
+runs/ops_check/*
+!runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/
+!runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/**
+
 # ── Personal data ──
 2026世界杯投注记录.md
 memory/
