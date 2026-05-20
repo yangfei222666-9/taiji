@@ -22,7 +22,16 @@ data/
 lancedb_data/
 lancedb_store/
 lancedb_memory*/
-evidence/
+evidence/*
+!evidence/.gitignore
+!evidence/Makefile
+!evidence/examples/
+!evidence/examples/snapshot.json
+!evidence/schema/
+!evidence/schema/request_audit.schema.json
+!evidence/scripts/
+!evidence/scripts/gen_manifest.sh
+!evidence/scripts/verify_all.sh
 debug_screenshots/
 validation_reports/
 jobs/
