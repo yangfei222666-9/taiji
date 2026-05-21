@@ -1,0 +1,30 @@
+name: ephemeral-run
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Supabase run id
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
+      CLOUD_RUN_JOB: ${{ vars.CLOUD_RUN_JOB || 'taiji-agent' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Execute Cloud Run Job
+        run: |
+          gcloud run jobs execute "${CLOUD_RUN_JOB}" \
+            --region="${GCP_REGION}" \
+            --update-env-vars="RUN_ID=${{ github.event.inputs.run_id }}" \
+            --wait
