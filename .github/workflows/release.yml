@@ -1,0 +1,230 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  actions: read
+  security-events: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-sign-attest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build pytest pytest-cov cyclonedx-bom pyyaml
+          pip install -e .
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          curl -sSfL https://github.com/google/go-containerregistry/releases/latest/download/go-containerregistry_Linux_x86_64.tar.gz \
+            | tar -xz crane
+          sudo mv crane /usr/local/bin/
+          syft version
+          crane version
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Python package
+        run: |
+          python -m build
+
+      - name: Run tests with coverage
+        run: |
+          set -o pipefail
+          pytest tests -q \
+            --maxfail=1 \
+            --disable-warnings \
+            --cov=aios \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing \
+            --cov-fail-under=70 \
+            | tee build-log.txt
+
+      - name: Generate SBOM
+        run: |
+          cyclonedx-py environment -o cyclonedx.sbom.xml
+          syft . -o json > sbom.json
+
+      - name: Build and push container image
+        run: |
+          SHORT_SHA=$(git rev-parse --short=12 HEAD)
+          IMAGE_NAME=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_REF="${REGISTRY}/${IMAGE_NAME}:${SHORT_SHA}"
+          docker build -t "${IMAGE_REF}" .
+          docker push "${IMAGE_REF}"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG_REF="${REGISTRY}/${IMAGE_NAME}:${GITHUB_REF_NAME}"
+            docker tag "${IMAGE_REF}" "${TAG_REF}"
+            docker push "${TAG_REF}"
+            echo "TAG_REF=${TAG_REF}" >> "${GITHUB_ENV}"
+          fi
+          echo "IMAGE_REF=${IMAGE_REF}" >> "${GITHUB_ENV}"
+          echo "IMAGE_NAME=${REGISTRY}/${IMAGE_NAME}" >> "${GITHUB_ENV}"
+          echo "IMAGE_TAG=${SHORT_SHA}" >> "${GITHUB_ENV}"
+
+      - name: Resolve image digest
+        id: digest
+        run: |
+          DIGEST=$(crane digest "${IMAGE_REF}")
+          DIGEST_SHA256=${DIGEST#sha256:}
+          echo "digest=${DIGEST}" >> "${GITHUB_OUTPUT}"
+          echo "digest_sha256=${DIGEST_SHA256}" >> "${GITHUB_OUTPUT}"
+
+      - name: Generate checksums
+        run: |
+          sha256sum dist/* > checksums.txt
+          sha256sum -c checksums.txt
+
+      - name: Generate manifest
+        env:
+          IMAGE_DIGEST: ${{ steps.digest.outputs.digest }}
+        run: |
+          python <<'PY'
+          import glob
+          import hashlib
+          import os
+          import yaml
+
+          artifacts = []
+          for path in sorted(glob.glob("dist/*")):
+              with open(path, "rb") as f:
+                  sha256 = hashlib.sha256(f.read()).hexdigest()
+              artifacts.append({"path": path, "sha256": sha256})
+
+          doc = {
+              "commit": os.environ["GITHUB_SHA"],
+              "ref": os.environ["GITHUB_REF"],
+              "image": f"{os.environ['IMAGE_REF']}@{os.environ['IMAGE_DIGEST']}",
+              "artifacts": artifacts,
+          }
+          with open("manifest.yaml", "w", encoding="utf-8") as f:
+              yaml.safe_dump(doc, f, sort_keys=False)
+          print("manifest.yaml written")
+          PY
+
+      - name: Generate provenance predicate
+        env:
+          IMAGE_DIGEST_SHA256: ${{ steps.digest.outputs.digest_sha256 }}
+        run: |
+          mkdir -p supplychain
+          python <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          predicate = {
+              "_type": "https://in-toto.io/Statement/v1",
+              "subject": [
+                  {
+                      "name": os.environ["IMAGE_REF"],
+                      "digest": {"sha256": os.environ["IMAGE_DIGEST_SHA256"]},
+                  }
+              ],
+              "predicateType": "https://slsa.dev/provenance/v1",
+              "predicate": {
+                  "buildType": "github-actions",
+                  "builder": {
+                      "id": f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+                  },
+                  "invocation": {
+                      "configSource": {
+                          "uri": f"git+https://github.com/{os.environ['GITHUB_REPOSITORY']}",
+                          "digest": {"sha1": os.environ["GITHUB_SHA"]},
+                      }
+                  },
+                  "metadata": {
+                      "buildInvocationId": os.environ["GITHUB_RUN_ID"],
+                      "buildStartedOn": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                  },
+              },
+          }
+
+          with open("supplychain/provenance.json", "w", encoding="utf-8") as f:
+              json.dump(predicate, f, indent=2, sort_keys=True)
+              f.write("\n")
+          PY
+
+      - name: Sign image with cosign
+        run: |
+          cosign sign --yes "${IMAGE_REF}"
+
+      - name: Attest provenance
+        run: |
+          cosign attest \
+            --yes \
+            --predicate supplychain/provenance.json \
+            --type slsaprovenance \
+            "${IMAGE_REF}"
+
+      - name: Verify signature
+        run: |
+          CERT_IDENTITY="https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@${GITHUB_REF}"
+          cosign verify \
+            --certificate-identity "${CERT_IDENTITY}" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            "${IMAGE_REF}"
+
+      - name: Verify attestation
+        run: |
+          CERT_IDENTITY="https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@${GITHUB_REF}"
+          cosign verify-attestation \
+            --certificate-identity "${CERT_IDENTITY}" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            --type slsaprovenance \
+            "${IMAGE_REF}"
+
+      - name: Create image lock
+        run: |
+          echo "${IMAGE_REF}@${{ steps.digest.outputs.digest }}" > image.lock
+          if [ -n "${TAG_REF:-}" ]; then
+            echo "${TAG_REF}@${{ steps.digest.outputs.digest }}" >> image.lock
+          fi
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: taiji-evidence-${{ github.sha }}
+          path: |
+            coverage.xml
+            cyclonedx.sbom.xml
+            sbom.json
+            checksums.txt
+            manifest.yaml
+            image.lock
+            build-log.txt
+            dist/*
+            supplychain/provenance.json
+
+      - name: Upload SARIF (optional)
+        if: always() && hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+          category: taiji-security
