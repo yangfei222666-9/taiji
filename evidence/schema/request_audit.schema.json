@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "req_id",
+    "actor",
+    "policy"
+  ],
+  "properties": {
+    "req_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "policy": {
+      "type": "string"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

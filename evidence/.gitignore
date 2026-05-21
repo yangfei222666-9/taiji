@@ -1,0 +1,6 @@
+/build/
+/deploy/
+/audit/
+/attest/
+/release/
+/keys/release_priv.pem
