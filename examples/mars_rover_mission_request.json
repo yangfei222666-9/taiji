@@ -1,0 +1,81 @@
+{
+  "mission_id": "MARS-SIM-EXAMPLE-001",
+  "target": {
+    "site": "Elysium Planitia training sector",
+    "objective": "Simulate a short traverse to inspect a rock outcrop and return a closeout.",
+    "coordinates": {
+      "lat": 4.5,
+      "lon": 135.9
+    }
+  },
+  "energy_budget": {
+    "unit": "Wh",
+    "available": 1200,
+    "reserve_minimum": 350
+  },
+  "terrain_risk": {
+    "level": "medium",
+    "hazards": [
+      "loose_regolith",
+      "small_rocks",
+      "low_sun_angle"
+    ]
+  },
+  "comm_delay": {
+    "unit": "minutes",
+    "one_way": 12.5
+  },
+  "sensor_status": {
+    "navcam": "ok",
+    "hazcam": "ok",
+    "imu": "ok",
+    "wheel_odometry": "degraded"
+  },
+  "allowed_actions": [
+    "simulate_path",
+    "simulate_scan",
+    "simulate_pause",
+    "write_event_flow",
+    "write_closeout"
+  ],
+  "forbidden_actions": [
+    "real_vehicle_control",
+    "satellite_command",
+    "radio_tx",
+    "external_api_call",
+    "secret_read",
+    "broker_connect",
+    "trade",
+    "paper_buy",
+    "promote",
+    "judge"
+  ],
+  "expected_closeout": {
+    "boot_preflight_required": true,
+    "event_flow_required": true,
+    "event_flow_path": "runs/spaceops_lab/MARS-SIM-EXAMPLE-001/event_flow.jsonl",
+    "closeout_required": true,
+    "closeout_path": "runs/spaceops_lab/MARS-SIM-EXAMPLE-001/closeout.md",
+    "allowed_verdicts": [
+      "success",
+      "partial",
+      "blocked"
+    ],
+    "partial_blocked_cannot_be_success": true
+  },
+  "boundary": {
+    "simulation_only": true,
+    "learning_only": true,
+    "no_real_vehicle_control": true,
+    "no_satellite_command": true,
+    "no_radio_tx": true,
+    "no_external_api_by_default": true,
+    "no_secret_access": true,
+    "no_broker": true,
+    "no_trade": true,
+    "no_paper_buy": true,
+    "no_promotion": true,
+    "no_judgment": true,
+    "xuan_shu_is_renderer_only": true
+  }
+}
