@@ -9,11 +9,12 @@ from aios.userland.product_spine.verify_run import ROOT, build_payload
 
 
 VERIFY_RUN = ROOT / "aios" / "userland" / "product_spine" / "verify_run.py"
-FIXTURE_RUN = ROOT / "runs" / "ops_check" / "product_spine_schema_extract_20260522"
 
 
-def test_current_product_spine_schema_extract_packet_verifies_without_repo_pass():
-    payload = build_payload(FIXTURE_RUN, repo_root=ROOT)
+def test_self_contained_product_spine_packet_verifies_without_repo_pass(tmp_path):
+    _write_valid_run(tmp_path)
+
+    payload = build_payload(tmp_path, repo_root=ROOT)
 
     assert payload["ok"] is True
     assert payload["checks"]["summary_json_parses"] is True
