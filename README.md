@@ -31,6 +31,7 @@
 
 This is the main TaijiOS repository.
 
+- SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md) — human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
 - Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
 - 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
 - Lite migration audit: [docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md](docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md)
