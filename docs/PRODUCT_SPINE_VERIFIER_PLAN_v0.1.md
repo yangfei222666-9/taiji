@@ -46,7 +46,7 @@ Optional docs inputs:
 ```text
 docs/PRODUCT_SPINE_SCHEMA_v0.1.md
 docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md
-docs/TAIJOS_REARCHITECTURE_PLAN_v0.1.md
+docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md
 ```
 
 The verifier must not read `.env`, keychain, provider secrets, `/Volumes/T7/secure`,
