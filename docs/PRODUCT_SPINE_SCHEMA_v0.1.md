@@ -48,6 +48,38 @@ Quant, Telegram, Enterprise Pack, OrderFlow, SpaceOps, Physical AI, TaijiMind,
 provider routing, and UI demos are use cases or future lines. They are not the
 first product entrypoint.
 
+## Long-Term Direction Boundary
+
+Product Spine is the required safety contract for the long-term TaijiOS ladder:
+
+```text
+TaijiOS
+  -> AI Agent Evidence Kernel
+  -> AI Workflow Safety Runtime
+  -> Physical AI / Robotics Safety Runtime
+  -> SpaceOps Simulation Kernel
+  -> Autonomous Mission Evidence OS
+```
+
+Each layer must preserve the same boundary fields before it can claim a higher
+authority state:
+
+- `preflight_status`
+- `event_flow_path`
+- `scope`
+- `verdict`
+- `blocked_stage`
+- `minimum_fix`
+- `not_claimed`
+- `secret_boundary`
+- `provider_boundary`
+- `trade_boundary`
+- `git_boundary`
+
+The ladder does not claim real robot, vehicle, actuator, satellite, radio,
+mission-control, provider, broker, trade, judgment, paper-buy, pass-to-trade, or
+promotion capability.
+
 ## Shared Status Vocabulary
 
 Only these terminal verdict classes are allowed at the Product Spine boundary:
