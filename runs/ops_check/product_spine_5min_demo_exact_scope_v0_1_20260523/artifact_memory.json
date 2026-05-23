@@ -1,0 +1,47 @@
+{
+  "artifact_id": "product_spine_5min_demo_exact_scope_v0_1_20260523",
+  "authority_level": "local_artifact",
+  "created_at": "2026-05-23T05:27:25+00:00",
+  "import_allowed": false,
+  "not_claimed": [
+    "repo PASS",
+    "provider/API ready",
+    "broker ready",
+    "trade/order ready",
+    "paper-buy ready",
+    "judgment ready",
+    "promotion ready",
+    "T7 imported",
+    "hardware control ready"
+  ],
+  "paths": {
+    "closeout": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/closeout.md",
+    "event_flow": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/event_flow.jsonl",
+    "manifest": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/manifest.json",
+    "run_dir": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523",
+    "summary": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/summary.json"
+  },
+  "retention_policy": "keep",
+  "scope": "product_spine_5min_demo_exact_scope_v0_1",
+  "source_candidates": [
+    "docs/PRODUCT_SPINE_SCHEMA_v0.1.md",
+    "aios/userland/product_spine/verify_run.py"
+  ],
+  "verifier_results": {
+    "changed_files_outside_scope_count": 3,
+    "event_flow_jsonl_written": true,
+    "json_artifacts_written": true,
+    "product_spine_verifier_preview": {
+      "can_claim_single_scope_pass": false,
+      "changed_files_outside_scope_count": 4,
+      "errors": [],
+      "event_count": 9,
+      "forbidden_claims": [],
+      "ok": true,
+      "repo_pass": false,
+      "staged_count": 0,
+      "verdict": "partial_product_spine_verified_dirty_tree"
+    },
+    "staged_count": 0
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "artifacts": {
+    "artifact_memory": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/artifact_memory.json",
+    "closeout": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/closeout.md",
+    "event_flow": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/event_flow.jsonl",
+    "manifest": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/manifest.json",
+    "product_spine_verifier_preview": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/product_spine_verifier_preview.json",
+    "summary": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/summary.json"
+  },
+  "created_at_utc": "2026-05-23T05:27:25+00:00",
+  "mode": "edit_verify_no_stage",
+  "not_claimed": [
+    "repo PASS",
+    "provider/API ready",
+    "broker ready",
+    "trade/order ready",
+    "paper-buy ready",
+    "judgment ready",
+    "promotion ready",
+    "T7 imported",
+    "hardware control ready"
+  ],
+  "repo_root": "/Users/weiwei/Desktop/taiji",
+  "run_dir": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523",
+  "run_id": "product_spine_5min_demo_exact_scope_v0_1_20260523",
+  "scope": "product_spine_5min_demo_exact_scope_v0_1"
+}

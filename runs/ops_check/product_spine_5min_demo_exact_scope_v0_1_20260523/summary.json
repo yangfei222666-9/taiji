@@ -1,0 +1,224 @@
+{
+  "artifact_memory": {
+    "artifact_id": "product_spine_5min_demo_exact_scope_v0_1_20260523",
+    "authority_level": "local_artifact",
+    "import_allowed": false,
+    "paths": {
+      "artifact_memory": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/artifact_memory.json",
+      "closeout": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/closeout.md",
+      "event_flow": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/event_flow.jsonl",
+      "manifest": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/manifest.json",
+      "summary": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/summary.json"
+    },
+    "retention_policy": "keep"
+  },
+  "boot_preflight": {
+    "blocked_stage": null,
+    "minimum_fix": null,
+    "preflight_status": "PASS",
+    "repo_root_exists": true,
+    "required_local_files_present": {
+      "aios/userland/product_spine/verify_run.py": true,
+      "docs/PRODUCT_SPINE_SCHEMA_v0.1.md": true
+    }
+  },
+  "boundaries": {
+    "git_boundary": {
+      "commit_allowed": false,
+      "merge_allowed": false,
+      "pr_allowed": false,
+      "push_allowed": false,
+      "stage_allowed": false
+    },
+    "provider_boundary": {
+      "provider_calls_allowed": false,
+      "provider_ready_claimed": false,
+      "sandbox_default": true
+    },
+    "secret_boundary": {
+      "env_read_allowed": false,
+      "keychain_read_allowed": false,
+      "secret_value_logged": false
+    },
+    "trade_boundary": {
+      "judgment_allowed": false,
+      "paper_buy_allowed": false,
+      "promote_allowed": false,
+      "trade_allowed": false
+    }
+  },
+  "broker_ready": false,
+  "changed_files_outside_scope": [
+    "docs/PRODUCT_SPINE_SCHEMA_v0.1.md",
+    "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md",
+    "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md"
+  ],
+  "changed_files_outside_scope_count": 3,
+  "demo_timeline": [
+    {
+      "component": "Boot Preflight",
+      "demo_step": "Declare scope, mode, will_not, and local-only boundaries before execution.",
+      "duration_seconds": 45
+    },
+    {
+      "component": "EventFlow",
+      "demo_step": "Append parseable JSONL transition events with explicit evidence fields.",
+      "duration_seconds": 60
+    },
+    {
+      "component": "Scope Isolation",
+      "demo_step": "Record branch, staged_count, scope paths, and outside-scope dirty files.",
+      "duration_seconds": 60
+    },
+    {
+      "component": "Artifact Memory",
+      "demo_step": "Write manifest and artifact_memory indexes for the run packet.",
+      "duration_seconds": 45
+    },
+    {
+      "component": "Closeout",
+      "demo_step": "Write verdict, verification, boundaries, not-claimed, and next gate.",
+      "duration_seconds": 45
+    },
+    {
+      "component": "Product Spine verifier",
+      "demo_step": "Run a verifier preview and keep dirty-tree output as PARTIAL, not repo PASS.",
+      "duration_seconds": 45
+    }
+  ],
+  "dirty_count": 4,
+  "entrypoint": "Evidence Kernel",
+  "generated_at_utc": "2026-05-23T05:27:25+00:00",
+  "git_scope": {
+    "branch": "main",
+    "dirty_count": 4,
+    "head": "9d59513eecf2d92f1f00d56cf6633d91adb1ba32",
+    "repo_pass_claimed": false,
+    "staged_count": 0
+  },
+  "input_paths": [
+    "docs/PRODUCT_SPINE_SCHEMA_v0.1.md",
+    "aios/userland/product_spine/verify_run.py",
+    "examples/product_spine_5min_demo.py"
+  ],
+  "judgment_allowed": false,
+  "mode": "edit_verify_no_stage",
+  "next_allowed_action": "Run Product Spine verifier and keep result PARTIAL until outside-scope dirty files are handled.",
+  "not_claimed": [
+    "repo PASS",
+    "provider/API ready",
+    "broker ready",
+    "trade/order ready",
+    "paper-buy ready",
+    "judgment ready",
+    "promotion ready",
+    "T7 imported",
+    "hardware control ready"
+  ],
+  "output_paths": {
+    "artifact_memory": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/artifact_memory.json",
+    "closeout": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/closeout.md",
+    "event_flow": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/event_flow.jsonl",
+    "manifest": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/manifest.json",
+    "product_spine_verifier_preview": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/product_spine_verifier_preview.json",
+    "summary": "/Users/weiwei/Desktop/taiji/runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523/summary.json"
+  },
+  "paper_buy_allowed": false,
+  "product_spine_components": [
+    "Boot Preflight",
+    "EventFlow",
+    "Scope Isolation",
+    "Artifact Memory",
+    "Closeout",
+    "Product Spine verifier"
+  ],
+  "promote_allowed": false,
+  "provider_ready": false,
+  "repo_pass": false,
+  "repo_root": "/Users/weiwei/Desktop/taiji",
+  "run_id": "product_spine_5min_demo_exact_scope_v0_1_20260523",
+  "safety": {
+    "broker_connected": false,
+    "deploy_or_publish": false,
+    "external_provider_called": false,
+    "git_commit_performed": false,
+    "git_push_performed": false,
+    "git_stage_performed": false,
+    "promotion_or_judgment_or_paper_buy": false,
+    "secret_value_read": false,
+    "secure_path_opened": false,
+    "t7_file_mutation": false,
+    "trade_or_order": false
+  },
+  "schema_version": "0.1",
+  "scope": "product_spine_5min_demo_exact_scope_v0_1",
+  "scope_isolation": {
+    "branch": "main",
+    "changed_files_outside_scope": 3,
+    "head": "9d59513eecf2d92f1f00d56cf6633d91adb1ba32",
+    "main_vs_origin_main": "0\t0",
+    "outside_scope_dirty_files": [
+      "docs/PRODUCT_SPINE_SCHEMA_v0.1.md",
+      "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md",
+      "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md"
+    ],
+    "repo_pass_claimed": false,
+    "scope_files": [
+      "examples/product_spine_5min_demo.py",
+      "runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523"
+    ],
+    "scope_pass_claimed": false,
+    "staged_count": 0,
+    "staged_outside_scope_files": [],
+    "staged_scope_files": []
+  },
+  "staged_count": 0,
+  "status": "partial",
+  "trade_allowed": false,
+  "verdict": "partial_product_spine_5min_demo_scope_dirty",
+  "verification": {
+    "closeout_md_written": true,
+    "event_flow_jsonl_written": true,
+    "event_sequence": [
+      "scope_started",
+      "boot_preflight_completed",
+      "scope_isolation_evaluated",
+      "artifact_memory_written",
+      "event_flow_written",
+      "verifier_started",
+      "verifier_completed",
+      "closeout_written",
+      "scope_completed"
+    ],
+    "product_spine_verifier_command": "python3 aios/userland/product_spine/verify_run.py runs/ops_check/product_spine_5min_demo_exact_scope_v0_1_20260523 --repo-root /Users/weiwei/Desktop/taiji --output-dir /tmp/product_spine_5min_demo_verify",
+    "product_spine_verifier_preview": {
+      "can_claim_single_scope_pass": false,
+      "changed_files_outside_scope_count": 4,
+      "errors": [],
+      "event_count": 9,
+      "forbidden_claims": [],
+      "ok": true,
+      "repo_pass": false,
+      "staged_count": 0,
+      "verdict": "partial_product_spine_verified_dirty_tree"
+    },
+    "summary_json_written": true
+  },
+  "will_not": [
+    "read secrets",
+    "call providers",
+    "use brokers",
+    "trade/order",
+    "paper-buy",
+    "judgment",
+    "promote",
+    "mutate T7/external disks",
+    "stage",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy",
+    "publish"
+  ]
+}
