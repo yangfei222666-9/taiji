@@ -1,0 +1,11 @@
+{
+  "can_claim_single_scope_pass": false,
+  "changed_files_outside_scope_count": 4,
+  "errors": [],
+  "event_count": 9,
+  "forbidden_claims": [],
+  "ok": true,
+  "repo_pass": false,
+  "staged_count": 0,
+  "verdict": "partial_product_spine_verified_dirty_tree"
+}
