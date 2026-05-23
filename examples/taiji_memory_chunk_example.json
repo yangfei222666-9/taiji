@@ -1,0 +1,223 @@
+{
+  "schema_version": "0.1",
+  "chunk_id": "taiji_memory_chunk_example_001",
+  "scope": "taijios_memory_layer_contract_v0_1",
+  "mode": "contract_only_docs_schema_tests",
+  "verdict": "PARTIAL",
+  "blocked_stage": "runtime_memory_store_not_implemented",
+  "failure_cause": "contract_and_schema_only",
+  "minimum_fix": "implement a local verifier-backed memory ingest pipeline before claiming runtime memory",
+  "source_refs": [
+    {
+      "path": "runs/ops_check/example/summary.json",
+      "input_type": "summary.json",
+      "allowed": true,
+      "parse_required": true,
+      "secret_read": false
+    },
+    {
+      "path": "runs/ops_check/example/event_flow.jsonl",
+      "input_type": "event_flow.jsonl",
+      "allowed": true,
+      "parse_required": true,
+      "secret_read": false
+    },
+    {
+      "path": "runs/ops_check/example/closeout.md",
+      "input_type": "closeout.md",
+      "allowed": true,
+      "parse_required": false,
+      "secret_read": false
+    },
+    {
+      "path": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md",
+      "input_type": "public docs/*.md",
+      "allowed": true,
+      "parse_required": false,
+      "secret_read": false
+    },
+    {
+      "path": "README.md",
+      "input_type": "README.md",
+      "allowed": true,
+      "parse_required": false,
+      "secret_read": false
+    }
+  ],
+  "forbidden_input_types": [
+    ".env",
+    "keychain",
+    "token",
+    "broker config",
+    "private customer data",
+    "Gmail",
+    "Slack",
+    "Notion",
+    "OAuth",
+    "raw provider secrets"
+  ],
+  "source_hashes": {
+    "summary.json": "sha256:example-only-not-a-real-source-hash",
+    "event_flow.jsonl": "sha256:example-only-not-a-real-source-hash"
+  },
+  "git_scope": {
+    "repo_root": "/Users/weiwei/Desktop/taiji",
+    "branch": "main",
+    "staged_count": 0,
+    "dirty_tree": "example_not_current_git_truth",
+    "commit": null,
+    "push": false,
+    "PR": null,
+    "merge": false,
+    "repo_pass_claimed": false,
+    "can_claim_single_scope_pass": false
+  },
+  "authority": {
+    "evidence_registry_is_ssot": true,
+    "memory_is_candidate_context_not_truth": true,
+    "model_output_is_not_truth": true,
+    "memory_chunk_is_truth": false,
+    "provider_output_is_truth": false
+  },
+  "boundary_flags": {
+    "clean_room": true,
+    "no_openhuman_code_import": true,
+    "local_first": true,
+    "evidence_registry_is_ssot": true,
+    "memory_is_candidate_context_not_truth": true,
+    "model_output_is_not_truth": true,
+    "no_secret_access": true,
+    "no_env_read": true,
+    "no_broker": true,
+    "no_trade": true,
+    "no_promotion": true,
+    "no_judgment": true,
+    "no_paper_buy": true,
+    "no_pass_to_trade": true,
+    "xuan_shu_renderer_only": true,
+    "provider_called": false,
+    "runtime_memory_store_implemented": false,
+    "auto_fetch_enabled": false,
+    "stage_commit_push": false
+  },
+  "preserved_fields": [
+    "verdict",
+    "scope",
+    "mode",
+    "repo_root",
+    "branch",
+    "staged_count",
+    "dirty_tree",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "blocked_stage",
+    "failure_cause",
+    "minimum_fix",
+    "not_claimed",
+    "forbidden_claims",
+    "what_is_verified",
+    "what_is_not_claimed",
+    "can_claim_single_scope_pass",
+    "source_refs",
+    "source_hashes"
+  ],
+  "compression_rules": {
+    "must_preserve": [
+      "verdict",
+      "scope",
+      "mode",
+      "staged_count",
+      "branch",
+      "commit",
+      "push",
+      "PR",
+      "merge",
+      "blocked_stage",
+      "failure_cause",
+      "minimum_fix",
+      "forbidden_claims",
+      "source_hashes"
+    ],
+    "must_not": [
+      "convert PARTIAL to PASS",
+      "convert BLOCKED to FAILED",
+      "remove BLOCKED reasons",
+      "remove forbidden_claims",
+      "hide dirty tree",
+      "hide staged_count",
+      "claim repo PASS from scope PASS",
+      "claim judgment from learning_only",
+      "claim trade from observe_only"
+    ],
+    "may_compress": [
+      "repeated paths",
+      "long log excerpts after preserving errors",
+      "duplicated event payloads",
+      "redundant markdown prose"
+    ]
+  },
+  "what_is_verified": [
+    "contract fields exist",
+    "allowed input types are explicit",
+    "forbidden input types are explicit",
+    "compression safety rules are explicit"
+  ],
+  "what_is_not_claimed": [
+    "repo PASS",
+    "runtime memory database implemented",
+    "OpenHuman integration ready",
+    "provider/API ready",
+    "OAuth integration ready",
+    "judgment ready",
+    "promotion ready",
+    "paper-buy ready",
+    "trade/order ready"
+  ],
+  "forbidden_claims": [
+    "repo_pass",
+    "provider_ready",
+    "judgment_allowed",
+    "promote_allowed",
+    "paper_buy_allowed",
+    "trade_allowed",
+    "pass_to_trade"
+  ],
+  "xuan_shu": {
+    "renderer_only": true,
+    "allowed_status": [
+      "PASS",
+      "PARTIAL",
+      "BLOCKED",
+      "PENDING",
+      "learning_only",
+      "observe_only",
+      "no_trade",
+      "local_only",
+      "artifact_available"
+    ],
+    "forbidden_claims": [
+      "ready_for_live",
+      "ready_for_trade",
+      "paper_buy_allowed",
+      "judgment_allowed",
+      "promote_allowed",
+      "provider_ready",
+      "repo_pass",
+      "external_integration_verified"
+    ]
+  },
+  "not_claimed": [
+    "repo PASS",
+    "runtime memory database implemented",
+    "OpenHuman integration ready",
+    "secret access",
+    "provider/API ready",
+    "broker ready",
+    "judgment ready",
+    "promotion ready",
+    "paper-buy ready",
+    "trade/order ready"
+  ]
+}
