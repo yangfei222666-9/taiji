@@ -1,0 +1,67 @@
+name: taijios-audit-pulse
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # UTC 00:00 = MYT 08:00
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  audit-pulse:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      STATE_DIR: .audit/state
+      AUDIT_OUT_DIR: .audit/out/${{ github.run_id }}
+      MATERIAL_GATE_HOURS: "72"
+      REKOR_REQUIRED: "1"
+      SIGSTORE_REKOR_SERVER: "https://rekor.sigstore.dev"
+      COSIGN_VERIFY_REQUIRED: "0"
+      COSIGN_CERT_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
+      COSIGN_CERT_IDENTITY_REGEXP: "^https://github.com/${{ github.repository }}/.github/workflows/.+@refs/heads/.+$"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install base deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+          curl -fsSL https://github.com/sigstore/rekor/releases/latest/download/rekor-cli-linux-amd64 \
+            -o /usr/local/bin/rekor-cli
+          chmod +x /usr/local/bin/rekor-cli
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Restore state
+        uses: actions/cache/restore@v4
+        with:
+          path: .audit/state
+          key: taijios-audit-state-${{ github.ref }}-${{ github.run_id }}
+          restore-keys: |
+            taijios-audit-state-${{ github.ref }}-
+
+      - name: Run material detector
+        run: |
+          chmod +x .audit/*.sh
+          ./.audit/material_detector.sh
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taijios-audit-pulse-${{ github.run_id }}
+          path: .audit/out/${{ github.run_id }}
+          if-no-files-found: warn
+
+      - name: Save state
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: .audit/state
+          key: taijios-audit-state-${{ github.ref }}-${{ github.run_id }}
