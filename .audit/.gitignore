@@ -1,0 +1,4 @@
+out/
+state/last_manifest.json
+state/last_rekor.txt
+state/last_sha256.txt
