@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.1",
+  "scenario_id": "mars_rover_demo_001",
+  "scope": "taijios_scenario_sandbox_contract_v0_1",
+  "mode": "contract_only_docs_schema_tests",
+  "simulation_mode": "simulation_only",
+  "seed_material": {
+    "type": "mission_brief",
+    "summary": "Rover must move to target, collect sample, and return status.",
+    "source_authority": "operator_supplied_example",
+    "is_truth_source": false
+  },
+  "entities": [
+    {
+      "id": "rover",
+      "type": "agent",
+      "role": "mobile science platform",
+      "goals": [
+        "reach target",
+        "collect sample",
+        "preserve battery margin"
+      ],
+      "memory_policy": "scenario_local_only"
+    },
+    {
+      "id": "battery",
+      "type": "resource",
+      "role": "energy budget"
+    },
+    {
+      "id": "terrain",
+      "type": "environment",
+      "role": "mobility risk"
+    },
+    {
+      "id": "dust_storm",
+      "type": "environment_event",
+      "role": "weather shock"
+    },
+    {
+      "id": "ground_control",
+      "type": "observer",
+      "role": "delayed command reviewer"
+    },
+    {
+      "id": "solar_charging",
+      "type": "resource_flow",
+      "role": "energy replenishment"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "dust_storm",
+      "to": "solar_charging",
+      "type": "reduces",
+      "evidence": "operator_supplied_example"
+    },
+    {
+      "from": "terrain",
+      "to": "rover",
+      "type": "constrains_mobility",
+      "evidence": "operator_supplied_example"
+    },
+    {
+      "from": "battery",
+      "to": "rover",
+      "type": "limits_action_budget",
+      "evidence": "operator_supplied_example"
+    },
+    {
+      "from": "ground_control",
+      "to": "rover",
+      "type": "observes_with_delay",
+      "evidence": "operator_supplied_example"
+    }
+  ],
+  "boundary_flags": {
+    "clean_room": true,
+    "no_mirofish_code_import": true,
+    "simulation_only": true,
+    "learning_only": true,
+    "candidate_only": true,
+    "prediction_is_candidate_not_truth": true,
+    "model_output_is_not_truth": true,
+    "evidence_kernel_remains_authority": true,
+    "no_secret_access": true,
+    "no_env_read": true,
+    "no_provider_call_by_default": true,
+    "no_broker": true,
+    "no_trade": true,
+    "no_order": true,
+    "no_promotion": true,
+    "no_judgment": true,
+    "no_paper_buy": true,
+    "no_pass_to_trade": true,
+    "no_real_hardware_control": true,
+    "no_satellite_command": true,
+    "no_radio_tx": true,
+    "preflight_required": true,
+    "event_flow_required": true,
+    "closeout_required": true,
+    "every_scenario_simulation_requires_preflight_event_flow_closeout": true,
+    "scenario_output_cannot_claim_PASS_without_verifier": true,
+    "xuan_shu_renderer_only": true
+  },
+  "runtime_state": {
+    "mirofish_connected": false,
+    "mirofish_code_imported": false,
+    "provider_called": false,
+    "env_read": false,
+    "secret_read": false,
+    "broker_connected": false,
+    "trade_or_order": false,
+    "judgment_allowed": false,
+    "paper_buy_allowed": false,
+    "promote_allowed": false,
+    "pass_to_trade_allowed": false,
+    "real_hardware_control": false,
+    "satellite_command": false,
+    "radio_tx": false
+  },
+  "forbidden_actions": {
+    "clone_mirofish": true,
+    "import_mirofish_code": true,
+    "copy_agpl_source": true,
+    "connect_mirofish_service": true,
+    "read_env": true,
+    "read_secret": true,
+    "provider_call": true,
+    "broker_connect": true,
+    "trade": true,
+    "order": true,
+    "paper_buy": true,
+    "judgment": true,
+    "promotion": true,
+    "pass_to_trade": true,
+    "real_hardware_control": true,
+    "satellite_command": true,
+    "radio_tx": true
+  },
+  "expected_artifacts": [
+    "scenario_graph.json",
+    "candidate_paths.json",
+    "event_flow.jsonl",
+    "simulation_closeout.md"
+  ],
+  "allowed_verdicts": [
+    "scenario_candidate_generated",
+    "scenario_partial_insufficient_evidence",
+    "scenario_blocked_forbidden_claim"
+  ],
+  "forbidden_verdicts": [
+    "future_predicted",
+    "truth_validated",
+    "mission_approved",
+    "trade_signal",
+    "provider_ready",
+    "ready_for_trade",
+    "pass_to_trade",
+    "judgment_approved",
+    "promotion_ready"
+  ],
+  "expected_verdict": "scenario_candidate_generated",
+  "not_claimed": [
+    "direct MiroFish integration",
+    "provider/API ready",
+    "future predicted",
+    "truth validated",
+    "mission approved",
+    "trade signal",
+    "judgment ready",
+    "promotion ready",
+    "repo PASS"
+  ]
+}
