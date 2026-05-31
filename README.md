@@ -32,6 +32,7 @@
 This is the main TaijiOS repository.
 
 - SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md) — human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
+- 权威边界文档: [Product Spine](docs/architecture/PRODUCT_SPINE_AUTHORITY.md), [Provider Gate](docs/provider/PROVIDER_BOUNDARY_GATE.md), [Direct LLM Caller](docs/provider/DIRECT_LLM_CALLER_BOUNDARY.md), [Multi-Model Gate](docs/provider/MULTI_MODEL_ARCHITECTURE_GATE.md), [Runtime Matrix](docs/runtime/RUNTIME_MATURITY_MATRIX.md), [HSDL](docs/design/HSDL_CANONICAL_SPEC_v0.1.md), [小九通天录](xiaojiu_tongtianlu/BOUNDARY.md), [Life Systems](life_systems/BIOSECURITY_BOUNDARY.md) — docs-only review gates; not repo-level PASS, runtime readiness, or provider readiness.
 - Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
 - 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
 - Lite migration audit: [docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md](docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md)
