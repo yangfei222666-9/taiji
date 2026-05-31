@@ -18,6 +18,13 @@ bash scripts/replay_public_demo.sh --runs 100
 ```
 
 The script reruns `examples/quickstart_minimal.py` and verifies the generated JSON evidence after each run.
+By default, replay artifacts are written to a temporary directory so repeated
+review runs do not modify tracked quickstart output files. To retain artifacts,
+set `TAIJI_REPLAY_OUTPUT_ROOT`, for example:
+
+```bash
+TAIJI_REPLAY_OUTPUT_ROOT=.audit/public_demo_100 bash scripts/replay_public_demo.sh --runs 100
+```
 
 ## Metrics
 

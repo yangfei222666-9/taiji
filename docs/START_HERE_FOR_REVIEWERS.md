@@ -25,11 +25,19 @@ pip install -e .
 bash scripts/replay_public_demo.sh
 ```
 
+The replay script writes to a temporary output directory by default so review
+runs do not dirty the git worktree. To keep inspectable artifacts, set an
+explicit output root:
+
+```bash
+TAIJI_REPLAY_OUTPUT_ROOT=.audit/public_demo bash scripts/replay_public_demo.sh
+```
+
 Then inspect:
 
-- `examples/quickstart_output/quickstart_evidence.json`
-- `examples/quickstart_output/quickstart_trace.json`
-- `examples/quickstart_output/quickstart_events.json`
+- `.audit/public_demo/run-1/quickstart_evidence.json`
+- `.audit/public_demo/run-1/quickstart_trace.json`
+- `.audit/public_demo/run-1/quickstart_events.json`
 - `docs/proof_index.json`
 - `docs/SPACE_X_AI_PROOF_PACKET.md`
 - `AUDIT_EVIDENCE.md`

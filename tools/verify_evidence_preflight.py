@@ -2,7 +2,8 @@
 """Verify the local evidence-only preflight artifacts.
 
 This verifier is intentionally local-only. It parses files already present in
-the repository and does not read env values, call providers, or touch git state.
+the repository and does not read env values or call providers. It accepts both
+the original staged-index capture mode and a clean checkout review mode.
 """
 
 from __future__ import annotations
@@ -110,9 +111,11 @@ def main() -> int:
         fail("git.is_worktree must be true")
     if git_state.get("staged_count") != len(EXPECTED_STAGED_FILES):
         fail("git.staged_count must match exact evidence stage scope")
+    if git_state.get("staged_files") != EXPECTED_STAGED_FILES:
+        fail("git.staged_files must match exact evidence stage scope")
     actual_staged = staged_files()
-    if actual_staged != EXPECTED_STAGED_FILES:
-        fail("staged files must match exact evidence scope")
+    if actual_staged and actual_staged != EXPECTED_STAGED_FILES:
+        fail("staged files must match exact evidence scope when index is staged")
     if git_state.get("commit") is not None:
         fail("commit must not be created in this mode")
     if git_state.get("push") is not None:

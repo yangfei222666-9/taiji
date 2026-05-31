@@ -16,6 +16,7 @@ Run:
 """
 import hashlib
 import json
+import os
 import time
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
@@ -28,7 +29,8 @@ try:
 except ImportError:
     AIOS_AVAILABLE = False
 
-OUTPUT_DIR = Path(__file__).parent / "quickstart_output"
+DEFAULT_OUTPUT_DIR = Path(__file__).parent / "quickstart_output"
+OUTPUT_DIR = Path(os.environ.get("TAIJI_QUICKSTART_OUTPUT_DIR", DEFAULT_OUTPUT_DIR))
 
 
 # ── 1. Event Bus (simplified core) ─────────────────────────────

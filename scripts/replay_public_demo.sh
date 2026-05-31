@@ -40,19 +40,37 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+RUN_OUTPUT_ROOT="${TAIJI_REPLAY_OUTPUT_ROOT:-}"
+CLEANUP_OUTPUT=0
+
+if [[ -z "$RUN_OUTPUT_ROOT" ]]; then
+  RUN_OUTPUT_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/taiji-public-demo.XXXXXX")"
+  CLEANUP_OUTPUT=1
+else
+  mkdir -p "$RUN_OUTPUT_ROOT"
+fi
+
+cleanup() {
+  if [[ "$CLEANUP_OUTPUT" -eq 1 ]]; then
+    rm -rf "$RUN_OUTPUT_ROOT"
+  fi
+}
+trap cleanup EXIT
 
 cd "$ROOT"
 
 for run_id in $(seq 1 "$RUNS"); do
-  "$PYTHON_BIN" examples/quickstart_minimal.py >/dev/null
-  "$PYTHON_BIN" - "$ROOT" "$run_id" <<'PY'
+  run_output="$RUN_OUTPUT_ROOT/run-$run_id"
+  rm -rf "$run_output"
+  mkdir -p "$run_output"
+  TAIJI_QUICKSTART_OUTPUT_DIR="$run_output" "$PYTHON_BIN" examples/quickstart_minimal.py >/dev/null
+  "$PYTHON_BIN" - "$run_output" "$run_id" <<'PY'
 import json
 import sys
 from pathlib import Path
 
-root = Path(sys.argv[1])
+out = Path(sys.argv[1])
 run_id = sys.argv[2]
-out = root / "examples" / "quickstart_output"
 
 evidence = json.loads((out / "quickstart_evidence.json").read_text(encoding="utf-8"))
 json.loads((out / "quickstart_trace.json").read_text(encoding="utf-8"))
@@ -85,4 +103,7 @@ print(
 PY
 done
 
+if [[ "$CLEANUP_OUTPUT" -eq 0 ]]; then
+  printf 'output_root=%s\n' "$RUN_OUTPUT_ROOT"
+fi
 printf 'verdict=PASS scope=local_public_demo_replay runs=%s\n' "$RUNS"

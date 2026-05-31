@@ -12,7 +12,7 @@
     },
     {
       "claim": "The public demo can replay without API keys or GPU and produce parseable local evidence.",
-      "evidence_file": "examples/quickstart_output/quickstart_evidence.json",
+      "evidence_file": "script stdout and optional TAIJI_REPLAY_OUTPUT_ROOT/run-*/quickstart_evidence.json",
       "command": "bash scripts/replay_public_demo.sh",
       "verdict": "PASS when replay output verifies 3 tasks, 3 succeeded, 3 self-healed, and 18 events.",
       "limitation": "A single replay is local-scope evidence only and must not be promoted to repo-wide PASS."
