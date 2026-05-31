@@ -1,6 +1,6 @@
 # TaijiOS Audit Evidence
 
-Status: `TEMPLATE_READY`, not live release evidence.
+Status: release evidence template, not live release evidence.
 
 ```text
 release_evidence_state=TEMPLATE_READY
