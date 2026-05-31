@@ -10,6 +10,22 @@ permissions:
   contents: read
 
 jobs:
+  sandbox-local-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install sandbox dependencies
+        run: npm ci --ignore-scripts
+      - name: Run sandbox full verifier
+        run: npm run verify:full
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:

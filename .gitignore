@@ -6,6 +6,7 @@ echocore/
 # ── Secrets ──
 .env
 .env.*
+.env*.local
 !.env.example
 *.pem
 *.key
@@ -44,6 +45,9 @@ jobs/
 audit_logs/
 
 # ── Local ops evidence ──
+# Per-run reports are local-only unless explicitly promoted.
+runs/*
+!runs/ops_check/
 # Per-run TaijiOS ops_check evidence is local-only unless explicitly promoted.
 runs/ops_check/*
 !runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/
@@ -56,6 +60,7 @@ notes/
 
 # ── Python ──
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
 *.egg-info/
@@ -107,3 +112,4 @@ desktop.ini
 .vercel
 .next/
 node_modules/
+*.tsbuildinfo
