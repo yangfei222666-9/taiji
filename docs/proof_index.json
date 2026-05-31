@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1",
+  "scope": "public_proof_packet",
+  "current_verdict": "PARTIAL_PUBLIC_PROOF_PACKET_READY",
+  "claims": [
+    {
+      "claim": "TaijiOS is an evidence-first reliability runtime for AI agents.",
+      "evidence_file": "README.md",
+      "command": "python examples/quickstart_minimal.py",
+      "verdict": "PASS / PARTIAL",
+      "limitation": "The quickstart demonstrates a local evidence loop, not production readiness or external validation."
+    },
+    {
+      "claim": "The public demo can replay without API keys or GPU and produce parseable local evidence.",
+      "evidence_file": "examples/quickstart_output/quickstart_evidence.json",
+      "command": "bash scripts/replay_public_demo.sh",
+      "verdict": "PASS when replay output verifies 3 tasks, 3 succeeded, 3 self-healed, and 18 events.",
+      "limitation": "A single replay is local-scope evidence only and must not be promoted to repo-wide PASS."
+    },
+    {
+      "claim": "The proof packet preserves no-overclaim boundaries for human review.",
+      "evidence_file": "docs/SPACE_X_AI_PROOF_PACKET.md",
+      "command": "python -m json.tool docs/proof_index.json",
+      "verdict": "PARTIAL",
+      "limitation": "No xAI, SpaceX, Elon, external organization, production, hardware, provider/API, trading, or release PASS endorsement is claimed."
+    },
+    {
+      "claim": "Release evidence workflow documentation exists.",
+      "evidence_file": "AUDIT_EVIDENCE.md",
+      "command": "test -f AUDIT_EVIDENCE.md",
+      "verdict": "TEMPLATE_READY",
+      "limitation": "Live release verification is PENDING; do not claim release evidence PASS from the template."
+    },
+    {
+      "claim": "A quantitative evidence path is defined for repeated local demo replays.",
+      "evidence_file": "docs/QUANT_EVIDENCE_PLAN.md",
+      "command": "bash scripts/replay_public_demo.sh --runs 100",
+      "verdict": "PENDING",
+      "limitation": "The 100-run and 1,000-run batches are plans until executed and recorded."
+    }
+  ],
+  "blocked_claims": [
+    "production_readiness",
+    "external_endorsement",
+    "hardware_control",
+    "provider_api_readiness",
+    "release_evidence_pass",
+    "trading_or_order_authority"
+  ]
+}
