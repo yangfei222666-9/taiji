@@ -1,0 +1,125 @@
+{
+  "verdict": "PARTIAL",
+  "scope": "evidence-only / no provider / no judgment / no trade",
+  "mode": "repair_preflight_then_verify_only",
+  "repo_root": "/Users/weiwei/Desktop/taiji",
+  "checked_at": "2026-05-24T13:50:16+08:00",
+  "triaged_at": "2026-05-24T13:56:34+08:00",
+  "owner_reviewed_at": "2026-05-24T14:06:04+08:00",
+  "dirty_tree_isolated_at": "2026-05-24T14:08:19+08:00",
+  "staged_at": "2026-05-24T14:14:00+08:00",
+  "summary": "Root verify target and required evidence artifacts repaired. Artifact consistency can pass, but repo PASS remains blocked by unrelated dirty tree and nonempty raw hard-gate grep.",
+  "git": {
+    "is_worktree": true,
+    "branch": "taijios-scenario-sandbox-contract-20260524",
+    "head_sample": [
+      "a945bb5 Add public reviewer proof packet",
+      "ddd847f docs: add TaijiOS scenario sandbox contract",
+      "1f069f2 Merge pull request #28 from yangfei222666-9/taijios-memory-layer-contract-20260523"
+    ],
+    "dirty_tree_before_repair": [
+      "?? .audit/",
+      "?? docs/TAIJIOS_SELF_EVOLUTION_PHILOSOPHY_v0.1.md"
+    ],
+    "dirty_tree_after_triage": [
+      " M .gitignore",
+      " M AUDIT_EVIDENCE.md",
+      "?? .audit/",
+      "?? Makefile",
+      "?? docs/TAIJIOS_SELF_EVOLUTION_PHILOSOPHY_v0.1.md",
+      "?? evidence/event_flow.jsonl",
+      "?? evidence/hard_gate_line_triage.json",
+      "?? evidence/preflight_checklist.json",
+      "?? evidence/repo_pass_blocker_owner_review.json",
+      "?? evidence/dirty_tree_scope_isolation.json",
+      "?? evidence/summary.json",
+      "?? tools/verify_evidence_preflight.py"
+    ],
+    "staged_count": 9,
+    "staged_files": [
+      ".gitignore",
+      "Makefile",
+      "evidence/dirty_tree_scope_isolation.json",
+      "evidence/event_flow.jsonl",
+      "evidence/hard_gate_line_triage.json",
+      "evidence/preflight_checklist.json",
+      "evidence/repo_pass_blocker_owner_review.json",
+      "evidence/summary.json",
+      "tools/verify_evidence_preflight.py"
+    ],
+    "commit": null,
+    "push": null,
+    "pr": null,
+    "merge": null,
+    "repo_pass": false
+  },
+  "required_artifacts": {
+    "evidence/summary.json": true,
+    "evidence/event_flow.jsonl": true,
+    "evidence/preflight_checklist.json": true,
+    "evidence/hard_gate_line_triage.json": true,
+    "evidence/repo_pass_blocker_owner_review.json": true,
+    "evidence/dirty_tree_scope_isolation.json": true
+  },
+  "repair_scope_files": [
+    ".gitignore",
+    "Makefile",
+    "tools/verify_evidence_preflight.py",
+    "evidence/summary.json",
+    "evidence/event_flow.jsonl",
+    "evidence/preflight_checklist.json",
+    "evidence/hard_gate_line_triage.json",
+    "evidence/repo_pass_blocker_owner_review.json",
+    "evidence/dirty_tree_scope_isolation.json"
+  ],
+  "verification": {
+    "root_make_verify_target": "added",
+    "root_make_verify_command": "python3 tools/verify_evidence_preflight.py",
+    "artifact_consistency_expected": "PASS",
+    "scope_verdict": "PARTIAL",
+    "repo_pass": false
+  },
+  "hard_gate_grep": {
+    "raw_match_file_count": 48,
+    "raw_match_line_count": 182,
+    "triage_status": "full_line_triaged",
+    "introduced_by_this_scope_count": 0,
+    "scope_escalation_count": 0,
+    "repo_pass_blocking_line_count": 87,
+    "owner_reviewed_line_count": 87,
+    "unreviewed_line_count": 0,
+    "inline_secret_value_observed_count": 0,
+    "release_or_runtime_readiness_claim_allowed_count": 0,
+    "active_escalation_found_in_this_scope": false,
+    "raw_grep_nonempty_triaged_for_evidence_scope": true,
+    "raw_grep_nonempty_blocks_repo_pass": false,
+    "manual_line_review_required_before_repo_pass": false
+  },
+  "boundaries": {
+    "runtime_logic_modified": false,
+    "secret_read": false,
+    "provider_called": false,
+    "execution_venue_touched": false,
+    "judgment_declared": false,
+    "paper_buy": false,
+    "trade_or_order": false,
+    "promotion": false,
+    "live_ready_declared": false,
+    "stage_exact_scope": true,
+    "commit_push_pr_merge": false
+  },
+  "cannot_declare": [
+    "repo PASS",
+    "release readiness",
+    "strategy validation",
+    "live trading capability",
+    "provider truthfulness",
+    "PR readiness",
+    "merge readiness"
+  ],
+  "minimum_fix_for_repo_pass": [
+    "resolve external dirty tree or explicitly split it into a separate confirmed scope",
+    "run make verify after artifacts are current",
+    "do not commit, push, create PR, or merge without explicit authorization"
+  ]
+}

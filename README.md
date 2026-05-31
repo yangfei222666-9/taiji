@@ -9,8 +9,8 @@
 <h1 align="center">TaijiOS 太极OS</h1>
 
 <p align="center">
-  六爻状态机驱动的 AI Agent 可靠性与学习运行时<br>
-  <em>A hexagram-guided reliability and learning runtime for AI agents</em><br>
+  证据优先的 AI Agent 可靠性运行时<br>
+  <em>An evidence-first reliability runtime for AI agents</em><br>
   <strong>Turn agent runs into auditable evidence: verify, retry, recover, and review.</strong>
 </p>
 
@@ -31,8 +31,11 @@
 
 This is the main TaijiOS repository.
 
+- Reviewer start page: [docs/START_HERE_FOR_REVIEWERS.md](docs/START_HERE_FOR_REVIEWERS.md) — 5-minute public review path, exact verdicts, and no-overclaim boundaries.
 - SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md) — human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
 - 权威边界文档: [Product Spine](docs/architecture/PRODUCT_SPINE_AUTHORITY.md), [Provider Gate](docs/provider/PROVIDER_BOUNDARY_GATE.md), [Direct LLM Caller](docs/provider/DIRECT_LLM_CALLER_BOUNDARY.md), [Multi-Model Gate](docs/provider/MULTI_MODEL_ARCHITECTURE_GATE.md), [Runtime Matrix](docs/runtime/RUNTIME_MATURITY_MATRIX.md), [HSDL](docs/design/HSDL_CANONICAL_SPEC_v0.1.md), [小九通天录](xiaojiu_tongtianlu/BOUNDARY.md), [Life Systems](life_systems/BIOSECURITY_BOUNDARY.md) — docs-only review gates; not repo-level PASS, runtime readiness, or provider readiness.
+- Machine-readable proof index: [docs/proof_index.json](docs/proof_index.json)
+- Quantitative evidence plan: [docs/QUANT_EVIDENCE_PLAN.md](docs/QUANT_EVIDENCE_PLAN.md)
 - Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
 - 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
 - Lite migration audit: [docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md](docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md)
@@ -48,6 +51,8 @@ If you are new here, start with the live HUD demo, then read this repository. Th
 This is the canonical TaijiOS engineering entrypoint. Start by running the minimal local demo below; the larger I Ching / Ising architecture is documented after the runnable path.
 
 Repository slug is `taiji`; the installable package is currently `taijios` and exposes the `aios` Python modules.
+
+For public reviewers, TaijiOS should be read first as an evidence-first runtime. Hexagram and I Ching labels are role-boundary and system-state abstractions, not mystical claims or production authority.
 
 ---
 
@@ -297,25 +302,25 @@ TaijiOS/
 ```bash
 # ── AI 模型（选填，至少配一个）──────────────────────
 # DeepSeek（推荐，便宜）
-DEEPSEEK_API_KEY=sk-...
+DEEPSEEK_API_KEY=<set-in-env-only>
 
 # Gemini
-GEMINI_API_KEY=AIza...
+GEMINI_API_KEY=<set-in-env-only>
 
 # Claude（官方 Anthropic 保底）
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=<set-in-env-only>
 
 # Claude 中转站（可选，比官方便宜）
-CLAUDE_RELAY_KEY=sk-...
+CLAUDE_RELAY_KEY=<set-in-env-only>
 CLAUDE_RELAY_BASE=https://your-relay.com/v1
 
 # ── 飞书 Bot（可选）──────────────────────────────
 FEISHU_APP_ID=cli_...
-FEISHU_APP_SECRET=...
+FEISHU_APP_SECRET=<set-in-env-only>
 
 # ── LLM Gateway ──────────────────────────────────
 TAIJIOS_GATEWAY_ENABLED=1
-TAIJIOS_API_TOKEN=your-token
+TAIJIOS_API_TOKEN=<set-in-env-only>
 
 # ── External research (roadmap) ───────────────────
 # Current local learning commands do not require GITHUB_TOKEN.

@@ -1,9 +1,9 @@
-# SpaceXAI Application Proof Packet
+# xAI / SpaceX-Style Human Review Proof Packet
 
 ```text
 scope=spacexai_application_proof_packet_v0_1
 mode=docs_only
-repo_root=/Users/weiwei/Desktop/taiji
+repo_root=<taiji repo root>
 verdict=PARTIAL
 expected_verdict=partial_spacexai_application_packet_ready_for_human_review
 ```
@@ -14,9 +14,16 @@ TaijiOS is an evidence-first AI agent runtime that turns agent activity into aud
 
 ## Three Evidence Bullets
 
-1. **Evidence-first runtime discipline:** TaijiOS separates `PASS`, `PARTIAL`, and `BLOCKED` states through parseable `summary.json`, `event_flow.jsonl`, and `closeout.md` artifacts, so local scope success is not rewritten as repo-wide success.
-2. **Verified reliability spine:** the Product Spine verifier checks run packets for parseable evidence, terminal verdict consistency, forbidden claims, staged-count reporting, and no fake repo pass.
-3. **Self-improving loop as reliability package:** the self-improving-loop line frames learning as monitored improvement plus rollback thresholds, not unbounded autonomy or production authority.
+1. **Hard problem solved:** AI agents can look successful while silently failing. TaijiOS requires parseable evidence before a claim is accepted.
+2. **Concrete evidence artifact:** local demos and run packets use `summary.json`, `event_flow.jsonl`, `closeout.md`, verifier checks, and explicit `PASS` / `PARTIAL` / `BLOCKED` semantics.
+3. **Exact limitation:** this packet is human-review evidence only. It is not production readiness, not xAI/SpaceX/Elon endorsement, not provider/API readiness, not release evidence `PASS`, and not hardware or trading authority.
+
+Reviewer entrypoints:
+
+- [START_HERE_FOR_REVIEWERS.md](START_HERE_FOR_REVIEWERS.md)
+- [proof_index.json](proof_index.json)
+- [QUANT_EVIDENCE_PLAN.md](QUANT_EVIDENCE_PLAN.md)
+- [../AUDIT_EVIDENCE.md](../AUDIT_EVIDENCE.md)
 
 ## GitHub Proof Links
 
@@ -39,6 +46,7 @@ Local candidate evidence, not yet claimed as public GitHub proof in this packet:
 ## What Is Verified
 
 - The public repo contains a runnable TaijiOS entrypoint, quickstart description, and architecture documentation.
+- The minimal quickstart can run without API keys or GPU and should produce 3 tasks, 3/3 succeeded, 3/3 self-healed, and 18 logged events.
 - Product Spine has a local verifier implementation and tests for run-packet evidence contracts.
 - The proof packet itself has a Product Spine-compatible run packet:
   - `runs/ops_check/spacexai_application_packet_20260522/summary.json`
@@ -90,6 +98,8 @@ These artifacts are part of the application evidence. They are not runtime proof
 - Not reviewed, endorsed, accepted, or recognized by SpaceX, SpaceXAI, or any external organization.
 - Not able to control real spacecraft, vehicles, robots, radios, satellites, hardware, brokers, or exchanges.
 - Not provider/API ready in this scope.
+- Not proof that this repo meets any hiring bar or will be reviewed favorably.
+- Not live release evidence `PASS`; `AUDIT_EVIDENCE.md` is currently `TEMPLATE_READY` with live release verification `PENDING`.
 - Not a secret, `.env`, keychain, billing, or external API verification.
 - Not a trade/order/paper-buy/judgment/promotion system.
 - Not repo PASS, branch PASS, commit PASS, push PASS, PR PASS, or merge PASS.
@@ -100,7 +110,7 @@ These artifacts are part of the application evidence. They are not runtime proof
 Use this packet as a compact application proof:
 
 ```text
-TaijiOS demonstrates exceptional ability through a practical agent-runtime pattern:
+TaijiOS demonstrates practical engineering evidence through an agent-runtime pattern:
 evidence before claims, verifier before promotion, and closeout before public success language.
 ```
 

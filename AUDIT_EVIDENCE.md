@@ -2,9 +2,18 @@
 
 Status: release evidence template, not live release evidence.
 
+```text
+release_evidence_state=TEMPLATE_READY
+live_release_verification=PENDING
+last_verified_run=null
+gate=DO_NOT_CLAIM_RELEASE_PASS
+```
+
 This file documents the evidence produced by `.github/workflows/release.yml`.
 It is valid for an audit only after a real GitHub Actions release run has
 completed and the uploaded artifact bundle has been downloaded and verified.
+Until that happens, the only valid public claim is that the release evidence
+framework exists. Do not claim release evidence `PASS` from this template alone.
 
 ## Version Anchor
 

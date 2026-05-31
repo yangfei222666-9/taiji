@@ -1,0 +1,72 @@
+{
+  "verdict": "PARTIAL",
+  "scope": "evidence-only / no provider / no judgment / no trade",
+  "mode": "dirty_tree_scope_isolation_only",
+  "repo_root": "/Users/weiwei/Desktop/taiji",
+  "checked_at": "2026-05-24T14:08:19+08:00",
+  "staged_at": "2026-05-24T14:14:00+08:00",
+  "staged_count": 9,
+  "repo_pass": false,
+  "stage_exact_scope": true,
+  "commit_push_pr_merge": false,
+  "evidence_sync_scope": {
+    "status": "isolated",
+    "file_count": 9,
+    "files": [
+      ".gitignore",
+      "Makefile",
+      "tools/verify_evidence_preflight.py",
+      "evidence/summary.json",
+      "evidence/event_flow.jsonl",
+      "evidence/preflight_checklist.json",
+      "evidence/hard_gate_line_triage.json",
+      "evidence/repo_pass_blocker_owner_review.json",
+      "evidence/dirty_tree_scope_isolation.json"
+    ],
+    "allowed_next_action": "commit gate only with explicit authorization; no push, PR, or merge"
+  },
+  "external_dirty_scope": {
+    "status": "present_outside_scope",
+    "file_count": 17,
+    "tracked_modified": [
+      "AUDIT_EVIDENCE.md"
+    ],
+    "untracked": [
+      ".audit/out/closeout_20260524_120023/unified.diff",
+      ".audit/out/selftest_20260524_115942/artifacts.json",
+      ".audit/out/selftest_20260524_115942/latest-build.normalized.sha256",
+      ".audit/out/selftest_20260524_115942/manifest.json",
+      ".audit/out/selftest_20260524_115942/pulse.txt",
+      ".audit/out/selftest_20260524_115942/rekor.txt",
+      ".audit/out/selftest_20260524_115942/sha256.txt",
+      ".audit/out/selftest_20260524_115942/sigstore.json",
+      ".audit/out/selftest_20260524_115942/summary.json",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/artifacts.json",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/latest-build.normalized.sha256",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/manifest.json",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/rekor.txt",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/sha256.txt",
+      ".audit/out/selftest_rekor_blocked_20260524_115952/summary.json",
+      "docs/TAIJIOS_SELF_EVOLUTION_PHILOSOPHY_v0.1.md"
+    ],
+    "blocks_repo_pass": true,
+    "action_taken": "left_unstaged"
+  },
+  "boundaries": {
+    "runtime_logic_modified": false,
+    "secret_read": false,
+    "provider_called": false,
+    "execution_venue_touched": false,
+    "judgment_declared": false,
+    "paper_buy": false,
+    "trade_or_order": false,
+    "promotion": false,
+    "live_ready_declared": false,
+    "commit_push_pr_merge": false
+  },
+  "decision": {
+    "evidence_scope_pass": true,
+    "repo_pass": false,
+    "reason": "external dirty tree remains present and no git write gate is authorized"
+  }
+}
