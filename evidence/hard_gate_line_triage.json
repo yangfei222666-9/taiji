@@ -1,0 +1,1722 @@
+{
+  "classification_counts": {
+    "agent_provider_client_code": 16,
+    "core_model_client_code": 14,
+    "example_boundary_fixture": 15,
+    "gateway_credential_or_boundary_code": 17,
+    "lite_runtime_credential_field": 35,
+    "policy_or_design_boundary_text": 51,
+    "prior_local_audit_record": 3,
+    "product_spine_boundary_literal": 7,
+    "scanner_rule_template": 1,
+    "sports_data_adapter_credential_field": 5,
+    "test_boundary_fixture": 7,
+    "test_or_demo_placeholder": 3,
+    "verifier_or_learning_tool_boundary_literal": 8
+  },
+  "entries": [
+    {
+      "blocks_repo_pass": false,
+      "class": "prior_local_audit_record",
+      "id": 1,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/github_actions_audit_checklist_verification.json:46"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "prior_local_audit_record",
+      "id": 2,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/event_flow.jsonl:1"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "prior_local_audit_record",
+      "id": 3,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/summary.json:31"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_or_demo_placeholder",
+      "id": 4,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "test_e2e_full_pipeline.py:34"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 5,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_taiji_memory_layer_contract.py:21"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 6,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_taiji_memory_layer_contract.py:50"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 7,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "rpa_vision/CONTROLLED_EXECUTION_SPEC.md:117"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 8,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_scenario_sandbox_contract.py:24"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 9,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_scenario_sandbox_contract.py:48"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 10,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_scenario_sandbox_contract.py:195"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 11,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/START_HERE_FOR_REVIEWERS.md:55"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 12,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/verify_github_actions_audit_checklist.py:378"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 13,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md:21"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 14,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md:47"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 15,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md:175"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 16,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md:227"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 17,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md:264"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 18,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_spaceops_lab_contract.py:20"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_boundary_fixture",
+      "id": 19,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tests/test_spaceops_lab_contract.py:50"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 20,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WORLDLINE_SIMULATOR_DESIGN_v0.1.md:174"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 21,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WORLDLINE_SIMULATOR_DESIGN_v0.1.md:248"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 22,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:46"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 23,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:53"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 24,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:69"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 25,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:74"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 26,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:86"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 27,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:665"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "verifier_or_learning_tool_boundary_literal",
+      "id": 28,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "tools/daily_learning_paper_intake.py:791"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 29,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md:21"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 30,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md:22"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 31,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md:228"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 32,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md:244"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 33,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md:249"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 34,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:677"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 35,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:756"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 36,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:852"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 37,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:854"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 38,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:856"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 39,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:864"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 40,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:875"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 41,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:888"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 42,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:892"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 43,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/taijios.py:1428"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 44,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJI_MEMORY_TREE_DESIGN_v0.1.md:134"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 45,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJI_MEMORY_TREE_DESIGN_v0.1.md:227"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 46,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJI_MEMORY_TREE_DESIGN_v0.1.md:252"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 47,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJI_MEMORY_TREE_DESIGN_v0.1.md:263"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 48,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:40"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 49,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:52"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 50,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:58"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 51,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:79"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 52,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:101"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 53,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:114"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 54,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/settings.py:128"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 55,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/gate.py:74"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 56,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/SPACE_X_AI_PROOF_PACKET.md:99"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "scanner_rule_template",
+      "id": 57,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "skill_auto_creation/templates/VALIDATION_RULES.json:53"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 58,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/api_server.py:441"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 59,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/providers.py:140"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 60,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/providers.py:220"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_or_demo_placeholder",
+      "id": 61,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/test_cross_validate.py:15"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "test_or_demo_placeholder",
+      "id": 62,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/test_cross_validate.py:21"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 63,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md:13"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 64,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md:40"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 65,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md:88"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 66,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md:138"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 67,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:50"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 68,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:55"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 69,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:90"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 70,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:118"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 71,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:168"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 72,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:198"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 73,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:255"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 74,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:265"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 75,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:270"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 76,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:281"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 77,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:292"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 78,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/multi_llm.py:366"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 79,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:12"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 80,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:24"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 81,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:63"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 82,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:85"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 83,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:122"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 84,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md:156"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 85,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:21"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 86,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:28"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 87,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:29"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 88,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:31"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 89,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:65"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 90,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/config.py:73"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 91,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md:11"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 92,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md:72"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 93,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md:99"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 94,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md:127"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 95,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md:148"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 96,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:5"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 97,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:25"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 98,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:36"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 99,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:48"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 100,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:131"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 101,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:132"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 102,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:133"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "gateway_credential_or_boundary_code",
+      "id": 103,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/gateway/auth.py:136"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 104,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:19"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 105,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:20"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 106,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:80"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 107,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:125"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 108,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:126"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 109,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_SCHEMA_v0.1.md:373"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 110,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_MEMORY_LAYER_CONTRACT_v0.1.md:18"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 111,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_MEMORY_LAYER_CONTRACT_v0.1.md:112"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 112,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_MEMORY_LAYER_CONTRACT_v0.1.md:316"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 113,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md:68"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 114,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md:81"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 115,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md:116"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 116,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md:27"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 117,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md:53"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 118,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md:80"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 119,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md:169"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "policy_or_design_boundary_text",
+      "id": 120,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md:202"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 121,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:77"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 122,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:80"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 123,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:83"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 124,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:90"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 125,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:91"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 126,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:94"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 127,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:101"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 128,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:102"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 129,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:105"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 130,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:112"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 131,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:114"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 132,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:116"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 133,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:302"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 134,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/llm_caller.py:303"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 135,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:56"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 136,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:70"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 137,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:166"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 138,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:233"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 139,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:549"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 140,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:594"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "product_spine_boundary_literal",
+      "id": 141,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/userland/product_spine/verify_run.py:604"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 142,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/bot_feishu.py:67"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 143,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/bot_feishu.py:81"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 144,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/bot_telegram.py:68"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 145,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/bot_telegram.py:83"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 146,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/real_executor.py:32"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 147,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/real_executor.py:60"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "lite_runtime_credential_field",
+      "id": 148,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "taijios-lite/bot_core.py:1068"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 149,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/secret_manager.py:55"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "agent_provider_client_code",
+      "id": 150,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/agent_system/secret_manager.py:60"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "sports_data_adapter_credential_field",
+      "id": 151,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "match_analysis/main.py:30"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 152,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/scenario_sandbox_seed_example.json:89"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 153,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/scenario_sandbox_seed_example.json:112"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 154,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/scenario_sandbox_seed_example.json:130"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 155,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:32"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 156,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:50"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 157,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:62"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 158,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:197"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 159,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:312"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 160,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:488"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 161,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/product_spine_5min_demo.py:498"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "sports_data_adapter_credential_field",
+      "id": 162,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "match_analysis/adapters/the_odds_api.py:45"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "sports_data_adapter_credential_field",
+      "id": 163,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "match_analysis/adapters/the_odds_api.py:46"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "sports_data_adapter_credential_field",
+      "id": 164,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "match_analysis/adapters/api_football.py:36"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "sports_data_adapter_credential_field",
+      "id": 165,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "match_analysis/adapters/api_football.py:37"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 166,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/mars_rover_mission_request.json:47"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 167,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/mars_rover_mission_request.json:74"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 168,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/taiji_memory_chunk_example.json:51"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 169,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/taiji_memory_chunk_example.json:91"
+    },
+    {
+      "blocks_repo_pass": false,
+      "class": "example_boundary_fixture",
+      "id": 170,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "examples/taiji_memory_chunk_example.json:217"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 171,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:40"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 172,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:48"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 173,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:53"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 174,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:60"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 175,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:162"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 176,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:163"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 177,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:164"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 178,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:253"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 179,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:310"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 180,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:311"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 181,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:318"
+    },
+    {
+      "blocks_repo_pass": true,
+      "class": "core_model_client_code",
+      "id": 182,
+      "introduced_by_this_scope": false,
+      "note": "classified_without_raw_line_text",
+      "scope_escalation": false,
+      "source": "aios/core/llm.py:335"
+    }
+  ],
+  "file_counts": {
+    "aios/agent_system/llm_caller.py": 14,
+    "aios/agent_system/secret_manager.py": 2,
+    "aios/core/llm.py": 12,
+    "aios/core/real_executor.py": 2,
+    "aios/gateway/auth.py": 8,
+    "aios/gateway/config.py": 6,
+    "aios/gateway/gate.py": 1,
+    "aios/gateway/providers.py": 2,
+    "aios/userland/product_spine/verify_run.py": 7,
+    "docs/DELTABOX_CHECKPOINT_EVENT_SCHEMA_v0.1.md": 5,
+    "docs/MARS_ROVER_SIM_CONTRACT_v0.1.md": 5,
+    "docs/PRODUCT_SPINE_SCHEMA_v0.1.md": 6,
+    "docs/PRODUCT_SPINE_VERIFIER_PLAN_v0.1.md": 5,
+    "docs/SPACE_X_AI_PROOF_PACKET.md": 1,
+    "docs/START_HERE_FOR_REVIEWERS.md": 1,
+    "docs/TAIJIOS_MEMORY_LAYER_CONTRACT_v0.1.md": 3,
+    "docs/TAIJIOS_REARCHITECTURE_PLAN_v0.1.md": 3,
+    "docs/TAIJIOS_SCENARIO_SANDBOX_CONTRACT_v0.1.md": 5,
+    "docs/TAIJIOS_SPACEOPS_LAB_v0.1.md": 6,
+    "docs/TAIJI_MEMORY_TREE_DESIGN_v0.1.md": 4,
+    "docs/WIN11_T7_PROJECT_INVENTORY_v0.1.md": 4,
+    "docs/WORLDLINE_SIMULATOR_DESIGN_v0.1.md": 2,
+    "examples/mars_rover_mission_request.json": 2,
+    "examples/product_spine_5min_demo.py": 7,
+    "examples/scenario_sandbox_seed_example.json": 3,
+    "examples/taiji_memory_chunk_example.json": 3,
+    "match_analysis/adapters/api_football.py": 2,
+    "match_analysis/adapters/the_odds_api.py": 2,
+    "match_analysis/main.py": 1,
+    "rpa_vision/CONTROLLED_EXECUTION_SPEC.md": 1,
+    "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/event_flow.jsonl": 1,
+    "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/github_actions_audit_checklist_verification.json": 1,
+    "runs/ops_check/github_actions_audit_checklist_canonical_repo_probe_v0_1_20260517/summary.json": 1,
+    "skill_auto_creation/templates/VALIDATION_RULES.json": 1,
+    "taijios-lite/api_server.py": 1,
+    "taijios-lite/bot_core.py": 1,
+    "taijios-lite/bot_feishu.py": 2,
+    "taijios-lite/bot_telegram.py": 2,
+    "taijios-lite/multi_llm.py": 12,
+    "taijios-lite/settings.py": 7,
+    "taijios-lite/taijios.py": 10,
+    "taijios-lite/test_cross_validate.py": 2,
+    "test_e2e_full_pipeline.py": 1,
+    "tests/test_scenario_sandbox_contract.py": 3,
+    "tests/test_spaceops_lab_contract.py": 2,
+    "tests/test_taiji_memory_layer_contract.py": 2,
+    "tools/daily_learning_paper_intake.py": 7,
+    "tools/verify_github_actions_audit_checklist.py": 1
+  },
+  "introduced_by_this_scope_count": 0,
+  "limitations": [
+    "raw line text intentionally omitted so this artifact does not create recursive gate matches",
+    "runtime credential-handling files require owner review before repo pass",
+    "dirty tree remains outside this triage artifact"
+  ],
+  "mode": "full_line_hard_gate_triage_only",
+  "raw_match_file_count": 48,
+  "raw_match_line_count": 182,
+  "repo_pass_blocking_line_count": 87,
+  "repo_root": "/Users/weiwei/Desktop/taiji",
+  "scope": "evidence-only / no provider / no judgment / no trade",
+  "scope_escalation_count": 0,
+  "triage_status": "full_line_triaged",
+  "verdict": "PARTIAL"
+}

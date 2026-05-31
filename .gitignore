@@ -32,6 +32,12 @@ evidence/*
 !evidence/scripts/
 !evidence/scripts/gen_manifest.sh
 !evidence/scripts/verify_all.sh
+!evidence/summary.json
+!evidence/event_flow.jsonl
+!evidence/preflight_checklist.json
+!evidence/hard_gate_line_triage.json
+!evidence/repo_pass_blocker_owner_review.json
+!evidence/dirty_tree_scope_isolation.json
 debug_screenshots/
 validation_reports/
 jobs/
