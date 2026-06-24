@@ -6,6 +6,8 @@ I build evidence gates for AI agent workflows. The goal is to prevent false-pass
 
 This page links the current public proof to merged GitHub PRs, local validation commands, and explicit `cannot_claim` boundaries.
 
+Current public proof also includes Codex Reliability Gap Map #01, a scoped public-report review that maps coding-agent failure reports to evidence-gate design patterns without treating reports as confirmed defects.
+
 ## What problem this targets
 
 AI agents often close tasks with unsupported success language. Common failure modes:
@@ -87,6 +89,22 @@ Evidence:
 - Merge commit: [`54c2b636`](https://github.com/yangfei222666-9/taiji/commit/54c2b6366e8417b5807bd13338e362aced896969)
 - Main CI run: [28108395046](https://github.com/yangfei222666-9/taiji/actions/runs/28108395046)
 
+### 5. Codex Reliability Gap Map #01
+
+The Gap Map reviews a deterministic 30-issue public `openai/codex` snapshot and maps reported symptoms to evidence-gate patterns. It is a research proof for failure-mode taxonomy, not a product-quality verdict.
+
+Run:
+
+```bash
+python3 scripts/check_codex_gap_map.py
+```
+
+Evidence:
+
+- PR #43: [Add Codex Reliability Gap Map #01](https://github.com/yangfei222666-9/taiji/pull/43)
+- Merge commit: [`44dee657`](https://github.com/yangfei222666-9/taiji/commit/44dee657fb112f8ea3bfa207c104684079bd94de)
+- Main CI run: [28116696880](https://github.com/yangfei222666-9/taiji/actions/runs/28116696880)
+
 ## Evidence map
 
 | Evidence | Status | What it supports | What it does not prove |
@@ -94,7 +112,9 @@ Evidence:
 | PR #38 merged | Remote main evidence | Empty or missing fixture directories are rejected instead of passing with zero cases | Production readiness |
 | PR #39 merged | Remote main evidence | Candidate review envelope exists and is local-only by default | Provider readiness |
 | PR #40 merged | Remote main evidence | GLM bridge scripts are locked to `glm-5.2` and `ZHIPUAI_API_KEY` | Long-task readiness |
+| PR #43 merged | Remote main evidence | Gap Map #01 is published with a deterministic public-report sample, validator, and tests | Codex product-quality assessment |
 | Main CI at `54c2b636` | Remote CI evidence | CI passed after PR #40 merged | Runtime deployment readiness |
+| Main CI at `44dee657` | Remote CI evidence | CI passed after PR #43 merged | Prevalence or confirmed-defect claims |
 | Local dry-run commands | Local validation evidence | No provider call or key read in dry-run mode | API execution correctness |
 
 ## Recruiter-readable summary
@@ -103,6 +123,7 @@ Evidence:
 - Fixed a real false-pass bug where missing or empty fixtures could have allowed a zero-case self-test to appear successful.
 - Added a candidate-review bridge that prepares sanitized review envelopes while preserving local-only and candidate-only boundaries.
 - Locked the GLM bridge to Zhipu GLM-5.2 only, removing dynamic model, endpoint, and fallback-provider paths.
+- Published Codex Reliability Gap Map #01 as a scoped research proof that maps public coding-agent failure reports to evidence-gate patterns.
 - Kept provider output separate from canonical truth: GLM output can assist planning and review, but local verification, GitHub CI, and human approval remain separate gates.
 
 ## `cannot_claim`
@@ -118,7 +139,10 @@ This proof does not claim:
 - customer validation
 - Zhipu endorsement
 - that provider output is canonical truth
+- prevalence across Codex users
+- current Codex product quality
+- maintainer-confirmed defects or root causes
 
 ## Next evidence gate
 
-The next useful gate is to validate, commit, and publish this evidence page, then link it from resume or recruiter-facing materials. Do not add another architecture layer before this proof is visible and reviewable.
+The next useful gate is to keep README and recruiter-facing materials aligned with the merged implementation proof and research proof. Do not add another architecture layer before the public proof path is easy to inspect.
