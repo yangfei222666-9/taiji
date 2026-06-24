@@ -4,6 +4,11 @@
 This script intentionally does not call a provider. It reads sanitized text from
 stdin and emits a JSON candidate-review envelope that can be used in a later,
 separately authorized provider-call gate.
+
+Provider lock:
+- provider SDK: zhipuai.ZhipuAI only
+- model: glm-5.2 only
+- API key env: ZHIPUAI_API_KEY only
 """
 
 from __future__ import annotations
@@ -17,7 +22,10 @@ import sys
 from typing import Any
 
 
-DEFAULT_MODEL = "glm-5.2"
+LOCKED_PROVIDER = "zhipuai"
+LOCKED_SDK = "zhipuai.ZhipuAI"
+LOCKED_MODEL = "glm-5.2"
+API_KEY_ENV = "ZHIPUAI_API_KEY"
 DEFAULT_MAX_INPUT_CHARS = 120_000
 SECRET_PATTERNS = (
     re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
@@ -36,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Read sanitized text from stdin and emit a local-only "
-            "candidate_review JSON envelope."
+            "candidate_review JSON envelope locked to GLM-5.2."
         ),
         epilog=(
             "Examples:\n"
@@ -48,12 +56,12 @@ def build_parser() -> argparse.ArgumentParser:
             "  Does not write files.\n"
             "  Does not read API keys.\n"
             "  Does not call provider APIs.\n"
-            "  Output remains candidate evidence, not canonical truth."
+            "  Output remains candidate evidence, not canonical truth.\n"
+            "  Provider request candidate is locked to zhipuai.ZhipuAI + glm-5.2."
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument("--task", default="candidate_review", help="Review task label.")
-    parser.add_argument("--model", default=DEFAULT_MODEL, help="Target provider model label.")
     parser.add_argument(
         "--max-input-chars",
         type=int,
@@ -93,7 +101,13 @@ def base_envelope(args: argparse.Namespace, text: str) -> dict[str, Any]:
         "repo_files_read": False,
         "files_written": False,
         "input_source": "stdin",
-        "model": args.model,
+        "locked_provider": LOCKED_PROVIDER,
+        "locked_sdk": LOCKED_SDK,
+        "locked_model": LOCKED_MODEL,
+        "api_key_env": API_KEY_ENV,
+        "dynamic_model_allowed": False,
+        "dynamic_endpoint_allowed": False,
+        "fallback_provider_allowed": False,
         "task": args.task,
         "input_chars": len(text),
         "input_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
@@ -153,7 +167,10 @@ def main() -> int:
 
     prompt = make_review_prompt(args.task, text)
     envelope["provider_request_candidate"] = {
-        "model": args.model,
+        "provider": LOCKED_PROVIDER,
+        "sdk": LOCKED_SDK,
+        "api_key_env": API_KEY_ENV,
+        "model": LOCKED_MODEL,
         "messages": [
             {
                 "role": "system",
