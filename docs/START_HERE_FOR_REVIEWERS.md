@@ -23,6 +23,7 @@ The core claim is narrow: agent progress should require parseable evidence befor
 ```bash
 pip install -e .
 bash scripts/replay_public_demo.sh
+python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
 ```
 
 The replay script writes to a temporary output directory by default so review
@@ -41,6 +42,25 @@ Then inspect:
 - `docs/proof_index.json`
 - `docs/SPACE_X_AI_PROOF_PACKET.md`
 - `AUDIT_EVIDENCE.md`
+
+## Agent Reliability: False-Pass Gate
+
+The False-Pass Gate checks whether an AI-agent success claim has passing evidence
+and explicit `cannot_claim` boundaries. It is intentionally local and synthetic:
+
+```bash
+python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
+```
+
+Expected local result:
+
+```text
+self_test=PASS cases=3
+```
+
+This gate can support `LOCAL_VALIDATED` after the self-test and pytest pass. It
+does not prove remote CI, public adoption, production readiness, provider/API
+readiness, or recruiting validation.
 
 ## Verdict Semantics
 
@@ -64,3 +84,4 @@ Do not claim:
 - Provider/API readiness unless a scoped live probe verifies it.
 - Release evidence `PASS` while `AUDIT_EVIDENCE.md` remains template-only.
 - Local demo `PASS` as repo-wide `PASS`.
+- Agent "done", "ready", or "complete" claims without passing evidence and explicit `cannot_claim` boundaries.

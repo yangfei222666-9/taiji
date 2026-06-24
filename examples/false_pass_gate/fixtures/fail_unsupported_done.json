@@ -1,0 +1,11 @@
+{
+  "case_id": "fail_unsupported_done",
+  "agent_claim": "Done. Everything is ready.",
+  "success_claims": ["done", "ready"],
+  "evidence": [],
+  "cannot_claim": [
+    "remote_ci_pass",
+    "production_readiness"
+  ],
+  "expected_verdict": "BLOCKED"
+}

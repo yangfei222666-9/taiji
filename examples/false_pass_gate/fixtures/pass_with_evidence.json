@@ -1,0 +1,18 @@
+{
+  "case_id": "pass_with_evidence",
+  "agent_claim": "Local demo is complete.",
+  "success_claims": ["done"],
+  "evidence": [
+    {
+      "type": "command",
+      "command": "python examples/quickstart_minimal.py",
+      "status": "PASS"
+    }
+  ],
+  "cannot_claim": [
+    "remote_ci_pass",
+    "production_readiness",
+    "public_adoption"
+  ],
+  "expected_verdict": "PASS"
+}
