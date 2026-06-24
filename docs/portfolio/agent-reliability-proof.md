@@ -28,8 +28,8 @@ The false-pass gate is a local schema-level check for agent success claims. It b
 Run:
 
 ```bash
-python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
-python -m pytest tests/test_false_pass_gate.py -q
+python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
+python3 -m pytest tests/test_false_pass_gate.py -q
 ```
 
 ### 2. Zero-fixture false-pass fix
@@ -49,8 +49,8 @@ Run:
 
 ```bash
 printf 'sanitized summary only; no secrets.\n' \
-  | python tools/glm52_candidate_review.py --task local_review \
-  | python -m json.tool
+  | python3 tools/glm52_candidate_review.py --task local_review \
+  | python3 -m json.tool
 ```
 
 Evidence:
@@ -66,7 +66,7 @@ Dry-run validation:
 
 ```bash
 env -u ZHIPUAI_API_KEY -u GLM_API_KEY -u BIGMODEL_API_KEY -u ZAI_API_KEY \
-  python tools/glm52_smoke.py
+  python3 tools/glm52_smoke.py
 ```
 
 Expected dry-run properties:
@@ -105,6 +105,16 @@ Evidence:
 - Merge commit: [`44dee657`](https://github.com/yangfei222666-9/taiji/commit/44dee657fb112f8ea3bfa207c104684079bd94de)
 - Main CI run: [28116696880](https://github.com/yangfei222666-9/taiji/actions/runs/28116696880)
 
+### 6. Public proof alignment
+
+The public README, proof page, and proof index link Agent Reliability proof to merged implementation and research evidence.
+
+Evidence:
+
+- PR #44: [Surface agent reliability evidence](https://github.com/yangfei222666-9/taiji/pull/44)
+- Merge commit: [`fcf2e5c`](https://github.com/yangfei222666-9/taiji/commit/fcf2e5cc7a0b049b61f568bf3d8ba58225cfda9d)
+- Main CI run: [28117951875](https://github.com/yangfei222666-9/taiji/actions/runs/28117951875)
+
 ## Evidence map
 
 | Evidence | Status | What it supports | What it does not prove |
@@ -113,8 +123,10 @@ Evidence:
 | PR #39 merged | Remote main evidence | Candidate review envelope exists and is local-only by default | Provider readiness |
 | PR #40 merged | Remote main evidence | GLM bridge scripts are locked to `glm-5.2` and `ZHIPUAI_API_KEY` | Long-task readiness |
 | PR #43 merged | Remote main evidence | Gap Map #01 is published with a deterministic public-report sample, validator, and tests | Codex product-quality assessment |
+| PR #44 merged | Remote main evidence | README, proof page, and proof index link Agent Reliability proof to merged implementation and research evidence | Hiring validation |
 | Main CI at `54c2b636` | Remote CI evidence | CI passed after PR #40 merged | Runtime deployment readiness |
 | Main CI at `44dee657` | Remote CI evidence | CI passed after PR #43 merged | Prevalence or confirmed-defect claims |
+| Main CI at `fcf2e5c` | Remote CI evidence | CI passed after PR #44 merged | Recruiting outcome claims |
 | Local dry-run commands | Local validation evidence | No provider call or key read in dry-run mode | API execution correctness |
 
 ## Recruiter-readable summary
@@ -124,6 +136,7 @@ Evidence:
 - Added a candidate-review bridge that prepares sanitized review envelopes while preserving local-only and candidate-only boundaries.
 - Locked the GLM bridge to Zhipu GLM-5.2 only, removing dynamic model, endpoint, and fallback-provider paths.
 - Published Codex Reliability Gap Map #01 as a scoped research proof that maps public coding-agent failure reports to evidence-gate patterns.
+- Aligned the public README so Agent Reliability evidence appears before broader TaijiOS system context.
 - Kept provider output separate from canonical truth: GLM output can assist planning and review, but local verification, GitHub CI, and human approval remain separate gates.
 
 ## `cannot_claim`

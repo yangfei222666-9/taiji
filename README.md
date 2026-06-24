@@ -2,12 +2,12 @@
   <img src="docs/hud_screenshot.png" alt="TaijiOS HUD — Five Engine Real-time Monitor" width="700" />
 </p>
 
-<h1 align="center">TaijiOS 太极OS</h1>
+<h1 align="center">Agent Reliability Evidence</h1>
 
 <p align="center">
-  证据优先的 AI Agent 可靠性运行时<br>
-  <em>An evidence-first reliability runtime for AI agents</em><br>
-  <strong>Turn agent runs into auditable evidence: verify, retry, recover, and review.</strong>
+  TaijiOS 太极OS: evidence-first reliability work for coding agents<br>
+  <em>False-pass prevention, scoped failure-mode research, and explicit no-overclaim boundaries</em><br>
+  <strong>Agent said done. Where is the evidence?</strong>
 </p>
 
 <p align="center">
@@ -18,38 +18,40 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start-快速开始">快速开始</a> · <a href="#why-i-ching-为什么用易经">易经状态机</a> · <a href="#architecture-架构">架构</a> · <a href="#features-核心能力">能力</a> · <a href="#modules-模块">模块</a>
+  <a href="#public-entry-公开入口">Public proof</a> · <a href="docs/portfolio/agent-reliability-proof.md">False-Pass Gate</a> · <a href="docs/research/codex-reliability-gap-map-01.md">Gap Map</a> · <a href="#quick-start-快速开始">Quick Start</a>
 </p>
 
 ---
 
 ## Public entry 公开入口
 
-This is the main TaijiOS repository.
+This repository is the public Agent Reliability entrypoint for TaijiOS. It shows how I inspect AI-agent "done" claims, map coding-agent failure reports to evidence gates, and separate local checks, remote CI, provider output, and canonical truth.
 
 - Agent Reliability proof path: Agent said done. Where is the evidence?
-  - Implementation proof: [False-Pass Gate](docs/portfolio/agent-reliability-proof.md) and `python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures`.
+  - Implementation proof: [False-Pass Gate](docs/portfolio/agent-reliability-proof.md) and `python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures`.
   - Research proof: [Codex Reliability Gap Map #01](docs/research/codex-reliability-gap-map-01.md), a scoped 30-issue public-report review mapped to evidence-gate patterns.
-  - Remote evidence: [PR #43](https://github.com/yangfei222666-9/taiji/pull/43), merge commit [`44dee657`](https://github.com/yangfei222666-9/taiji/commit/44dee657fb112f8ea3bfa207c104684079bd94de), and [main CI run 28116696880](https://github.com/yangfei222666-9/taiji/actions/runs/28116696880).
+  - Remote evidence: [PR #43](https://github.com/yangfei222666-9/taiji/pull/43), merge commit [`44dee657`](https://github.com/yangfei222666-9/taiji/commit/44dee657fb112f8ea3bfa207c104684079bd94de), [main CI run 28116696880](https://github.com/yangfei222666-9/taiji/actions/runs/28116696880), [PR #44](https://github.com/yangfei222666-9/taiji/pull/44), merge commit [`fcf2e5c`](https://github.com/yangfei222666-9/taiji/commit/fcf2e5cc7a0b049b61f568bf3d8ba58225cfda9d), and [main CI run 28117951875](https://github.com/yangfei222666-9/taiji/actions/runs/28117951875).
   - Limits: not a prevalence study, not a current Codex product-quality conclusion, and not proof that open issues are confirmed defects.
 - Reviewer start page: [docs/START_HERE_FOR_REVIEWERS.md](docs/START_HERE_FOR_REVIEWERS.md) — 5-minute public review path, exact verdicts, and no-overclaim boundaries.
-- Agent Reliability False-Pass Gate: `python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures` — local schema-level check that blocks success language when passing evidence pointers or explicit `cannot_claim` boundaries are missing.
-- Agent Reliability proof: [docs/portfolio/agent-reliability-proof.md](docs/portfolio/agent-reliability-proof.md) - recruiter-readable evidence map for PR #38, PR #39, PR #40, and PR #43; not provider readiness, runtime readiness, Codex product assessment, or hiring validation.
-- SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md) — human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
-- 权威边界文档: [Product Spine](docs/architecture/PRODUCT_SPINE_AUTHORITY.md), [Provider Gate](docs/provider/PROVIDER_BOUNDARY_GATE.md), [Direct LLM Caller](docs/provider/DIRECT_LLM_CALLER_BOUNDARY.md), [Multi-Model Gate](docs/provider/MULTI_MODEL_ARCHITECTURE_GATE.md), [Runtime Matrix](docs/runtime/RUNTIME_MATURITY_MATRIX.md), [HSDL](docs/design/HSDL_CANONICAL_SPEC_v0.1.md), [小九通天录](xiaojiu_tongtianlu/BOUNDARY.md), [Life Systems](life_systems/BIOSECURITY_BOUNDARY.md) — docs-only review gates; not repo-level PASS, runtime readiness, or provider readiness.
+- Agent Reliability False-Pass Gate: `python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures` blocks success language when passing evidence pointers or explicit `cannot_claim` boundaries are missing.
+- Agent Reliability proof: [docs/portfolio/agent-reliability-proof.md](docs/portfolio/agent-reliability-proof.md) maps PR #38, PR #39, PR #40, PR #43, and PR #44 to evidence, commands, limitations, and recruiter-readable claims.
 - Machine-readable proof index: [docs/proof_index.json](docs/proof_index.json)
-- Quantitative evidence plan: [docs/QUANT_EVIDENCE_PLAN.md](docs/QUANT_EVIDENCE_PLAN.md)
-- Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
-- 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
-- Lite migration audit: [docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md](docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md)
-- Legacy prototype: [TaijiOS](https://github.com/yangfei222666-9/TaijiOS)
-- Lite prototype / example pack: [TaijiOS-Lite](https://github.com/yangfei222666-9/TaijiOS-Lite)
-- Standalone reliability spin-off: [self-improving-loop](https://github.com/yangfei222666-9/self-improving-loop)
-- Standalone reasoning skill: [zhuge-skill](https://github.com/yangfei222666-9/zhuge-skill)
 
-If you are new here, start with the live HUD demo, then read this repository. The other repos are either spin-offs or historical prototypes.
+If you are reviewing the Agent Reliability work, start with the proof page, then run the two local validation commands above.
 
 ---
+
+## Extended TaijiOS context
+
+These links are useful after the Agent Reliability proof path. They are broader TaijiOS system context, not the first proof for coding-agent reliability.
+
+- Live demo: [taijios-hud.netlify.app](https://taijios-hud.netlify.app)
+- 30s HUD demo script: [docs/HUD_DEMO_SCRIPT_30S.md](docs/HUD_DEMO_SCRIPT_30S.md)
+- SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md), human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
+- Quantitative evidence plan: [docs/QUANT_EVIDENCE_PLAN.md](docs/QUANT_EVIDENCE_PLAN.md)
+- Lite migration audit: [docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md](docs/examples/TAIJIOS_LITE_MIGRATION_AUDIT.md)
+- Boundary docs: [Product Spine](docs/architecture/PRODUCT_SPINE_AUTHORITY.md), [Provider Gate](docs/provider/PROVIDER_BOUNDARY_GATE.md), [Direct LLM Caller](docs/provider/DIRECT_LLM_CALLER_BOUNDARY.md), [Multi-Model Gate](docs/provider/MULTI_MODEL_ARCHITECTURE_GATE.md), [Runtime Matrix](docs/runtime/RUNTIME_MATURITY_MATRIX.md), [HSDL](docs/design/HSDL_CANONICAL_SPEC_v0.1.md), [小九通天录](xiaojiu_tongtianlu/BOUNDARY.md), and [Life Systems](life_systems/BIOSECURITY_BOUNDARY.md)
+- Historical prototypes: [TaijiOS](https://github.com/yangfei222666-9/TaijiOS), [TaijiOS-Lite](https://github.com/yangfei222666-9/TaijiOS-Lite), [self-improving-loop](https://github.com/yangfei222666-9/self-improving-loop), and [zhuge-skill](https://github.com/yangfei222666-9/zhuge-skill)
 
 This is the canonical TaijiOS engineering entrypoint. Start by running the minimal local demo below; the larger I Ching / Ising architecture is documented after the runnable path.
 
@@ -70,7 +72,7 @@ cd taiji
 pip install -e .
 
 # 运行最小示例（无需 API Key、无需 GPU）
-python examples/quickstart_minimal.py
+python3 examples/quickstart_minimal.py
 ```
 
 你会看到：
@@ -96,7 +98,7 @@ python examples/quickstart_minimal.py
 Run the audit-log demo without external providers:
 
 ```bash
-python examples/demo_app.py
+python3 examples/demo_app.py
 ```
 
 The default path is learning-only and writes JSONL audit evidence. External APIs are disabled unless explicitly enabled:
@@ -235,10 +237,10 @@ TaijiOS 将 6 个系统维度映射为 6 个量子自旋（σ = ±1），用 Isi
 ```bash
 # 启动心跳引擎
 cd aios/agent_system
-python ising_heartbeat.py --loop --interval 60
+python3 ising_heartbeat.py --loop --interval 60
 
 # 查看实时状态
-python ising_heartbeat.py --status
+python3 ising_heartbeat.py --status
 ```
 
 ## Tech Stack 技术栈
@@ -251,15 +253,15 @@ Python 3.12 · FastAPI · SQLite · pyautogui · edge-tts · Whisper
 
 ```bash
 export TAIJIOS_GATEWAY_ENABLED=1
-python -m aios.gateway --port 9200
+python3 -m aios.gateway --port 9200
 ```
 
 ### 运行本地学习分析
 
 ```bash
-PYTHONPATH=aios python -m learning.analyze_report json
-PYTHONPATH=aios python -m learning.analyze_report report
-PYTHONPATH=aios python -m learning.baseline gate
+PYTHONPATH=aios python3 -m learning.analyze_report json
+PYTHONPATH=aios python3 -m learning.analyze_report report
+PYTHONPATH=aios python3 -m learning.baseline gate
 ```
 
 The current open-source repo ships local event analytics under `aios/learning/`.
