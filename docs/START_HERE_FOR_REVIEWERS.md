@@ -45,8 +45,9 @@ Then inspect:
 
 ## Agent Reliability: False-Pass Gate
 
-The False-Pass Gate checks whether an AI-agent success claim has passing evidence
-and explicit `cannot_claim` boundaries. It is intentionally local and synthetic:
+The False-Pass Gate is a schema-level check for AI-agent success claims. It
+requires passing evidence pointers and explicit `cannot_claim` boundaries before
+success language is accepted. It is intentionally local and synthetic:
 
 ```bash
 python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
@@ -59,8 +60,9 @@ self_test=PASS cases=3
 ```
 
 This gate can support `LOCAL_VALIDATED` after the self-test and pytest pass. It
-does not prove remote CI, public adoption, production readiness, provider/API
-readiness, or recruiting validation.
+does not execute evidence commands, prove that the success claim is true, prove
+remote CI, public adoption, production readiness, provider/API readiness, or
+recruiting validation.
 
 ## Verdict Semantics
 
