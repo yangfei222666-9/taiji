@@ -37,6 +37,13 @@
       "command": "bash scripts/replay_public_demo.sh --runs 100",
       "verdict": "PENDING",
       "limitation": "The 100-run and 1,000-run batches are plans until executed and recorded."
+    },
+    {
+      "claim": "The Agent Reliability False-Pass Gate blocks unsupported AI-agent done/readiness claims and missing cannot_claim boundaries.",
+      "evidence_file": "scripts/check_false_pass_gate.py and examples/false_pass_gate/fixtures/",
+      "command": "python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures",
+      "verdict": "LOCAL_VALIDATED when self-test and pytest pass",
+      "limitation": "Synthetic local fixtures only; this does not prove remote CI, public proof update, production readiness, provider/API readiness, recruiting validation, or canonical truth."
     }
   ],
   "blocked_claims": [
@@ -45,6 +52,7 @@
     "hardware_control",
     "provider_api_readiness",
     "release_evidence_pass",
-    "trading_or_order_authority"
+    "trading_or_order_authority",
+    "false_pass_gate_without_evidence"
   ]
 }

@@ -32,6 +32,7 @@
 This is the main TaijiOS repository.
 
 - Reviewer start page: [docs/START_HERE_FOR_REVIEWERS.md](docs/START_HERE_FOR_REVIEWERS.md) — 5-minute public review path, exact verdicts, and no-overclaim boundaries.
+- Agent Reliability False-Pass Gate: `python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures` — local proof that unsupported "done" claims and missing `cannot_claim` boundaries are blocked before success language is accepted.
 - SpaceXAI proof packet: [docs/SPACE_X_AI_PROOF_PACKET.md](docs/SPACE_X_AI_PROOF_PACKET.md) — human-review evidence for an evidence-first AI agent runtime; not SpaceX endorsement, not production readiness, and not real hardware control.
 - 权威边界文档: [Product Spine](docs/architecture/PRODUCT_SPINE_AUTHORITY.md), [Provider Gate](docs/provider/PROVIDER_BOUNDARY_GATE.md), [Direct LLM Caller](docs/provider/DIRECT_LLM_CALLER_BOUNDARY.md), [Multi-Model Gate](docs/provider/MULTI_MODEL_ARCHITECTURE_GATE.md), [Runtime Matrix](docs/runtime/RUNTIME_MATURITY_MATRIX.md), [HSDL](docs/design/HSDL_CANONICAL_SPEC_v0.1.md), [小九通天录](xiaojiu_tongtianlu/BOUNDARY.md), [Life Systems](life_systems/BIOSECURITY_BOUNDARY.md) — docs-only review gates; not repo-level PASS, runtime readiness, or provider readiness.
 - Machine-readable proof index: [docs/proof_index.json](docs/proof_index.json)

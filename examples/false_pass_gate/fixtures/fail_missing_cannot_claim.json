@@ -1,0 +1,14 @@
+{
+  "case_id": "fail_missing_cannot_claim",
+  "agent_claim": "Local validation passed.",
+  "success_claims": ["local_validated"],
+  "evidence": [
+    {
+      "type": "command",
+      "command": "python -m pytest tests/test_false_pass_gate.py -q",
+      "status": "PASS"
+    }
+  ],
+  "cannot_claim": [],
+  "expected_verdict": "BLOCKED"
+}
