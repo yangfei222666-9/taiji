@@ -27,6 +27,29 @@ def test_self_test_fixture_suite_passes():
     assert "cases=3" in result.stdout
 
 
+def test_self_test_rejects_empty_fixture_directory(tmp_path):
+    empty_fixtures = tmp_path / "fixtures"
+    empty_fixtures.mkdir()
+
+    result = run_gate("--self-test", str(empty_fixtures))
+
+    assert result.returncode == 1
+    assert "self_test=FAIL" in result.stdout
+    assert "cases=0" in result.stdout
+    assert "reason=no_fixtures" in result.stdout
+
+
+def test_self_test_rejects_missing_fixture_directory(tmp_path):
+    missing_fixtures = tmp_path / "missing"
+
+    result = run_gate("--self-test", str(missing_fixtures))
+
+    assert result.returncode == 1
+    assert "self_test=FAIL" in result.stdout
+    assert "cases=0" in result.stdout
+    assert "reason=fixtures_dir_not_found" in result.stdout
+
+
 def test_unsupported_done_claim_is_blocked():
     result = run_gate("--case", str(FIXTURES / "fail_unsupported_done.json"))
 

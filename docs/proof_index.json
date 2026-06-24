@@ -39,11 +39,11 @@
       "limitation": "The 100-run and 1,000-run batches are plans until executed and recorded."
     },
     {
-      "claim": "The Agent Reliability False-Pass Gate blocks unsupported AI-agent done/readiness claims and missing cannot_claim boundaries.",
+      "claim": "The Agent Reliability False-Pass Gate blocks AI-agent success language when passing evidence pointers or explicit cannot_claim boundaries are missing.",
       "evidence_file": "scripts/check_false_pass_gate.py and examples/false_pass_gate/fixtures/",
       "command": "python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures",
       "verdict": "LOCAL_VALIDATED when self-test and pytest pass",
-      "limitation": "Synthetic local fixtures only; this does not prove remote CI, public proof update, production readiness, provider/API readiness, recruiting validation, or canonical truth."
+      "limitation": "Synthetic local fixtures only; this does not execute evidence commands, prove that the success claim is true, prove remote CI, public proof update, production readiness, provider/API readiness, recruiting validation, or canonical truth."
     }
   ],
   "blocked_claims": [
