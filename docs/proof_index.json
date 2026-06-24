@@ -44,6 +44,13 @@
       "command": "python scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures",
       "verdict": "LOCAL_VALIDATED when self-test and pytest pass",
       "limitation": "Synthetic local fixtures only; this does not execute evidence commands, prove that the success claim is true, prove remote CI, public proof update, production readiness, provider/API readiness, recruiting validation, or canonical truth."
+    },
+    {
+      "claim": "The Agent Reliability proof page links the false-pass gate, zero-fixture fix, GLM candidate-review bridge, and GLM-5.2 provider lock to merged PR and CI evidence.",
+      "evidence_file": "docs/portfolio/agent-reliability-proof.md",
+      "command": "test -f docs/portfolio/agent-reliability-proof.md && python -m json.tool docs/proof_index.json",
+      "verdict": "PORTFOLIO_EVIDENCE_LINKED",
+      "limitation": "Recruiter-readable documentation only; this does not prove provider readiness, runtime readiness, long-task readiness, production deployment, hiring validation, or that GLM output is canonical truth."
     }
   ],
   "blocked_claims": [
@@ -53,6 +60,10 @@
     "provider_api_readiness",
     "release_evidence_pass",
     "trading_or_order_authority",
-    "false_pass_gate_without_evidence"
+    "false_pass_gate_without_evidence",
+    "runtime_readiness",
+    "long_task_readiness",
+    "hiring_validation",
+    "glm_output_as_canonical_truth"
   ]
 }
