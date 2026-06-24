@@ -93,7 +93,21 @@ def run_case(path: Path) -> int:
 
 
 def run_self_test(fixtures_dir: Path) -> int:
+    if not fixtures_dir.is_dir():
+        print(
+            f"self_test=FAIL cases=0 "
+            f"reason=fixtures_dir_not_found path={fixtures_dir}"
+        )
+        return 1
+
     paths = sorted(fixtures_dir.glob("*.json"))
+    if not paths:
+        print(
+            f"self_test=FAIL cases=0 "
+            f"reason=no_fixtures path={fixtures_dir}"
+        )
+        return 1
+
     failures: list[str] = []
 
     for path in paths:
