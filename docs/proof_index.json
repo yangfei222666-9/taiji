@@ -20,7 +20,7 @@
     {
       "claim": "The proof packet preserves no-overclaim boundaries for human review.",
       "evidence_file": "docs/SPACE_X_AI_PROOF_PACKET.md",
-      "command": "python -m json.tool docs/proof_index.json",
+      "command": "python3 -m json.tool docs/proof_index.json",
       "verdict": "PARTIAL",
       "limitation": "No xAI, SpaceX, Elon, external organization, production, hardware, provider/API, trading, or release PASS endorsement is claimed."
     },
@@ -48,9 +48,16 @@
     {
       "claim": "The Agent Reliability proof page links the false-pass gate, zero-fixture fix, GLM candidate-review bridge, and GLM-5.2 provider lock to merged PR and CI evidence.",
       "evidence_file": "docs/portfolio/agent-reliability-proof.md",
-      "command": "test -f docs/portfolio/agent-reliability-proof.md && python -m json.tool docs/proof_index.json",
+      "command": "test -f docs/portfolio/agent-reliability-proof.md && python3 -m json.tool docs/proof_index.json",
       "verdict": "PORTFOLIO_EVIDENCE_LINKED",
       "limitation": "Recruiter-readable documentation only; this does not prove provider readiness, runtime readiness, long-task readiness, production deployment, hiring validation, or that GLM output is canonical truth."
+    },
+    {
+      "claim": "Codex Reliability Gap Map #01 maps a deterministic 30-issue public Codex issue snapshot to evidence-gate patterns without treating reported symptoms as confirmed defects.",
+      "evidence_file": "docs/research/codex-reliability-gap-map-01.md and data/codex-reliability-gap-map-01.json",
+      "command": "python3 scripts/check_codex_gap_map.py && python3 -m json.tool docs/proof_index.json",
+      "verdict": "MERGED_REMOTE_CI_VALIDATED at main 44dee657fb112f8ea3bfa207c104684079bd94de / CI 28116696880",
+      "limitation": "Scoped public-report review only; not a prevalence study, not a security audit, not a current Codex product-quality conclusion, and not proof that open issues are maintainer-confirmed defects."
     }
   ],
   "blocked_claims": [
@@ -64,6 +71,9 @@
     "runtime_readiness",
     "long_task_readiness",
     "hiring_validation",
-    "glm_output_as_canonical_truth"
+    "glm_output_as_canonical_truth",
+    "codex_gap_map_as_prevalence_study",
+    "codex_gap_map_as_current_product_quality_assessment",
+    "open_issue_as_confirmed_defect"
   ]
 }
