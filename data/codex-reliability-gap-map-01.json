@@ -1,0 +1,923 @@
+{
+  "schema": "codex_reliability_gap_map_01_v1",
+  "title": "Codex Reliability Gap Map #01",
+  "subtitle": "A Scoped Review of Public Coding-Agent Failure Reports",
+  "snapshot_date": "2026-06-24",
+  "snapshot_cutoff": "2026-06-24T23:59:59Z",
+  "source_repo": "openai/codex",
+  "source_query": "https://api.github.com/repos/openai/codex/issues?state=open&per_page=100&sort=created&direction=desc",
+  "sample_size": 30,
+  "sample_type": "deterministic_non_random_snapshot",
+  "sampling_rule": "Take the first 30 open, non-PR GitHub issues with created_at <= 2026-06-24T23:59:59Z after sorting by created_at descending.",
+  "purpose": "exploratory_failure_mode_mapping",
+  "sources": [
+    "https://openai.com/index/introducing-codex/",
+    "https://github.com/openai/codex/issues",
+    "https://arxiv.org/abs/2603.20847",
+    "https://arxiv.org/abs/2605.18583",
+    "https://arxiv.org/abs/2606.22721"
+  ],
+  "cannot_establish": [
+    "prevalence across all Codex users",
+    "maintainer-confirmed product defects",
+    "root causes",
+    "whether reports remain valid after later releases",
+    "security impact",
+    "current Codex product quality"
+  ],
+  "failure_modes": {
+    "completion_evidence_integrity": {
+      "label": "Completion evidence integrity",
+      "gate": "Closeout Evidence Gate",
+      "description": "Completion claims need inspectable evidence rather than partial, stale, or UI-only success signals."
+    },
+    "session_state_continuity": {
+      "label": "Session and state continuity",
+      "gate": "State Resume Receipt",
+      "description": "Long-running tasks need receipts that preserve resumable state, connection assumptions, and stale-context boundaries."
+    },
+    "authorization_scope_control": {
+      "label": "Authorization and scope control",
+      "gate": "Exact-Scope Authorization Gate",
+      "description": "Agent actions need scoped permission records before touching files, config, tools, credentials, or persistent settings."
+    },
+    "tool_sandbox_execution_integrity": {
+      "label": "Tool and sandbox execution integrity",
+      "gate": "Tool-Call Execution Receipt",
+      "description": "Command, tool-call, sandbox, ACL, and cross-platform execution results need explicit receipts."
+    },
+    "cost_runaway_loop_visibility": {
+      "label": "Cost and runaway-loop visibility",
+      "gate": "Run Budget / Stop-Condition Gate",
+      "description": "Users need visible budgets, loop stop conditions, and cost or performance degradation signals."
+    }
+  },
+  "statistics": {
+    "sample_size": 30,
+    "report_type_counts": {
+      "bug_report": 27,
+      "feature_request": 3
+    },
+    "failure_mode_counts": {
+      "authorization_scope_control": 4,
+      "completion_evidence_integrity": 10,
+      "cost_runaway_loop_visibility": 4,
+      "session_state_continuity": 6,
+      "tool_sandbox_execution_integrity": 6
+    },
+    "top_label_counts": {
+      "bug": 27,
+      "app": 21,
+      "windows-os": 13,
+      "CLI": 9,
+      "performance": 5,
+      "sandbox": 5,
+      "skills": 4,
+      "session": 4,
+      "enhancement": 3,
+      "app-server": 3,
+      "exec": 3,
+      "model-behavior": 2,
+      "safety-check": 2,
+      "extension": 2,
+      "connectivity": 2
+    }
+  },
+  "issues": [
+    {
+      "issue_id": 29882,
+      "issue_url": "https://github.com/openai/codex/issues/29882",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T16:58:10Z",
+      "updated_at": "2026-06-24T16:58:49Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app",
+        "performance"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Windows Codex Desktop may trigger full system freeze after Modern Standby resume; prior LiveKernelEvent 193 dxgkrnl watchdog",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29881,
+      "issue_url": "https://github.com/openai/codex/issues/29881",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T16:57:32Z",
+      "updated_at": "2026-06-24T16:58:12Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "sandbox",
+        "CLI",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "[Windows] Switching App Agent Environment WSL → Native initializes the sandbox and fixes both App and CLI",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29880,
+      "issue_url": "https://github.com/openai/codex/issues/29880",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T16:53:50Z",
+      "updated_at": "2026-06-24T16:54:50Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Codex app image thumbnails fail to render after feedback upload",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29879,
+      "issue_url": "https://github.com/openai/codex/issues/29879",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T16:52:46Z",
+      "updated_at": "2026-06-24T16:53:25Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "model-behavior",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Model not respecting agents instructions",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "authorization_scope_control",
+      "mapped_gate": "Exact-Scope Authorization Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29878,
+      "issue_url": "https://github.com/openai/codex/issues/29878",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:56:27Z",
+      "updated_at": "2026-06-24T15:57:06Z",
+      "report_type": "feature_request",
+      "labels": [
+        "enhancement",
+        "CLI",
+        "safety-check",
+        "skills"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "open source codex-security plugin",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "authorization_scope_control",
+      "mapped_gate": "Exact-Scope Authorization Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29876,
+      "issue_url": "https://github.com/openai/codex/issues/29876",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:50:31Z",
+      "updated_at": "2026-06-24T15:57:27Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "extension",
+        "app",
+        "performance"
+      ],
+      "platform": "IDE extension",
+      "user_reported_symptom": "Excessive disk writes / SSD wear concern on macOS Codex app and JetBrains ACP",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "cost_runaway_loop_visibility",
+      "mapped_gate": "Run Budget / Stop-Condition Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29873,
+      "issue_url": "https://github.com/openai/codex/issues/29873",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:39:44Z",
+      "updated_at": "2026-06-24T16:31:20Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Office files open from output links but show unsupported preview from workspace file picker",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29872,
+      "issue_url": "https://github.com/openai/codex/issues/29872",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:39:25Z",
+      "updated_at": "2026-06-24T15:40:08Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "CLI",
+        "app-server"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "\"app-server/src/lib.rs\" has unused mutable \"loader_overrides\"",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29871,
+      "issue_url": "https://github.com/openai/codex/issues/29871",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:31:59Z",
+      "updated_at": "2026-06-24T15:32:42Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app",
+        "safety-check",
+        "skills"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "[Codex Security] Workspace fails on Japanese Windows when Git commit subject contains non-ASCII characters",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "authorization_scope_control",
+      "mapped_gate": "Exact-Scope Authorization Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29868,
+      "issue_url": "https://github.com/openai/codex/issues/29868",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:14:47Z",
+      "updated_at": "2026-06-24T15:16:14Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app",
+        "session",
+        "app-server"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Codex Desktop exposes stale ghost conversations that cannot be resumed or archived",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29867,
+      "issue_url": "https://github.com/openai/codex/issues/29867",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:12:39Z",
+      "updated_at": "2026-06-24T15:14:41Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "sandbox",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Windows sandbox can leave workspace owned by CodexSandboxOnline, then setup refresh fails with SetNamedSecurityInfoW 5",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29866,
+      "issue_url": "https://github.com/openai/codex/issues/29866",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T15:06:23Z",
+      "updated_at": "2026-06-24T15:13:50Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "extension",
+        "sandbox",
+        "connectivity",
+        "session",
+        "remote"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Codex IDE chat loses SSH/network access after idle/resume in same conversation",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29864,
+      "issue_url": "https://github.com/openai/codex/issues/29864",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T14:55:08Z",
+      "updated_at": "2026-06-24T14:55:48Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app",
+        "session"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Codex Desktop resume can fail when shell snapshot tmp file disappears during validation",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29860,
+      "issue_url": "https://github.com/openai/codex/issues/29860",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T14:30:13Z",
+      "updated_at": "2026-06-24T14:30:52Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "code-review",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Review comments are not cleared after being addressed",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29859,
+      "issue_url": "https://github.com/openai/codex/issues/29859",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T13:58:56Z",
+      "updated_at": "2026-06-24T13:59:44Z",
+      "report_type": "feature_request",
+      "labels": [
+        "enhancement",
+        "exec",
+        "CLI",
+        "skills",
+        "session"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "TypeScript SDK: Expand feature coverage — fork, session management, messages, metadata",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29858,
+      "issue_url": "https://github.com/openai/codex/issues/29858",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T13:53:43Z",
+      "updated_at": "2026-06-24T14:07:28Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app",
+        "performance"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Windows: Opening Codex tab in non-Git workspace causes continuous git.exe spawning and high Defender CPU",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "cost_runaway_loop_visibility",
+      "mapped_gate": "Run Budget / Stop-Condition Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29857,
+      "issue_url": "https://github.com/openai/codex/issues/29857",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T13:37:00Z",
+      "updated_at": "2026-06-24T13:37:42Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "mcp",
+        "exec",
+        "CLI",
+        "config"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "codex exec silently auto-cancels MCP tool calls regardless of default_tools_approval_mode",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29855,
+      "issue_url": "https://github.com/openai/codex/issues/29855",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T13:25:26Z",
+      "updated_at": "2026-06-24T13:27:01Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Spell checker incorrectly flags common English words in Codex Desktop 26.616.81150 (Windows 11)",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29854,
+      "issue_url": "https://github.com/openai/codex/issues/29854",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T13:08:37Z",
+      "updated_at": "2026-06-24T13:12:40Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app",
+        "connectivity",
+        "app-server",
+        "performance"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Codex Windows app-server saturates upload bandwidth and causes packet loss",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "session_state_continuity",
+      "mapped_gate": "State Resume Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29849,
+      "issue_url": "https://github.com/openai/codex/issues/29849",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T12:01:23Z",
+      "updated_at": "2026-06-24T12:02:03Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "PR status panel shows GitHub CLI unavailable in non-GitHub workspace",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29848,
+      "issue_url": "https://github.com/openai/codex/issues/29848",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T11:30:20Z",
+      "updated_at": "2026-06-24T13:16:41Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "BUG Codex Windows  404 Not Found Model not found gpt-5.5",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29847,
+      "issue_url": "https://github.com/openai/codex/issues/29847",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T11:13:05Z",
+      "updated_at": "2026-06-24T11:13:48Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "codex pc app bug",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29846,
+      "issue_url": "https://github.com/openai/codex/issues/29846",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T11:11:10Z",
+      "updated_at": "2026-06-24T11:11:51Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "CLI",
+        "skills",
+        "subagent",
+        "config"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "skills.config enabled=false cannot be overridden by project or custom subagent config",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "authorization_scope_control",
+      "mapped_gate": "Exact-Scope Authorization Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29843,
+      "issue_url": "https://github.com/openai/codex/issues/29843",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T10:55:29Z",
+      "updated_at": "2026-06-24T13:01:08Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "model-behavior",
+        "TUI",
+        "CLI"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "Codex CLI scroll view jump on type and queued messages steering too hard",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29840,
+      "issue_url": "https://github.com/openai/codex/issues/29840",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T10:26:32Z",
+      "updated_at": "2026-06-24T10:27:15Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "tool-calls",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "Gmail connector _create_draft fails for threaded replies with reply_message_id: Subject does not match",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29838,
+      "issue_url": "https://github.com/openai/codex/issues/29838",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T10:14:57Z",
+      "updated_at": "2026-06-24T10:20:12Z",
+      "report_type": "feature_request",
+      "labels": [
+        "enhancement",
+        "rate-limits",
+        "CLI"
+      ],
+      "platform": "CLI",
+      "user_reported_symptom": "Add /usage command to codex cli",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "cost_runaway_loop_visibility",
+      "mapped_gate": "Run Budget / Stop-Condition Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29836,
+      "issue_url": "https://github.com/openai/codex/issues/29836",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T09:58:56Z",
+      "updated_at": "2026-06-24T10:38:10Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "sandbox",
+        "exec",
+        "CLI"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Can't run WinGet executables in the sandbox when Windows Developer mode is enabled",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29834,
+      "issue_url": "https://github.com/openai/codex/issues/29834",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T09:49:59Z",
+      "updated_at": "2026-06-24T11:02:30Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "app"
+      ],
+      "platform": "Desktop app",
+      "user_reported_symptom": "codex crash bug when I enter information in a running task",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "completion_evidence_integrity",
+      "mapped_gate": "Closeout Evidence Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29832,
+      "issue_url": "https://github.com/openai/codex/issues/29832",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T09:25:44Z",
+      "updated_at": "2026-06-24T09:27:26Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "app",
+        "performance"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "Windows Codex app updated to 26.616.10790.0, but continuous disk writes persist and appear worse.",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "cost_runaway_loop_visibility",
+      "mapped_gate": "Run Budget / Stop-Condition Gate",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    },
+    {
+      "issue_id": 29830,
+      "issue_url": "https://github.com/openai/codex/issues/29830",
+      "snapshot_date": "2026-06-24",
+      "sample_rule": "openai/codex open issues; created_at <= 2026-06-24T23:59:59Z; sorted by created_at desc; first 30 non-PR issues",
+      "issue_status": "open",
+      "created_at": "2026-06-24T09:17:09Z",
+      "updated_at": "2026-06-24T09:19:07Z",
+      "report_type": "bug_report",
+      "labels": [
+        "bug",
+        "windows-os",
+        "sandbox",
+        "tool-calls",
+        "app"
+      ],
+      "platform": "Windows",
+      "user_reported_symptom": "The Codex App always requires my approval, and I've granted it all permissions.",
+      "maintainer_confirmation": "not_observed",
+      "independent_reproduction": "not_performed",
+      "failure_mode": "tool_sandbox_execution_integrity",
+      "mapped_gate": "Tool-Call Execution Receipt",
+      "cannot_claim": [
+        "Cannot claim product-wide prevalence from this sample.",
+        "Cannot claim root cause is confirmed by maintainers.",
+        "Cannot claim independent reproduction was performed.",
+        "Cannot claim the issue remains present in later versions."
+      ]
+    }
+  ]
+}
