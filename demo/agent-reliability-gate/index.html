@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Reliability Evidence Gate</title>
+  <meta name="description" content="A static Agent Reliability demo that classifies AI-agent done claims against evidence, cannot_claim boundaries, and next gates.">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero__kicker">Agent Reliability Demo V0</div>
+      <div class="hero__grid">
+        <div>
+          <h1 id="page-title">Agent said done. Where is the evidence?</h1>
+          <p class="hero__lede">
+            A static evidence-gate walkthrough for AI-agent closeouts. It does not call an API,
+            does not upload data, and does not prove production readiness. It shows how a reviewer
+            can separate success language from inspected evidence.
+          </p>
+          <div class="hero__links" aria-label="Public proof links">
+            <a href="../../docs/portfolio/agent-reliability-proof.md">Portfolio proof</a>
+            <a href="../../docs/research/codex-reliability-gap-map-01.md">Gap Map</a>
+            <a href="../../docs/START_HERE_FOR_REVIEWERS.md">Reviewer start</a>
+          </div>
+          <div class="boundary-banner" role="note">
+            <span>Boundary</span>
+            Static explanatory demo, not runtime evidence.
+          </div>
+        </div>
+        <aside class="principle-card" aria-label="Demo boundaries">
+          <span class="stamp">static local demo</span>
+          <ul>
+            <li>No provider call</li>
+            <li>No hidden truth promotion</li>
+            <li>No final PASS without evidence</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="workbench" aria-label="Evidence gate workbench">
+      <div class="case-panel">
+        <div class="panel-title">
+          <span>1</span>
+          <h2>Choose a closeout</h2>
+        </div>
+        <div id="case-list" class="case-list" role="listbox" aria-label="Closeout examples"></div>
+      </div>
+
+      <div class="claim-panel">
+        <div class="panel-title">
+          <span>2</span>
+          <h2>Inspect the claim</h2>
+        </div>
+        <article class="claim-card">
+          <p class="label">Agent closeout</p>
+          <blockquote id="claim-text"></blockquote>
+        </article>
+        <div class="signals" id="signal-grid" aria-label="Evidence signals"></div>
+        <button id="run-gate" class="run-button" type="button">Run Evidence Gate</button>
+      </div>
+
+      <div class="verdict-panel" aria-live="polite">
+        <div class="panel-title">
+          <span>3</span>
+          <h2>Gate verdict</h2>
+        </div>
+        <div id="verdict-card" class="verdict-card verdict-pending">
+          <p class="verdict-label">Waiting for inspection</p>
+          <strong id="verdict">PENDING</strong>
+          <p id="verdict-summary">Select a case and run the gate.</p>
+        </div>
+        <div class="result-columns">
+          <section>
+            <h3>Missing evidence</h3>
+            <ul id="missing-list"></ul>
+          </section>
+          <section>
+            <h3>Cannot claim</h3>
+            <ul id="cannot-list"></ul>
+          </section>
+          <section>
+            <h3>Next gate</h3>
+            <ul id="next-list"></ul>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="audit-strip" aria-label="Audit output">
+      <div>
+        <h2>Reviewer-readable output</h2>
+        <p>
+          The demo produces a small JSON receipt. It is derived from local fixture data inside
+          this page, so it is useful for explanation only, not as canonical runtime evidence.
+        </p>
+      </div>
+      <pre id="receipt" tabindex="0"></pre>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
