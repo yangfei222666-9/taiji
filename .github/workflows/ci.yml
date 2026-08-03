@@ -26,6 +26,20 @@ jobs:
       - name: Run sandbox full verifier
         run: npm run verify:full
 
+  proof-api-contract:
+    name: Proof API contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify evidence preflight contract
+        run: make verify
+      - name: Replay public demo three times
+        run: bash scripts/replay_public_demo.sh --runs 3
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:
