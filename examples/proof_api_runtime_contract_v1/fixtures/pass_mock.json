@@ -1,0 +1,247 @@
+{
+  "package_id": "proof_api_runtime_contract_v1_positive_controls",
+  "contract_id": "proof_api_runtime_contract_v1",
+  "contract_path": "docs/PROOF_API_RUNTIME_CONTRACT_V1.md",
+  "contract_sha256": "d4b5f4d7e3fd85d16bcb683623aa1322da207c1041dc4b2640ebbd7b940e1f21",
+  "schema_path": "evidence/schema/proof_api_runtime_contract_v1.schema.json",
+  "controls": {
+    "health_configured": {
+      "schema_version": "taiji.proof.health.v1",
+      "service": "taiji-proof-api",
+      "status": "ok",
+      "revision_binding": "configured",
+      "api_exact_sha": "0123456789abcdef0123456789abcdef01234567",
+      "reason_codes": [],
+      "cannot_claim": [
+        "proof_accepted",
+        "runtime_readiness",
+        "supabase_reachable"
+      ]
+    },
+    "health_unconfigured": {
+      "schema_version": "taiji.proof.health.v1",
+      "service": "taiji-proof-api",
+      "status": "ok",
+      "revision_binding": "unconfigured",
+      "api_exact_sha": null,
+      "reason_codes": [
+        "missing_api_exact_sha"
+      ],
+      "cannot_claim": [
+        "proof_accepted",
+        "runtime_readiness",
+        "supabase_reachable"
+      ]
+    },
+    "mock_profile": {
+      "request": {
+        "schema_version": "taiji.proof.request.v1",
+        "expected_evidence_profile": "taiji.proof.evidence.mock.v1",
+        "proof_query_id": "16906589-bcfd-4338-af90-766e5d8f4b6d",
+        "run_request_id": "62c15237-bd79-434a-9a79-b9fbe1280af5",
+        "run_id": "1ac16c0f-7b83-45c8-a3ee-80a72650bfa4",
+        "expected_root_event_id": "d478d62b-64ca-45bc-af29-c719e4286824",
+        "expected_api_exact_sha": "0123456789abcdef0123456789abcdef01234567",
+        "expected_producer_exact_sha": "0123456789abcdef0123456789abcdef01234567",
+        "expected_producer_image_digest": null
+      },
+      "response": {
+        "contract_id": "proof_api_runtime_contract_v1",
+        "schema_version": "taiji.proof.response.v1",
+        "proof_scope": "stored_run_evidence_integrity_v1",
+        "evidence_profile": "taiji.proof.evidence.mock.v1",
+        "proof_query_id": "16906589-bcfd-4338-af90-766e5d8f4b6d",
+        "verdict": "PASS",
+        "proof_accepted": true,
+        "reason_codes": [],
+        "receipt": {
+          "contract_id": "proof_api_runtime_contract_v1",
+          "schema_version": "taiji.proof.receipt.v1",
+          "proof_scope": "stored_run_evidence_integrity_v1",
+          "evidence_profile": "taiji.proof.evidence.mock.v1",
+          "receipt_id": "48df17fc-cd74-47a6-a39d-fbff4286a02a",
+          "created_at": "2026-08-11T00:00:00Z",
+          "finalized_at": "2026-08-11T00:00:01Z",
+          "run_request_id": "62c15237-bd79-434a-9a79-b9fbe1280af5",
+          "run_id": "1ac16c0f-7b83-45c8-a3ee-80a72650bfa4",
+          "root_event_id": "d478d62b-64ca-45bc-af29-c719e4286824",
+          "api_exact_sha": "0123456789abcdef0123456789abcdef01234567",
+          "producer_exact_sha": "0123456789abcdef0123456789abcdef01234567",
+          "producer_image_digest": null,
+          "terminal_run_status": "succeeded",
+          "trigger_mode": "mock",
+          "event_manifest": [
+            {
+              "event_id": "d478d62b-64ca-45bc-af29-c719e4286824",
+              "parent_event_id": null,
+              "event_type": "run.created",
+              "occurred_at": "2026-08-11T00:00:00Z",
+              "payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            {
+              "event_id": "e269409e-d64a-4fd8-b369-58997952bb3b",
+              "parent_event_id": "d478d62b-64ca-45bc-af29-c719e4286824",
+              "event_type": "artifact.stored",
+              "occurred_at": "2026-08-11T00:00:01Z",
+              "payload_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ],
+          "artifact_manifest": [
+            {
+              "artifact_id": "b5682f1c-2266-48fc-9362-6c35b17638c5",
+              "producer_event_id": "e269409e-d64a-4fd8-b369-58997952bb3b",
+              "bucket": "taiji-artifacts",
+              "path": "runs/1ac16c0f-7b83-45c8-a3ee-80a72650bfa4/result.json",
+              "label": "result.json",
+              "content_type": "application/json",
+              "bytes": 128,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "verifier_name": "taiji-proof-verifier",
+          "verifier_version": "1.0.0",
+          "verdict": "PASS",
+          "reason_codes": [],
+          "cannot_claim": [
+            "deployment_provenance",
+            "github_execution",
+            "producer_execution_identity",
+            "production_readiness",
+            "provider_readiness",
+            "repo_wide_pass",
+            "task_correctness"
+          ],
+          "receipt_sha256": "ae8a2200d9b70b6088ee5da61dd1c60c0609feeb1c413975436de44f74bf8dc0"
+        },
+        "checked_at": "2026-08-11T00:00:02Z",
+        "cannot_claim": [
+          "deployment_provenance",
+          "github_execution",
+          "producer_execution_identity",
+          "production_readiness",
+          "provider_readiness",
+          "repo_wide_pass",
+          "task_correctness"
+        ]
+      }
+    },
+    "github_profile": {
+      "request": {
+        "schema_version": "taiji.proof.request.v1",
+        "expected_evidence_profile": "taiji.proof.evidence.github.v1",
+        "proof_query_id": "26906589-bcfd-4338-af90-766e5d8f4b6d",
+        "run_request_id": "72c15237-bd79-434a-9a79-b9fbe1280af5",
+        "run_id": "2ac16c0f-7b83-45c8-a3ee-80a72650bfa4",
+        "expected_root_event_id": "a478d62b-64ca-45bc-af29-c719e4286824",
+        "expected_api_exact_sha": "1111111111111111111111111111111111111111",
+        "expected_producer_exact_sha": "2222222222222222222222222222222222222222",
+        "expected_producer_image_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "response": {
+        "contract_id": "proof_api_runtime_contract_v1",
+        "schema_version": "taiji.proof.response.v1",
+        "proof_scope": "stored_run_evidence_integrity_v1",
+        "evidence_profile": "taiji.proof.evidence.github.v1",
+        "proof_query_id": "26906589-bcfd-4338-af90-766e5d8f4b6d",
+        "verdict": "PASS",
+        "proof_accepted": true,
+        "reason_codes": [],
+        "receipt": {
+          "contract_id": "proof_api_runtime_contract_v1",
+          "schema_version": "taiji.proof.receipt.v1",
+          "proof_scope": "stored_run_evidence_integrity_v1",
+          "evidence_profile": "taiji.proof.evidence.github.v1",
+          "receipt_id": "58df17fc-cd74-47a6-a39d-fbff4286a02a",
+          "created_at": "2026-08-11T01:00:00Z",
+          "finalized_at": "2026-08-11T01:00:01Z",
+          "run_request_id": "72c15237-bd79-434a-9a79-b9fbe1280af5",
+          "run_id": "2ac16c0f-7b83-45c8-a3ee-80a72650bfa4",
+          "root_event_id": "a478d62b-64ca-45bc-af29-c719e4286824",
+          "api_exact_sha": "1111111111111111111111111111111111111111",
+          "producer_exact_sha": "2222222222222222222222222222222222222222",
+          "producer_image_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "terminal_run_status": "succeeded",
+          "trigger_mode": "github",
+          "event_manifest": [
+            {
+              "event_id": "a478d62b-64ca-45bc-af29-c719e4286824",
+              "parent_event_id": null,
+              "event_type": "run.created",
+              "occurred_at": "2026-08-11T01:00:00Z",
+              "payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            {
+              "event_id": "b269409e-d64a-4fd8-b369-58997952bb3b",
+              "parent_event_id": "a478d62b-64ca-45bc-af29-c719e4286824",
+              "event_type": "artifact.stored",
+              "occurred_at": "2026-08-11T01:00:01Z",
+              "payload_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ],
+          "artifact_manifest": [
+            {
+              "artifact_id": "c5682f1c-2266-48fc-9362-6c35b17638c5",
+              "producer_event_id": "b269409e-d64a-4fd8-b369-58997952bb3b",
+              "bucket": "taiji-artifacts",
+              "path": "runs/2ac16c0f-7b83-45c8-a3ee-80a72650bfa4/result.json",
+              "label": "result.json",
+              "content_type": "application/json",
+              "bytes": 256,
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "verifier_name": "taiji-proof-verifier",
+          "verifier_version": "1.0.0",
+          "verdict": "PASS",
+          "reason_codes": [],
+          "cannot_claim": [
+            "deployment_provenance",
+            "github_execution",
+            "producer_execution_identity",
+            "production_readiness",
+            "provider_readiness",
+            "repo_wide_pass",
+            "task_correctness"
+          ],
+          "receipt_sha256": "c37602fc05fae96918b8add5f8c6b6d57e8cb40d09039f42c580189fe67f248b"
+        },
+        "checked_at": "2026-08-11T01:00:02Z",
+        "cannot_claim": [
+          "deployment_provenance",
+          "github_execution",
+          "producer_execution_identity",
+          "production_readiness",
+          "provider_readiness",
+          "repo_wide_pass",
+          "task_correctness"
+        ]
+      }
+    },
+    "nonpass_response": {
+      "contract_id": "proof_api_runtime_contract_v1",
+      "schema_version": "taiji.proof.response.v1",
+      "proof_scope": "stored_run_evidence_integrity_v1",
+      "evidence_profile": null,
+      "proof_query_id": null,
+      "run_request_id": null,
+      "run_id": null,
+      "verdict": "BLOCKED",
+      "proof_accepted": false,
+      "reason_codes": [
+        "invalid_request"
+      ],
+      "receipt": null,
+      "checked_at": "2026-08-11T00:00:00Z",
+      "cannot_claim": [
+        "proof_accepted",
+        "repo_wide_pass",
+        "runtime_readiness"
+      ]
+    },
+    "signed_url_delivery_failure_irrelevant": {
+      "baseline_verdict": "PASS",
+      "delivery_failed": true,
+      "expected_verdict": "PASS"
+    }
+  }
+}

@@ -1,0 +1,855 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://taiji.local/evidence/schema/proof_api_runtime_contract_v1.schema.json",
+  "title": "TaijiOS Proof API Runtime Contract v1 static RED package schema",
+  "description": "Static contract shapes only. This schema is not runtime, provider, deployment, or canonical-truth evidence.",
+  "x-taiji-contract-id": "proof_api_runtime_contract_v1",
+  "x-taiji-contract-path": "docs/PROOF_API_RUNTIME_CONTRACT_V1.md",
+  "x-taiji-contract-sha256": "d4b5f4d7e3fd85d16bcb683623aa1322da207c1041dc4b2640ebbd7b940e1f21",
+  "oneOf": [
+    { "$ref": "#/$defs/health_response" },
+    { "$ref": "#/$defs/proof_request" },
+    { "$ref": "#/$defs/proof_response" },
+    { "$ref": "#/$defs/fixture_catalog" },
+    { "$ref": "#/$defs/positive_control_catalog" }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "sha40": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "rfc3339_utc": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "PENDING", "BLOCKED", "FAILED", "UNVERIFIED"]
+    },
+    "reason_code": {
+      "type": "string",
+      "enum": [
+        "api_sha_mismatch",
+        "artifact_bytes_mismatch",
+        "artifact_digest_mismatch",
+        "artifact_missing",
+        "artifact_object_missing",
+        "artifact_path_invalid",
+        "artifact_record_failed",
+        "artifact_upload_failed",
+        "dependency_unavailable",
+        "duplicate_receipt",
+        "event_lineage_mismatch",
+        "event_missing",
+        "event_payload_digest_mismatch",
+        "event_persist_failed",
+        "finalization_conflict",
+        "internal_verification_error",
+        "invalid_invite_token",
+        "invalid_request",
+        "invalid_state_transition",
+        "invite_expired",
+        "missing_api_exact_sha",
+        "missing_invite_token",
+        "producer_image_digest_mismatch",
+        "producer_image_digest_missing",
+        "producer_revision_missing",
+        "producer_sha_mismatch",
+        "provider_call_forbidden",
+        "receipt_digest_mismatch",
+        "receipt_malformed",
+        "receipt_manifest_mismatch",
+        "receipt_missing",
+        "receipt_persist_failed",
+        "request_too_large",
+        "root_event_mismatch",
+        "run_access_denied",
+        "run_cancelled",
+        "run_failed",
+        "run_id_mismatch",
+        "run_not_found",
+        "run_not_terminal",
+        "run_request_id_mismatch",
+        "secret_exposure_detected",
+        "stored_bytes_unverified",
+        "unsupported_contract",
+        "unsupported_media_type"
+      ]
+    },
+    "cannot_claim": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z0-9_]+$"
+      }
+    },
+    "health_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "service",
+        "status",
+        "revision_binding",
+        "api_exact_sha",
+        "reason_codes",
+        "cannot_claim"
+      ],
+      "properties": {
+        "schema_version": { "const": "taiji.proof.health.v1" },
+        "service": { "const": "taiji-proof-api" },
+        "status": { "const": "ok" },
+        "revision_binding": { "enum": ["configured", "unconfigured"] },
+        "api_exact_sha": {
+          "oneOf": [
+            { "$ref": "#/$defs/sha40" },
+            { "type": "null" }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/reason_code" }
+        },
+        "cannot_claim": { "$ref": "#/$defs/cannot_claim" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "revision_binding": { "const": "configured" } },
+            "required": ["revision_binding"]
+          },
+          "then": {
+            "properties": {
+              "api_exact_sha": { "$ref": "#/$defs/sha40" },
+              "reason_codes": { "const": [] }
+            }
+          },
+          "else": {
+            "properties": {
+              "api_exact_sha": { "type": "null" },
+              "reason_codes": { "const": ["missing_api_exact_sha"] }
+            }
+          }
+        }
+      ]
+    },
+    "proof_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "expected_evidence_profile",
+        "proof_query_id",
+        "run_request_id",
+        "run_id",
+        "expected_root_event_id",
+        "expected_api_exact_sha",
+        "expected_producer_exact_sha",
+        "expected_producer_image_digest"
+      ],
+      "properties": {
+        "schema_version": { "const": "taiji.proof.request.v1" },
+        "expected_evidence_profile": {
+          "enum": [
+            "taiji.proof.evidence.github.v1",
+            "taiji.proof.evidence.mock.v1"
+          ]
+        },
+        "proof_query_id": { "$ref": "#/$defs/uuid" },
+        "run_request_id": { "$ref": "#/$defs/uuid" },
+        "run_id": { "$ref": "#/$defs/uuid" },
+        "expected_root_event_id": { "$ref": "#/$defs/uuid" },
+        "expected_api_exact_sha": { "$ref": "#/$defs/sha40" },
+        "expected_producer_exact_sha": { "$ref": "#/$defs/sha40" },
+        "expected_producer_image_digest": {
+          "oneOf": [
+            { "$ref": "#/$defs/image_digest" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "expected_evidence_profile": {
+                "const": "taiji.proof.evidence.mock.v1"
+              }
+            },
+            "required": ["expected_evidence_profile"]
+          },
+          "then": {
+            "properties": {
+              "expected_producer_image_digest": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "expected_producer_image_digest": { "$ref": "#/$defs/image_digest" }
+            }
+          }
+        }
+      ]
+    },
+    "event_manifest_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "parent_event_id",
+        "event_type",
+        "occurred_at",
+        "payload_sha256"
+      ],
+      "properties": {
+        "event_id": { "$ref": "#/$defs/uuid" },
+        "parent_event_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "event_type": { "enum": ["artifact.stored", "run.created"] },
+        "occurred_at": { "$ref": "#/$defs/rfc3339_utc" },
+        "payload_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifact_manifest_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "producer_event_id",
+        "bucket",
+        "path",
+        "label",
+        "content_type",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/uuid" },
+        "producer_event_id": { "$ref": "#/$defs/uuid" },
+        "bucket": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "label": { "const": "result.json" },
+        "content_type": { "const": "application/json" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_id",
+        "schema_version",
+        "proof_scope",
+        "evidence_profile",
+        "receipt_id",
+        "created_at",
+        "finalized_at",
+        "run_request_id",
+        "run_id",
+        "root_event_id",
+        "api_exact_sha",
+        "producer_exact_sha",
+        "producer_image_digest",
+        "terminal_run_status",
+        "trigger_mode",
+        "event_manifest",
+        "artifact_manifest",
+        "verifier_name",
+        "verifier_version",
+        "verdict",
+        "reason_codes",
+        "cannot_claim",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "contract_id": { "const": "proof_api_runtime_contract_v1" },
+        "schema_version": { "const": "taiji.proof.receipt.v1" },
+        "proof_scope": { "const": "stored_run_evidence_integrity_v1" },
+        "evidence_profile": {
+          "enum": [
+            "taiji.proof.evidence.github.v1",
+            "taiji.proof.evidence.mock.v1"
+          ]
+        },
+        "receipt_id": { "$ref": "#/$defs/uuid" },
+        "created_at": { "$ref": "#/$defs/rfc3339_utc" },
+        "finalized_at": { "$ref": "#/$defs/rfc3339_utc" },
+        "run_request_id": { "$ref": "#/$defs/uuid" },
+        "run_id": { "$ref": "#/$defs/uuid" },
+        "root_event_id": { "$ref": "#/$defs/uuid" },
+        "api_exact_sha": { "$ref": "#/$defs/sha40" },
+        "producer_exact_sha": { "$ref": "#/$defs/sha40" },
+        "producer_image_digest": {
+          "oneOf": [
+            { "$ref": "#/$defs/image_digest" },
+            { "type": "null" }
+          ]
+        },
+        "terminal_run_status": { "const": "succeeded" },
+        "trigger_mode": { "enum": ["github", "mock"] },
+        "event_manifest": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/event_manifest_item" }
+        },
+        "artifact_manifest": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/artifact_manifest_item" }
+        },
+        "verifier_name": { "const": "taiji-proof-verifier" },
+        "verifier_version": { "const": "1.0.0" },
+        "verdict": { "const": "PASS" },
+        "reason_codes": { "const": [] },
+        "cannot_claim": { "$ref": "#/$defs/cannot_claim" },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evidence_profile": {
+                "const": "taiji.proof.evidence.mock.v1"
+              }
+            },
+            "required": ["evidence_profile"]
+          },
+          "then": {
+            "properties": {
+              "trigger_mode": { "const": "mock" },
+              "producer_image_digest": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "trigger_mode": { "const": "github" },
+              "producer_image_digest": { "$ref": "#/$defs/image_digest" }
+            }
+          }
+        }
+      ]
+    },
+    "proof_pass_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_id",
+        "schema_version",
+        "proof_scope",
+        "evidence_profile",
+        "proof_query_id",
+        "verdict",
+        "proof_accepted",
+        "reason_codes",
+        "receipt",
+        "checked_at",
+        "cannot_claim"
+      ],
+      "properties": {
+        "contract_id": { "const": "proof_api_runtime_contract_v1" },
+        "schema_version": { "const": "taiji.proof.response.v1" },
+        "proof_scope": { "const": "stored_run_evidence_integrity_v1" },
+        "evidence_profile": {
+          "enum": [
+            "taiji.proof.evidence.github.v1",
+            "taiji.proof.evidence.mock.v1"
+          ]
+        },
+        "proof_query_id": { "$ref": "#/$defs/uuid" },
+        "verdict": { "const": "PASS" },
+        "proof_accepted": { "const": true },
+        "reason_codes": { "const": [] },
+        "receipt": { "$ref": "#/$defs/receipt" },
+        "checked_at": { "$ref": "#/$defs/rfc3339_utc" },
+        "cannot_claim": { "$ref": "#/$defs/cannot_claim" }
+      }
+    },
+    "proof_nonpass_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_id",
+        "schema_version",
+        "proof_scope",
+        "evidence_profile",
+        "proof_query_id",
+        "run_request_id",
+        "run_id",
+        "verdict",
+        "proof_accepted",
+        "reason_codes",
+        "receipt",
+        "checked_at",
+        "cannot_claim"
+      ],
+      "properties": {
+        "contract_id": { "const": "proof_api_runtime_contract_v1" },
+        "schema_version": { "const": "taiji.proof.response.v1" },
+        "proof_scope": { "const": "stored_run_evidence_integrity_v1" },
+        "evidence_profile": {
+          "oneOf": [
+            {
+              "enum": [
+                "taiji.proof.evidence.github.v1",
+                "taiji.proof.evidence.mock.v1"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "proof_query_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "run_request_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "run_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "verdict": {
+          "enum": ["PENDING", "BLOCKED", "FAILED", "UNVERIFIED"]
+        },
+        "proof_accepted": { "const": false },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/reason_code" }
+        },
+        "receipt": { "type": "null" },
+        "checked_at": { "$ref": "#/$defs/rfc3339_utc" },
+        "cannot_claim": { "$ref": "#/$defs/cannot_claim" }
+      }
+    },
+    "proof_response": {
+      "oneOf": [
+        { "$ref": "#/$defs/proof_pass_response" },
+        { "$ref": "#/$defs/proof_nonpass_response" }
+      ]
+    },
+    "static_scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_sha_match",
+        "artifact_bytes_match",
+        "artifact_count",
+        "artifact_digest_match",
+        "artifact_object_exists",
+        "artifact_path_valid",
+        "auth_carrier_count",
+        "auth_carrier_malformed",
+        "content_type",
+        "durable_failure_code",
+        "event_lineage_valid",
+        "event_payload_digest_match",
+        "event_present",
+        "formats_valid",
+        "health_side_effect_count",
+        "invite_status",
+        "persistence_failure",
+        "producer_event_exists",
+        "producer_event_field_present",
+        "producer_event_same_run",
+        "producer_image_format_valid",
+        "producer_image_match",
+        "producer_image_present",
+        "producer_image_required",
+        "producer_revision_present",
+        "producer_sha_match",
+        "proof_mutation_count",
+        "provider_call_attempted",
+        "raw_body_bytes",
+        "raw_body_mode",
+        "receipt_api_field_present",
+        "receipt_atomic_with_terminal",
+        "receipt_count",
+        "receipt_digest_match",
+        "receipt_exists",
+        "receipt_manifest_match",
+        "receipt_well_formed",
+        "request_additional_fields_present",
+        "request_required_fields_present",
+        "retry_content_match",
+        "root_event_match",
+        "run_access_allowed",
+        "run_found",
+        "run_id_match",
+        "run_request_id_match",
+        "run_status",
+        "schema_supported",
+        "secret_exposed",
+        "serving_api_sha_present",
+        "storage_dependency_available",
+        "stored_bytes_read",
+        "top_level_receipt_match",
+        "workflow_dispatch_attempted"
+      ],
+      "properties": {
+        "api_sha_match": { "type": "boolean" },
+        "artifact_bytes_match": { "type": "boolean" },
+        "artifact_count": { "type": "integer", "minimum": 0 },
+        "artifact_digest_match": { "type": "boolean" },
+        "artifact_object_exists": { "type": "boolean" },
+        "artifact_path_valid": { "type": "boolean" },
+        "auth_carrier_count": { "type": "integer", "minimum": 0 },
+        "auth_carrier_malformed": { "type": "boolean" },
+        "content_type": { "type": "string" },
+        "durable_failure_code": {
+          "oneOf": [
+            { "$ref": "#/$defs/reason_code" },
+            { "type": "null" }
+          ]
+        },
+        "event_lineage_valid": { "type": "boolean" },
+        "event_payload_digest_match": { "type": "boolean" },
+        "event_present": { "type": "boolean" },
+        "formats_valid": { "type": "boolean" },
+        "health_side_effect_count": { "type": "integer", "minimum": 0 },
+        "invite_status": { "enum": ["expired", "invalid", "valid"] },
+        "persistence_failure": {
+          "oneOf": [
+            {
+              "enum": [
+                "artifact_record_failed",
+                "artifact_upload_failed",
+                "event_persist_failed",
+                "invalid_state_transition",
+                "receipt_persist_failed"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "producer_event_exists": { "type": "boolean" },
+        "producer_event_field_present": { "type": "boolean" },
+        "producer_event_same_run": { "type": "boolean" },
+        "producer_image_format_valid": { "type": "boolean" },
+        "producer_image_match": { "type": "boolean" },
+        "producer_image_present": { "type": "boolean" },
+        "producer_image_required": { "type": "boolean" },
+        "producer_revision_present": { "type": "boolean" },
+        "producer_sha_match": { "type": "boolean" },
+        "proof_mutation_count": { "type": "integer", "minimum": 0 },
+        "provider_call_attempted": { "type": "boolean" },
+        "raw_body_bytes": { "type": "integer", "minimum": 0 },
+        "raw_body_mode": { "enum": ["duplicate_keys", "malformed", "valid"] },
+        "receipt_api_field_present": { "type": "boolean" },
+        "receipt_atomic_with_terminal": { "type": "boolean" },
+        "receipt_count": { "type": "integer", "minimum": 0 },
+        "receipt_digest_match": { "type": "boolean" },
+        "receipt_exists": { "type": "boolean" },
+        "receipt_manifest_match": { "type": "boolean" },
+        "receipt_well_formed": { "type": "boolean" },
+        "request_additional_fields_present": { "type": "boolean" },
+        "request_required_fields_present": { "type": "boolean" },
+        "retry_content_match": { "type": "boolean" },
+        "root_event_match": { "type": "boolean" },
+        "run_access_allowed": { "type": "boolean" },
+        "run_found": { "type": "boolean" },
+        "run_id_match": { "type": "boolean" },
+        "run_request_id_match": { "type": "boolean" },
+        "run_status": { "enum": ["cancelled", "failed", "queued", "running", "succeeded"] },
+        "schema_supported": { "type": "boolean" },
+        "secret_exposed": { "type": "boolean" },
+        "serving_api_sha_present": { "type": "boolean" },
+        "storage_dependency_available": { "type": "boolean" },
+        "stored_bytes_read": { "type": "boolean" },
+        "top_level_receipt_match": { "type": "boolean" },
+        "workflow_dispatch_attempted": { "type": "boolean" }
+      }
+    },
+    "scenario_patch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "value"],
+      "properties": {
+        "path": {
+          "enum": [
+            "api_sha_match",
+            "artifact_bytes_match",
+            "artifact_count",
+            "artifact_digest_match",
+            "artifact_object_exists",
+            "artifact_path_valid",
+            "auth_carrier_count",
+            "auth_carrier_malformed",
+            "content_type",
+            "durable_failure_code",
+            "event_lineage_valid",
+            "event_payload_digest_match",
+            "event_present",
+            "formats_valid",
+            "health_side_effect_count",
+            "invite_status",
+            "persistence_failure",
+            "producer_event_exists",
+            "producer_event_field_present",
+            "producer_event_same_run",
+            "producer_image_format_valid",
+            "producer_image_match",
+            "producer_image_present",
+            "producer_image_required",
+            "producer_revision_present",
+            "producer_sha_match",
+            "proof_mutation_count",
+            "provider_call_attempted",
+            "raw_body_bytes",
+            "raw_body_mode",
+            "receipt_api_field_present",
+            "receipt_atomic_with_terminal",
+            "receipt_count",
+            "receipt_digest_match",
+            "receipt_exists",
+            "receipt_manifest_match",
+            "receipt_well_formed",
+            "request_additional_fields_present",
+            "request_required_fields_present",
+            "retry_content_match",
+            "root_event_match",
+            "run_access_allowed",
+            "run_found",
+            "run_id_match",
+            "run_request_id_match",
+            "run_status",
+            "schema_supported",
+            "secret_exposed",
+            "serving_api_sha_present",
+            "storage_dependency_available",
+            "stored_bytes_read",
+            "top_level_receipt_match",
+            "workflow_dispatch_attempted"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "integer" },
+            { "type": "string" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "scenario_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base", "overrides"],
+      "properties": {
+        "base": { "$ref": "#/$defs/static_scenario" },
+        "overrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^red_[0-9]{2}_[a-z0-9_]+$": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/scenario_patch" }
+            }
+          }
+        }
+      }
+    },
+    "fixture_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "section_10_group",
+        "input_kind",
+        "mutation",
+        "expected_http",
+        "expected_verdict",
+        "expected_reason_code",
+        "expected_harness_code",
+        "expected_proof_accepted",
+        "coverage_level"
+      ],
+      "properties": {
+        "case_id": { "type": "string", "pattern": "^red_[0-9]{2}_[a-z0-9_]+$" },
+        "section_10_group": { "type": "integer", "minimum": 1, "maximum": 29 },
+        "input_kind": {
+          "enum": [
+            "artifact",
+            "auth",
+            "event",
+            "finalization",
+            "raw_http",
+            "receipt",
+            "request",
+            "revision",
+            "run",
+            "safety",
+            "side_effect"
+          ]
+        },
+        "mutation": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "expected_http": {
+          "oneOf": [
+            { "enum": [202, 400, 401, 403, 404, 409, 413, 415, 422, 500, 503] },
+            { "type": "null" }
+          ]
+        },
+        "expected_verdict": {
+          "oneOf": [
+            { "enum": ["PENDING", "BLOCKED", "FAILED", "UNVERIFIED"] },
+            { "type": "null" }
+          ]
+        },
+        "expected_reason_code": {
+          "oneOf": [
+            { "$ref": "#/$defs/reason_code" },
+            { "type": "null" }
+          ]
+        },
+        "expected_harness_code": {
+          "oneOf": [
+            { "enum": ["health_side_effect_detected", "proof_mutation_detected"] },
+            { "type": "null" }
+          ]
+        },
+        "expected_proof_accepted": { "const": false },
+        "coverage_level": { "const": "static_model_executed" }
+      }
+    },
+    "fixture_catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_id",
+        "contract_id",
+        "contract_path",
+        "contract_sha256",
+        "schema_path",
+        "section_9_non_pass_reason_codes",
+        "section_10_groups",
+        "harness_codes",
+        "scenario_model",
+        "cases"
+      ],
+      "properties": {
+        "package_id": { "const": "proof_api_runtime_contract_v1_exact_red_package" },
+        "contract_id": { "const": "proof_api_runtime_contract_v1" },
+        "contract_path": { "const": "docs/PROOF_API_RUNTIME_CONTRACT_V1.md" },
+        "contract_sha256": { "const": "d4b5f4d7e3fd85d16bcb683623aa1322da207c1041dc4b2640ebbd7b940e1f21" },
+        "schema_path": { "const": "evidence/schema/proof_api_runtime_contract_v1.schema.json" },
+        "section_9_non_pass_reason_codes": {
+          "type": "array",
+          "minItems": 45,
+          "maxItems": 45,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/reason_code" }
+        },
+        "section_10_groups": {
+          "type": "array",
+          "minItems": 29,
+          "maxItems": 29,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 1, "maximum": 29 }
+        },
+        "harness_codes": {
+          "const": ["health_side_effect_detected", "proof_mutation_detected"]
+        },
+        "scenario_model": { "$ref": "#/$defs/scenario_model" },
+        "cases": {
+          "type": "array",
+          "minItems": 45,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/fixture_case" }
+        }
+      }
+    },
+    "profile_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request", "response"],
+      "properties": {
+        "request": { "$ref": "#/$defs/proof_request" },
+        "response": { "$ref": "#/$defs/proof_pass_response" }
+      }
+    },
+    "positive_control_catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_id",
+        "contract_id",
+        "contract_path",
+        "contract_sha256",
+        "schema_path",
+        "controls"
+      ],
+      "properties": {
+        "package_id": { "const": "proof_api_runtime_contract_v1_positive_controls" },
+        "contract_id": { "const": "proof_api_runtime_contract_v1" },
+        "contract_path": { "const": "docs/PROOF_API_RUNTIME_CONTRACT_V1.md" },
+        "contract_sha256": { "const": "d4b5f4d7e3fd85d16bcb683623aa1322da207c1041dc4b2640ebbd7b940e1f21" },
+        "schema_path": { "const": "evidence/schema/proof_api_runtime_contract_v1.schema.json" },
+        "controls": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "health_configured",
+            "health_unconfigured",
+            "mock_profile",
+            "github_profile",
+            "nonpass_response",
+            "signed_url_delivery_failure_irrelevant"
+          ],
+          "properties": {
+            "health_configured": { "$ref": "#/$defs/health_response" },
+            "health_unconfigured": { "$ref": "#/$defs/health_response" },
+            "mock_profile": { "$ref": "#/$defs/profile_control" },
+            "github_profile": { "$ref": "#/$defs/profile_control" },
+            "nonpass_response": { "$ref": "#/$defs/proof_nonpass_response" },
+            "signed_url_delivery_failure_irrelevant": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["baseline_verdict", "delivery_failed", "expected_verdict"],
+              "properties": {
+                "baseline_verdict": { "const": "PASS" },
+                "delivery_failed": { "const": true },
+                "expected_verdict": { "const": "PASS" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
