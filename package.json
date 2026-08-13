@@ -24,6 +24,9 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.75.1",
+    "ajv": "8.20.0",
+    "canonicalize": "4.0.0",
+    "jsonc-parser": "3.3.1",
     "next": "^16.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
@@ -35,6 +38,7 @@
     "typescript": "^5.9.0"
   },
   "overrides": {
+    "fast-uri": "3.1.5",
     "postcss": "^8.5.23"
   }
 }
