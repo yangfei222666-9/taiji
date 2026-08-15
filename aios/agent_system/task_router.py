@@ -20,6 +20,9 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
+
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE_DIR))  # 裸 import(core.status_adapter)自愈
 from core.status_adapter import get_agent_status
 
 BASE_DIR = Path(__file__).resolve().parent

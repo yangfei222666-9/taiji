@@ -17,6 +17,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 BASE_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE_DIR))  # 裸 import(paths/memory_retrieval)自愈
 try:
     from paths import TASK_QUEUE as QUEUE_PATH, TASK_EXECUTIONS as _EXEC_PATH
     EXEC_LOG = _EXEC_PATH

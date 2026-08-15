@@ -69,7 +69,8 @@ Task execution with durable state and experience harvesting.
 | TaskQueue | `aios/agent_system/task_queue.py` | Durable queue with atomic transitions: queued → running → succeeded/failed |
 | TaskExecutor | `aios/agent_system/task_executor.py` | Executes tasks with retry and error handling |
 | Lifecycle | `aios/agent_system/agent_lifecycle_engine.py` | Agent state machine: init → running → paused → stopped |
-| Removed 2026-08 | `experience_learner_v4.py` / `meta_agent.py` / `evolution*.py` | P0 死代码清理:全仓库零 import 引用,见 git 历史 |
+| MemoryRetrieval | `aios/agent_system/memory_retrieval.py` | Episodic memory hints: Jaccard keyword-overlap retrieval + feedback log; deterministic baseline, NOT vector search |
+| Removed 2026-08 | `experience_learner_v4.py` / `meta_agent.py` / `evolution*.py` / `AgentSystem` facade / `core/agent_manager.py` | P0 死代码清理 + A2 门面移除(unified_router_v1.py 从未存在于 git 历史) |
 
 Key design: every task execution produces a run trace. Failed tasks generate experience records that improve future runs.
 
