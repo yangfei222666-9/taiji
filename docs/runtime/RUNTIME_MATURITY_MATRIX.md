@@ -47,28 +47,27 @@ the maturity class.
 | LLM Gateway | PARTIAL | PROVIDER_BLOCKED | Auth, policy, route, audit exist; external provider execution remains blocked |
 | `aios/gateway/*` | PARTIAL | PROVIDER_BLOCKED | Provider calls require explicit Provider Boundary Gate |
 | `aios/agent_system/task_queue.py` | PARTIAL | DURABLE_QUEUE_CANDIDATE | Durable queue mechanics look valuable; needs exact-scope validation |
-| `aios/core/event_bus.py` | PARTIAL | EVENT_BUS_CANDIDATE | Useful core pattern; persistence and runtime scope need review |
+| `aios/core/event_bus.py` | REMOVED | REMOVED_P0_2026-08 | Zero import references; removed in P0 dead-code cleanup (see git history) |
 | `aios/core/engine.py` | PARTIAL | EVENT_SCHEMA_CANDIDATE | Local JSONL event schema; writes runtime data |
 | `examples/quickstart_minimal.py` | PARTIAL | RUNNABLE_DEMO | Demonstrates self-healing evidence loop; demo is not runtime readiness |
 | `examples/demo_app.py` | PARTIAL | LEARNING_ONLY_DEMO | External APIs disabled by default; judgment path blocked |
 | `self_improving_loop/` | EXPERIMENTAL | PENDING | Skeleton for threshold and rollback; not stable self-evolution |
-| `aios/core/reactor.py` | BLOCKED_PLATFORM | PLATFORM_PENDING | Contains platform-specific assumptions; not Mac-ready by default |
+| `aios/core/reactor.py` | REMOVED | REMOVED_P0_2026-08 | Zero import references; removed in P0 dead-code cleanup (see git history) |
 | `aios/core/safe_click.py` | BLOCKED_PLATFORM | PLATFORM_PENDING | Windows-oriented UI automation assumptions; requires platform review |
 | `rpa_vision/` | BLOCKED_PLATFORM | PLATFORM_PENDING | Safe Click validation lane needs platform-specific evidence |
-| `aios/agent_system/llm_caller.py` | LEGACY_PENDING | DIRECT_PROVIDER_PENDING | Direct provider path must route through Gateway or be fenced as legacy fallback |
+| `aios/agent_system/llm_caller.py` | REMOVED | REMOVED_P0_2026-08 | Zero import references; removed in P0 dead-code cleanup (see git history) |
 | `aios/core/model_router.py` | LEGACY_PENDING | PLACEHOLDER_PROVIDER_PATH | Contains placeholder Claude response behavior; needs review before claims |
-| `taiji-sandbox/` and root Next app | PARTIAL | PRODUCT_SHELL_CANDIDATE | Sandbox/product shell exists; deployment readiness requires separate gates |
+| Root Next app | PARTIAL | PRODUCT_SHELL_CANDIDATE | Product shell exists; deployment readiness requires separate gates (`taiji-sandbox/` duplicate removed 2026-08 P0) |
 | `xuan_shu/` | PARTIAL | RENDERER_ONLY_RESEARCH | Learning/observe-only symbolic layer; no command authority |
 
 ## Known Risk Examples
 
 ```text
 self_improving_loop: EXPERIMENTAL / PENDING
-reactor.py: PLATFORM_PENDING
 safe_click.py: PLATFORM_PENDING
-llm_caller.py: DIRECT_PROVIDER_PENDING
 Gateway: PARTIAL / PROVIDER_BLOCKED
 Product Spine verifier: CORE_ASSET / needs tests reviewed
+(event_bus.py / reactor.py / llm_caller.py: REMOVED_P0_2026-08)
 ```
 
 ## Production-Ready Rule

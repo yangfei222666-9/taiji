@@ -1,5 +1,7 @@
 # Direct LLM Caller Boundary
 
+> **RESOLVED 2026-08-15**:`aios/agent_system/llm_caller.py` was removed in the P0 dead-code cleanup (zero import references across the repo;see git history). This boundary doc is retained as historical evidence of the review posture;the direct-caller path no longer exists in the repository.
+
 ## Verdict
 
 ```text
@@ -7,7 +9,7 @@ verdict=direct_llm_caller_boundary_draft
 scope=direct_llm_caller_review_boundary_v0_1
 mode=docs_only_direct_provider_boundary
 direct_provider_calls=BLOCKED
-llm_caller_py_status=PENDING_REVIEW
+llm_caller_py_status=REMOVED_P0_2026-08
 gateway_bypass_allowed=false
 secret_read=false
 runtime_changed=false
