@@ -1,13 +1,13 @@
 [
   {
-    "ts": 1786783373.3711832,
+    "ts": 1786787906.135243,
     "type": "task.started",
     "data": {
       "task_id": "quickstart-001"
     }
   },
   {
-    "ts": 1786783373.371197,
+    "ts": 1786787906.135262,
     "type": "step.completed",
     "data": {
       "step": "generate:rev1",
@@ -15,7 +15,7 @@
     }
   },
   {
-    "ts": 1786783373.371202,
+    "ts": 1786787906.135267,
     "type": "validation.failed",
     "data": {
       "task_id": "quickstart-001",
@@ -28,7 +28,7 @@
     }
   },
   {
-    "ts": 1786783373.371208,
+    "ts": 1786787906.135274,
     "type": "step.completed",
     "data": {
       "step": "generate:rev2",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "ts": 1786783373.37121,
+    "ts": 1786787906.1352751,
     "type": "validation.passed",
     "data": {
       "task_id": "quickstart-001",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "ts": 1786783373.371211,
+    "ts": 1786787906.135277,
     "type": "task.delivered",
     "data": {
       "task_id": "quickstart-001",
@@ -53,14 +53,14 @@
     }
   },
   {
-    "ts": 1786783373.371233,
+    "ts": 1786787906.1353002,
     "type": "task.started",
     "data": {
       "task_id": "quickstart-002"
     }
   },
   {
-    "ts": 1786783373.371236,
+    "ts": 1786787906.135303,
     "type": "step.completed",
     "data": {
       "step": "generate:rev1",
@@ -68,7 +68,7 @@
     }
   },
   {
-    "ts": 1786783373.371237,
+    "ts": 1786787906.135305,
     "type": "validation.failed",
     "data": {
       "task_id": "quickstart-002",
@@ -81,7 +81,7 @@
     }
   },
   {
-    "ts": 1786783373.37124,
+    "ts": 1786787906.135307,
     "type": "step.completed",
     "data": {
       "step": "generate:rev2",
@@ -89,7 +89,7 @@
     }
   },
   {
-    "ts": 1786783373.3712409,
+    "ts": 1786787906.135309,
     "type": "validation.passed",
     "data": {
       "task_id": "quickstart-002",
@@ -98,7 +98,7 @@
     }
   },
   {
-    "ts": 1786783373.371242,
+    "ts": 1786787906.135309,
     "type": "task.delivered",
     "data": {
       "task_id": "quickstart-002",
@@ -106,14 +106,14 @@
     }
   },
   {
-    "ts": 1786783373.371254,
+    "ts": 1786787906.1353228,
     "type": "task.started",
     "data": {
       "task_id": "quickstart-003"
     }
   },
   {
-    "ts": 1786783373.371258,
+    "ts": 1786787906.135325,
     "type": "step.completed",
     "data": {
       "step": "generate:rev1",
@@ -121,7 +121,7 @@
     }
   },
   {
-    "ts": 1786783373.371259,
+    "ts": 1786787906.1353269,
     "type": "validation.failed",
     "data": {
       "task_id": "quickstart-003",
@@ -134,7 +134,7 @@
     }
   },
   {
-    "ts": 1786783373.3712618,
+    "ts": 1786787906.13533,
     "type": "step.completed",
     "data": {
       "step": "generate:rev2",
@@ -142,7 +142,7 @@
     }
   },
   {
-    "ts": 1786783373.371263,
+    "ts": 1786787906.1353312,
     "type": "validation.passed",
     "data": {
       "task_id": "quickstart-003",
@@ -151,7 +151,7 @@
     }
   },
   {
-    "ts": 1786783373.371264,
+    "ts": 1786787906.135332,
     "type": "task.delivered",
     "data": {
       "task_id": "quickstart-003",
