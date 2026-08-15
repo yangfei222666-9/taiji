@@ -166,9 +166,6 @@ graph TB
     end
 
     subgraph Learning["Reliability Learning 学习/回滚"]
-        FB[Feedback 反馈环]
-        EVO[Evolution 进化]
-        PL[PolicyLearner 策略学习]
         RB[Rollback 安全回滚]
     end
 
@@ -194,14 +191,14 @@ graph TB
 | Event-Driven Core 事件驱动核心 | EventBus + Scheduler + Reactor，所有行为由事件触发 | verified demo |
 | LLM Gateway 统一网关 | 认证、限流、多 Provider 故障转移、审计 | prototype |
 | Agent System 智能体框架 | 任务队列、生命周期管理、经验收割 | prototype |
-| MetaAgent 元智能体 | 缺口检测、Agent 草案和注册流程 | experimental |
-| Reliability Learning 学习/回滚骨架 | 反馈环 + 进化评分 + 策略学习 + 安全回滚接口 | prototype |
-| Circuit Breaker 熔断器 | 故障隔离，防止级联崩溃 | prototype |
+| MetaAgent 元智能体 | 已移除 2026-08(P0 死代码清理,零引用) | removed |
+| Reliability Learning 学习/回滚骨架 | 安全回滚骨架(反馈环/进化/策略学习已移除 2026-08) | prototype |
+| Circuit Breaker 熔断器 | 已移除 2026-08(P0 死代码清理,零引用) | removed |
 | Safe Click 受控点击 | 四闸门安全点击执行器（窗口绑定 + 区域禁点 + 白名单 + OCR 置信度） | prototype |
 | External Learning 外部学习候选 | 从外部项目提炼候选机制，人工 review 后才可纳入 | roadmap |
 | Match Analysis 交叉验证框架 | 多数据源分析和交叉验证框架 | prototype |
 | Pattern Recognition 模式识别 | 从运行数据中识别可优化模式 | prototype |
-| Ising Heartbeat 物理心跳引擎 | 统计物理 Ising 模型 + 六爻映射，追踪系统状态动力学 | experimental |
+| Ising Heartbeat 物理心跳引擎 | 已移除 2026-08(P0 死代码清理);18.8 小时实验保留为历史证据 | removed |
 | Multi-LLM Router 多模型路由 | DeepSeek / Gemini / GPT / Claude 路由与降级接口 | prototype |
 | FastAPI Server REST 接口 | `/api/chat` `/api/hexagram` `/api/cognitive_map` 等，TaijiBot 接入 | prototype |
 
@@ -234,14 +231,7 @@ TaijiOS 将 6 个系统维度映射为 6 个量子自旋（σ = ±1），用 Isi
 - 外场自适应自发学出"抑刚强流通"格局，与易经坤德高度吻合
 - 易经"应"关系（初↔四等）在 Hebbian 学习中**未**自发增强——物理邻近性比功能对应性更强
 
-```bash
-# 启动心跳引擎
-cd aios/agent_system
-python3 ising_heartbeat.py --loop --interval 60
-
-# 查看实时状态
-python3 ising_heartbeat.py --status
-```
+> 注:Ising 心跳引擎(ising_heartbeat.py)已在 2026-08 死代码清理(P0)中移除;上述 18.8 小时实验为历史证据,完整实现见 git 历史。
 
 ## Tech Stack 技术栈
 
@@ -256,15 +246,7 @@ export TAIJIOS_GATEWAY_ENABLED=1
 python3 -m aios.gateway --port 9200
 ```
 
-### 运行本地学习分析
-
-```bash
-PYTHONPATH=aios python3 -m learning.analyze_report json
-PYTHONPATH=aios python3 -m learning.analyze_report report
-PYTHONPATH=aios python3 -m learning.baseline gate
-```
-
-The current open-source repo ships local event analytics under `aios/learning/`.
+> `aios/learning/`(analyze/report/baseline/extract)已于 2026-08 P0 死代码清理移除——全仓库零 import 引用;本地事件流由 `aios/core/engine.py` 输出 JSONL。
 External GitHub mining is not shipped as a top-level package in this repo;
 external project research should enter as review candidates, not as automatic
 self-modification.
@@ -274,12 +256,10 @@ self-modification.
 ```
 TaijiOS/
 ├── aios/
-│   ├── core/              # 事件引擎、调度器、反应器、记忆、熔断器、Safe Click
+│   ├── core/              # 事件引擎(JSONL)、执行器、幂等保护、内存、模型路由
 │   ├── gateway/           # LLM 统一网关（认证、路由、故障转移、审计）
-│   ├── agent_system/      # 智能体框架（任务队列、执行器、经验引擎、元智能体）
-│   └── storage/           # SQLite 存储层
+│   └── agent_system/      # 智能体框架（任务队列、任务路由、生命周期引擎、统一路由）
 ├── self_improving_loop/   # 学习/回滚骨架（反馈、策略学习、阈值、回滚）
-├── aios/learning/         # 本地事件分析、报告、基线和回归门禁
 ├── match_analysis/        # 赔率交叉验证框架
 ├── rpa_vision/            # Safe Click 受控点击验证器
 ├── skill_auto_creation/   # 技能自动创建（检测→草案→验证→反馈→注册）
@@ -290,12 +270,11 @@ TaijiOS/
 
 | Module | Description | 说明 |
 |--------|-------------|------|
-| `aios/core/` | Event engine, scheduler, reactor, memory, circuit breaker, model router, Safe Click | 事件引擎、调度器、反应器、记忆、熔断器、模型路由、安全点击 |
+| `aios/core/` | Event engine (JSONL), executor, idempotency guard, gateway client | 事件引擎(JSONL)、执行器、幂等保护、网关客户端 |
 | `aios/gateway/` | Unified LLM Gateway — auth, rate limiting, provider failover, audit, streaming | 统一 LLM 网关 — 认证、限流、故障转移、审计、流式传输 |
-| `aios/agent_system/` | Task queue, agent lifecycle, experience harvesting, meta-agent, evolution, Ising heartbeat | 任务队列、智能体生命周期、经验收割、元智能体、进化、Ising 心跳引擎 |
+| `aios/agent_system/` | Task queue, task router, agent lifecycle engine, unified router | 任务队列、任务路由、智能体生命周期引擎、统一路由 |
 | `taijios-lite/` | Lightweight server — FastAPI `/api/chat`, multi-LLM router, Feishu/Telegram bot | 轻量服务 — FastAPI 接口、多模型路由、飞书/Telegram Bot |
 | `self_improving_loop/` | Learning and rollback skeleton with threshold gates | 学习/回滚骨架 + 阈值门控 |
-| `aios/learning/` | Local event analytics, daily report, baseline, regression gate | 本地事件分析、日报、基线、回归门禁 |
 | `match_analysis/` | Multi-source match analysis with odds cross-validation | 多数据源比赛分析 + 赔率交叉验证 |
 | `rpa_vision/` | Safe Click validator — 4-gate controlled click executor | 安全点击验证器 — 四闸门受控点击执行器 |
 | `skill_auto_creation/` | Auto-detect patterns → draft skills → 3-layer validation | 自动检测模式 → 生成技能草案 → 三层验证 |

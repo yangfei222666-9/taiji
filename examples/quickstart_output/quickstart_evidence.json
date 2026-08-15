@@ -1,5 +1,5 @@
 {
-  "ts": "2026-05-03T02:32:49Z",
+  "ts": "2026-08-15T08:14:51Z",
   "total_tasks": 3,
   "succeeded": 3,
   "self_healed": 3,
@@ -13,14 +13,14 @@
       "trace": {
         "task_id": "quickstart-001",
         "status": "succeeded",
-        "started_at": 1777775569.167757,
-        "ended_at": 1777775569.1679401,
+        "started_at": 1786781691.661558,
+        "ended_at": 1786781691.6615858,
         "steps": [
           {
             "name": "generate:rev1",
             "status": "completed",
-            "started_at": 1777775569.1677709,
-            "ended_at": 1777775569.167864,
+            "started_at": 1786781691.66156,
+            "ended_at": 1786781691.661572,
             "output": {
               "revision": 1,
               "guidance": {},
@@ -31,8 +31,8 @@
           {
             "name": "validate:rev1",
             "status": "failed",
-            "started_at": 1777775569.16787,
-            "ended_at": 1777775569.1678872,
+            "started_at": 1786781691.6615732,
+            "ended_at": 1786781691.661576,
             "output": {
               "score": 0.35,
               "passed": false,
@@ -53,8 +53,8 @@
           {
             "name": "generate:rev2",
             "status": "completed",
-            "started_at": 1777775569.167895,
-            "ended_at": 1777775569.167922,
+            "started_at": 1786781691.661578,
+            "ended_at": 1786781691.6615832,
             "output": {
               "revision": 2,
               "guidance": {
@@ -68,8 +68,8 @@
           {
             "name": "validate:rev2",
             "status": "completed",
-            "started_at": 1777775569.167925,
-            "ended_at": 1777775569.1679308,
+            "started_at": 1786781691.6615832,
+            "ended_at": 1786781691.6615849,
             "output": {
               "score": 0.9,
               "passed": true,
@@ -81,8 +81,8 @@
           {
             "name": "deliver",
             "status": "completed",
-            "started_at": 1777775569.167934,
-            "ended_at": 1777775569.1679392,
+            "started_at": 1786781691.6615849,
+            "ended_at": 1786781691.6615858,
             "output": {
               "delivered": true,
               "final_score": 0.9
@@ -101,14 +101,14 @@
       "trace": {
         "task_id": "quickstart-002",
         "status": "succeeded",
-        "started_at": 1777775569.168019,
-        "ended_at": 1777775569.168077,
+        "started_at": 1786781691.661607,
+        "ended_at": 1786781691.66162,
         "steps": [
           {
             "name": "generate:rev1",
             "status": "completed",
-            "started_at": 1777775569.168024,
-            "ended_at": 1777775569.168036,
+            "started_at": 1786781691.661609,
+            "ended_at": 1786781691.661613,
             "output": {
               "revision": 1,
               "guidance": {},
@@ -119,8 +119,8 @@
           {
             "name": "validate:rev1",
             "status": "failed",
-            "started_at": 1777775569.168038,
-            "ended_at": 1777775569.168043,
+            "started_at": 1786781691.661613,
+            "ended_at": 1786781691.6616142,
             "output": {
               "score": 0.35,
               "passed": false,
@@ -141,8 +141,8 @@
           {
             "name": "generate:rev2",
             "status": "completed",
-            "started_at": 1777775569.1680472,
-            "ended_at": 1777775569.1680582,
+            "started_at": 1786781691.6616151,
+            "ended_at": 1786781691.6616168,
             "output": {
               "revision": 2,
               "guidance": {
@@ -156,8 +156,8 @@
           {
             "name": "validate:rev2",
             "status": "completed",
-            "started_at": 1777775569.1680598,
-            "ended_at": 1777775569.168063,
+            "started_at": 1786781691.661618,
+            "ended_at": 1786781691.661618,
             "output": {
               "score": 0.9,
               "passed": true,
@@ -169,8 +169,8 @@
           {
             "name": "deliver",
             "status": "completed",
-            "started_at": 1777775569.168065,
-            "ended_at": 1777775569.168076,
+            "started_at": 1786781691.661619,
+            "ended_at": 1786781691.66162,
             "output": {
               "delivered": true,
               "final_score": 0.9
@@ -189,14 +189,14 @@
       "trace": {
         "task_id": "quickstart-003",
         "status": "succeeded",
-        "started_at": 1777775569.168191,
-        "ended_at": 1777775569.168236,
+        "started_at": 1786781691.6616309,
+        "ended_at": 1786781691.66164,
         "steps": [
           {
             "name": "generate:rev1",
             "status": "completed",
-            "started_at": 1777775569.168195,
-            "ended_at": 1777775569.168208,
+            "started_at": 1786781691.661632,
+            "ended_at": 1786781691.661634,
             "output": {
               "revision": 1,
               "guidance": {},
@@ -207,8 +207,8 @@
           {
             "name": "validate:rev1",
             "status": "failed",
-            "started_at": 1777775569.16821,
-            "ended_at": 1777775569.168215,
+            "started_at": 1786781691.661634,
+            "ended_at": 1786781691.6616352,
             "output": {
               "score": 0.35,
               "passed": false,
@@ -229,8 +229,8 @@
           {
             "name": "generate:rev2",
             "status": "completed",
-            "started_at": 1777775569.1682181,
-            "ended_at": 1777775569.168227,
+            "started_at": 1786781691.661636,
+            "ended_at": 1786781691.6616378,
             "output": {
               "revision": 2,
               "guidance": {
@@ -244,8 +244,8 @@
           {
             "name": "validate:rev2",
             "status": "completed",
-            "started_at": 1777775569.1682281,
-            "ended_at": 1777775569.168231,
+            "started_at": 1786781691.6616378,
+            "ended_at": 1786781691.661639,
             "output": {
               "score": 0.9,
               "passed": true,
@@ -257,8 +257,8 @@
           {
             "name": "deliver",
             "status": "completed",
-            "started_at": 1777775569.168233,
-            "ended_at": 1777775569.168236,
+            "started_at": 1786781691.661639,
+            "ended_at": 1786781691.66164,
             "output": {
               "delivered": true,
               "final_score": 0.9
@@ -269,5 +269,16 @@
       }
     }
   ],
-  "event_log_count": 18
+  "event_log_count": 18,
+  "aios_event": {
+    "id": "54885ab2-ce9d-400c-8d56-cf2d6ab671eb",
+    "type": "pipeline.completed",
+    "source": "quickstart",
+    "timestamp": 1786781691662,
+    "payload": {
+      "total_tasks": 3,
+      "succeeded": 3,
+      "self_healed": 3
+    }
+  }
 }

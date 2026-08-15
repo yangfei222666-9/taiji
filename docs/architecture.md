@@ -2,9 +2,9 @@
 
 ## Overview 概览
 
-TaijiOS is a layered AI operating system. Each layer has a clear responsibility and communicates through the EventBus.
+TaijiOS is a layered AI operating system. Each layer has a clear responsibility and communicates through the event engine (`aios/core/engine.py`, JSONL).
 
-太极OS 是分层的 AI 操作系统。每层职责清晰，通过事件总线通信。
+太极OS 是分层的 AI 操作系统。每层职责清晰，通过事件引擎(`aios/core/engine.py`,JSONL)通信。
 
 ## Layer Diagram 分层图
 
@@ -15,10 +15,8 @@ Layer 5: External Learning      外部学习候选层
               │         learns from               │ writes to
               ▼                                  ▼
 Layer 4: Reliability Learning   学习/回滚层
-         feedback_loop ←→ evolution ←→ policy_learner
-              │                │              │
-              │ scores         │ evolves      │ rollback
-              ▼                ▼              ▼
+         (feedback_loop/evolution/policy_learner 已于 2026-08 P0 死代码清理移除;
+          保留 self_improving_loop/ 回滚骨架与人工 gate 原则)
 Layer 3: Agent System           智能体层
          task_queue → task_executor → lifecycle_engine
               │              │              │
@@ -30,11 +28,8 @@ Layer 2: LLM Gateway            网关层
               │ authenticate           │ failover
               ▼                        ▼
 Layer 1: Core Engine              核心层
-         EventBus ←→ Scheduler ←→ Reactor
-              │           │           │
-              │ events    │ schedule  │ react
-              ▼           ▼           ▼
-         Memory    Registry    CircuitBreaker
+         engine.py (五层事件 + JSONL) ← executor.py (幂等执行)
+         (event_bus/scheduler/reactor/registry/circuit_breaker 已于 2026-08 P0 清理移除)
 ```
 
 ## Core Engine (Layer 1) 核心层
@@ -43,14 +38,11 @@ The foundation. Everything is an event.
 
 | Component | File | Role |
 | --------- | ---- | ---- |
-| EventBus | `aios/core/event_bus.py` | Central nervous system. All components publish/subscribe events |
-| Scheduler | `aios/core/scheduler.py` | Decides what runs when. Priority-based with resource awareness |
-| Reactor | `aios/core/reactor.py` | Auto-responds to events using playbooks |
+| Engine | `aios/core/engine.py` | Five-layer event engine, emits JSONL events |
+| Executor | `aios/core/executor.py` | Idempotent execution guard |
 | Memory | `aios/core/memory.py` | Layered memory: working, episodic, semantic |
-| Registry | `aios/core/registry.py` | Plugin/component discovery and registration |
-| CircuitBreaker | `aios/core/circuit_breaker.py` | Prevents cascade failures. States: closed → open → half-open |
-| Budget | `aios/core/budget.py` | Token and resource budget control |
 | ModelRouter | `aios/core/model_router.py` | Routes LLM calls to optimal provider based on task complexity |
+| Removed 2026-08 | `event_bus.py` / `scheduler*.py` / `reactor*.py` / `registry.py` / `circuit_breaker.py` / `budget.py` / `model_router_v2.py` | P0 死代码清理:全仓库零 import 引用,见 git 历史 |
 
 ## LLM Gateway (Layer 2) 网关层
 
@@ -77,7 +69,7 @@ Task execution with durable state and experience harvesting.
 | TaskQueue | `aios/agent_system/task_queue.py` | Durable queue with atomic transitions: queued → running → succeeded/failed |
 | TaskExecutor | `aios/agent_system/task_executor.py` | Executes tasks with retry and error handling |
 | Lifecycle | `aios/agent_system/agent_lifecycle_engine.py` | Agent state machine: init → running → paused → stopped |
-| Experience | `aios/agent_system/experience_learner_v4.py` | Harvests execution results into reusable experience with idempotent keys and grayscale rollout |
+| Removed 2026-08 | `experience_learner_v4.py` / `meta_agent.py` / `evolution*.py` | P0 死代码清理:全仓库零 import 引用,见 git 历史 |
 
 Key design: every task execution produces a run trace. Failed tasks generate experience records that improve future runs.
 
@@ -87,23 +79,18 @@ Learning and rollback proposals with evidence and threshold gates.
 
 | Component | File | Role |
 | --------- | ---- | ---- |
-| FeedbackLoop | `aios/core/feedback_loop.py` | Collects execution outcomes, computes improvement signals |
-| Evolution | `aios/core/evolution.py` | Scores system health, tracks improvement over time |
-| PolicyLearner | `aios/core/policy_learner.py` | Learns scheduling/routing policies from experience |
+| Removed 2026-08 | `feedback_loop.py` / `evolution.py` / `policy_learner.py` | P0 死代码清理:全仓库零 import 引用,见 git 历史 |
 | Rollback | `self_improving_loop/` | Safe rollback if a self-modification degrades performance |
 
 Key design: learning output is evidence first. A proposal must pass explicit thresholds and tests before it can affect runtime behavior; otherwise it remains a review candidate.
 
 ## External Learning (Layer 5) 外部学习候选层
 
-Converts local event history and external research into review candidates. The current open-source repo ships local learning analytics under `aios/learning/`; it does not ship a top-level external GitHub mining package.
+Converts local event history and external research into review candidates. The `aios/learning/` analytics package was removed in the 2026-08 P0 dead-code cleanup (zero import references); local events are emitted as JSONL by `aios/core/engine.py`. The repo does not ship a top-level external GitHub mining package.
 
 | Step | File | Role |
 | ---- | ---- | ---- |
-| Analyze | `aios/learning/analyze.py` | Computes metrics, top issues, suggestions, and threshold warnings from local events |
-| Report | `aios/learning/analyze_report.py` | Writes structured JSON and daily Markdown reports |
-| Baseline | `aios/learning/baseline.py` | Snapshots metrics history and regression gate state |
-| Extract | `aios/learning/analyze_extract.py` | Normalizes event fields before analysis |
+| Removed 2026-08 | `aios/learning/` (analyze / report / baseline / extract) | P0 死代码清理:全仓库零 import 引用,见 git 历史 |
 | Gate | planned | External GitHub mining must feed human-review candidates before any runtime change |
 
 Key design: the gate is always manual. External discovery may feed candidates, but humans decide what enters TaijiOS. This prevents the system from treating third-party patterns as verified local behavior.

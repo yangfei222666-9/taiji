@@ -40,10 +40,9 @@ class AIOSCLI:
         print("\n📦 组件状态:")
         
         components = {
-            "EventBus": self.aios_root / "core" / "event_bus.py",
-            "Scheduler": self.aios_root / "core" / "production_scheduler.py",
-            "Reactor": self.aios_root / "core" / "production_reactor.py",
-            "Dashboard": self.aios_root / "dashboard" / "server.py",
+            "Engine": self.aios_root / "core" / "engine.py",
+            "Executor": self.aios_root / "core" / "executor.py",
+            "Gateway": self.aios_root / "gateway" / "app.py",
         }
         
         for name, path in components.items():
