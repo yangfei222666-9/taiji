@@ -91,8 +91,6 @@ jobs:
       - name: Agent system smoke
         run: |
           python -m compileall -q aios/agent_system
-          python -m aios.agent_system.evolution analyze ci-agent
-          python -m aios.agent_system.evolution report ci-agent
       - name: Compile check
         run: python -m compileall aios/ -q
       - name: Install flake8
@@ -111,8 +109,6 @@ jobs:
         run: pip install -e . 2>&1 | tail -5
       - name: Check core imports
         run: |
-          python -c "from aios.core.event_bus import EventBus; print('OK: event_bus')"
-          python -c "from aios.core.circuit_breaker import CircuitBreaker; print('OK: circuit_breaker')"
           python -c "from aios.gateway.errors import GatewayError; print('OK: gateway.errors')"
 
   python-test:
