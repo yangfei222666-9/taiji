@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TaijiOS 证据门操作系统 · Evidence-Gate Operating Loop",
+    "output": "taiji-evidence-gate.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "user",
+      "type": "external",
+      "label": "用户 · 小九",
+      "sublabel": "唯一决策源",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "backend",
+      "label": "值班 Agent",
+      "sublabel": "deepseek-v4-pro · DSH web · 131 插件",
+      "tag": "owner: 值班系统",
+      "pos": [
+        300,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "tools",
+      "type": "backend",
+      "label": "工具层",
+      "sublabel": "bash / 文件 / 沙箱 / MCP / 技能",
+      "tag": "owner: 值班系统",
+      "pos": [
+        560,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "证据门",
+      "sublabel": "receipt · gate · cannot_claim",
+      "tag": "核心",
+      "pos": [
+        820,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "brain",
+      "type": "database",
+      "label": "规则与教训库",
+      "sublabel": "LESSONS · R1-R19",
+      "tag": "owner: 值班系统",
+      "pos": [
+        300,
+        260
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "growth",
+      "type": "backend",
+      "label": "成长审计",
+      "sublabel": "五指标 · 证据化",
+      "tag": "owner: 值班系统",
+      "pos": [
+        560,
+        260
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "reviewers",
+      "type": "external",
+      "label": "四视角评审",
+      "sublabel": "glm-5 · opus-5 · gemini-3.1-pro · codex",
+      "pos": [
+        820,
+        260
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "timers",
+      "type": "backend",
+      "label": "定时任务层",
+      "sublabel": "launchd ×7 · 巡检/备份/仪式",
+      "tag": "owner: 值班系统",
+      "pos": [
+        300,
+        440
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "backup",
+      "type": "cloud",
+      "label": "备份三副本",
+      "sublabel": "T7 · iCloud · backup-mac · 哨兵哈希",
+      "tag": "owner: 值班系统",
+      "pos": [
+        560,
+        440
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub 门禁",
+      "sublabel": "PR · 社区帖 #2278 · 技能包",
+      "pos": [
+        1080,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "keys",
+      "type": "security",
+      "label": "密钥库",
+      "sublabel": ".env.local · 永不读值",
+      "tag": "owner: 值班系统",
+      "pos": [
+        40,
+        260
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "show",
+      "type": "external",
+      "label": "外部真人验证",
+      "sublabel": "show 信号 · 0/1",
+      "pos": [
+        1080,
+        260
+      ],
+      "size": [
+        150,
+        60
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "user",
+      "to": "agent",
+      "label": "指令 / 拍板",
+      "fromSide": "right",
+      "toSide": "left",
+      "variant": "emphasis",
+      "labelDy": 54
+    },
+    {
+      "from": "agent",
+      "to": "tools",
+      "label": "调度",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "tools",
+      "to": "gate",
+      "label": "动作留 receipt",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "gate",
+      "to": "github",
+      "label": "PR / 回执",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "gate",
+      "to": "brain",
+      "label": "教训提炼",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "brain",
+      "to": "growth",
+      "label": "证据喂审计",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "growth",
+      "to": "reviewers",
+      "label": "送审 artifact",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "reviewers",
+      "to": "show",
+      "label": "等待外部验证",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    },
+    {
+      "from": "reviewers",
+      "to": "gate",
+      "label": "候选评审回灌",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "variant": "security"
+    },
+    {
+      "from": "agent",
+      "to": "growth",
+      "label": "状态快照",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "timers",
+      "to": "backup",
+      "label": "三副本 + 哨兵",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 54
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "本机 M5 Max",
+      "wraps": [
+        "agent",
+        "tools",
+        "gate",
+        "brain",
+        "growth",
+        "timers",
+        "keys"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "备份三副本域",
+      "wraps": [
+        "backup"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三条纪律",
+      "items": [
+        "receipt 优先,完成必须有证据",
+        "R12:永不宣称 AGI,无证据=未增长",
+        "删除先列清单,第三级动作逐次确认",
+        "密钥库只核对字段名,永不读值(见纪律,不连线)"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "三层进化",
+      "items": [
+        "规则/教训 = 是什么",
+        "技能 = 怎么干",
+        "MEMORY = 我是谁"
+      ]
+    }
+  ]
+}
