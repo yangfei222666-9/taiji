@@ -24,3 +24,8 @@ node archify/archify/bin/archify.mjs render architecture \
 ## 边界
 
 本图是值班系统的架构自述,不是生产级服务的部署拓扑;所有组件与连接都有对应实据(仓库文件/launchd 任务/回执账本),但没有第三方审计。
+
+## 2026-08-16 补充:一天时间线图
+
+- `day-2026-08-16.html` + `day-2026-08-16.lifecycle.json` —— 值班 agent 当日工作的时间线图(Archify lifecycle 类型)
+- 追加踩坑:lifecycle 网格宪法(main 带 5 列/事件带与 terminal 带 3 列)、所有事件泳道共享一行、跨带连线用 route: bottom-channel
