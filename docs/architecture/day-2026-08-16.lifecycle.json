@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "小九值班 · 2026-08-16 的一天",
+    "output": "day-2026-08-16.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1400,
+      860
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "主线(13:23 → 16:06)"
+    },
+    {
+      "id": "fixes",
+      "label": "失误 → 修复"
+    },
+    {
+      "id": "terminal",
+      "label": "收束"
+    }
+  ],
+  "states": [
+    {
+      "id": "p1",
+      "type": "start",
+      "label": "开局盘点",
+      "sublabel": "13:23 · 待办清单整合",
+      "lane": "main",
+      "col": 0,
+      "step": "01",
+      "tag": "entry"
+    },
+    {
+      "id": "p2",
+      "type": "active",
+      "label": "能力建设",
+      "sublabel": "13:29 · 四视角评审·MCP·备份v2",
+      "lane": "main",
+      "col": 1,
+      "step": "02",
+      "tag": "work"
+    },
+    {
+      "id": "p3",
+      "type": "active",
+      "label": "学习主线",
+      "sublabel": "14:20 · 课22·OSS49·论文9",
+      "lane": "main",
+      "col": 2,
+      "step": "03",
+      "tag": "work"
+    },
+    {
+      "id": "p4",
+      "type": "active",
+      "label": "对外输出",
+      "sublabel": "14:47 · 帖·仓库·bug报告",
+      "lane": "main",
+      "col": 3,
+      "step": "04",
+      "tag": "work"
+    },
+    {
+      "id": "p5",
+      "type": "active",
+      "label": "收束工程",
+      "sublabel": "15:13 · 架构图·仓库卫生·预设",
+      "lane": "main",
+      "col": 4,
+      "step": "05",
+      "tag": "work"
+    },
+    {
+      "id": "f1",
+      "type": "success",
+      "label": "备份案 → v2+哨兵",
+      "sublabel": "假完成→哈希验证",
+      "lane": "fixes",
+      "col": 0,
+      "step": "R1",
+      "tag": "retryable"
+    },
+    {
+      "id": "f3",
+      "type": "success",
+      "label": "archify案 → #76",
+      "sublabel": "崩溃→证据报告",
+      "lane": "fixes",
+      "col": 1,
+      "step": "R2",
+      "tag": "retryable"
+    },
+    {
+      "id": "t1",
+      "type": "success",
+      "label": "四层闭环上线",
+      "sublabel": "记忆→规则→技能→预设",
+      "lane": "terminal",
+      "col": 2,
+      "step": "09",
+      "tag": "terminal"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "p1",
+      "to": "p2"
+    },
+    {
+      "from": "p2",
+      "to": "p3"
+    },
+    {
+      "from": "p3",
+      "to": "p4"
+    },
+    {
+      "from": "p4",
+      "to": "p5"
+    },
+    {
+      "from": "p5",
+      "to": "t1",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "bottom-channel"
+    },
+    {
+      "from": "p2",
+      "to": "f1",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "p5",
+      "to": "f3",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "今日数字",
+      "items": [
+        "评审首轮 12/12 · 教训+3 · 规则+1",
+        "情报课 22 · OSS 49 · 论文 9",
+        "PR 合并 2 · 社区输出 3 · 回执 40+",
+        "余额 153.99(旧价)· 新价口径已备"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "等待项",
+      "items": [
+        "X 短文:等点发送",
+        "五触点真人反馈:自动捕获",
+        "08-23 审计 #3:自动执行",
+        "审计 2/12 · 外部验证 0/1"
+      ]
+    }
+  ]
+}
