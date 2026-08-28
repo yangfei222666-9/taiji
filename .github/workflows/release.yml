@@ -15,6 +15,10 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  SYFT_VERSION: "1.51.0"
+  SYFT_SHA256: "2a2e837a2c8d59ec9af5472ee22d3b04ee463c4e44476ecf993fd1e5ab6ebc7f"
+  CRANE_VERSION: "0.22.0"
+  CRANE_SHA256: "edb74d53fad9a596860f59d1c5d04a43dfb5f441dc71f57060dd0bf39483c833"
 
 jobs:
   build-sign-attest:
@@ -34,10 +38,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install build pytest pytest-cov cyclonedx-bom pyyaml
           pip install -e .
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-          curl -sSfL https://github.com/google/go-containerregistry/releases/latest/download/go-containerregistry_Linux_x86_64.tar.gz \
-            | tar -xz crane
-          sudo mv crane /usr/local/bin/
+          SYFT_ARCHIVE="syft_${SYFT_VERSION}_linux_amd64.tar.gz"
+          curl -sSfL "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/${SYFT_ARCHIVE}" -o "${SYFT_ARCHIVE}"
+          echo "${SYFT_SHA256}  ${SYFT_ARCHIVE}" | sha256sum -c -
+          tar -xzf "${SYFT_ARCHIVE}" syft
+          sudo install -m 0755 syft /usr/local/bin/syft
+          CRANE_ARCHIVE="go-containerregistry_Linux_x86_64.tar.gz"
+          curl -sSfL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/${CRANE_ARCHIVE}" -o "${CRANE_ARCHIVE}"
+          echo "${CRANE_SHA256}  ${CRANE_ARCHIVE}" | sha256sum -c -
+          tar -xzf "${CRANE_ARCHIVE}" crane
+          sudo install -m 0755 crane /usr/local/bin/crane
           syft version
           crane version
 

@@ -83,6 +83,48 @@ begin
 end;
 $$;
 
+create or replace function public.reserve_run_slot(
+  p_max_active_runs int,
+  p_demo_id text,
+  p_invite_id uuid,
+  p_payload jsonb
+)
+returns table (
+  run_id uuid,
+  outcome text
+)
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  v_active_runs int;
+  v_run_id uuid;
+begin
+  if p_max_active_runs is null or p_max_active_runs <= 0 then
+    raise exception 'p_max_active_runs must be positive' using errcode = '22023';
+  end if;
+
+  perform pg_advisory_xact_lock(hashtextextended('taiji.reserve_run_slot', 0));
+
+  select count(*)
+  into v_active_runs
+  from public.runs
+  where status in ('queued', 'running');
+
+  if v_active_runs >= p_max_active_runs then
+    return query select null::uuid, 'active_run_limit_reached'::text;
+    return;
+  end if;
+
+  insert into public.runs (demo_id, invite_id, payload, status, progress)
+  values (p_demo_id, p_invite_id, p_payload, 'queued', 0)
+  returning id into v_run_id;
+
+  return query select v_run_id, 'reserved'::text;
+end;
+$$;
+
 alter table public.invites enable row level security;
 alter table public.runs enable row level security;
 alter table public.run_artifacts enable row level security;
@@ -91,11 +133,13 @@ revoke all on public.invites from anon, authenticated;
 revoke all on public.runs from anon, authenticated;
 revoke all on public.run_artifacts from anon, authenticated;
 revoke all on function public.consume_invite_run(uuid) from public, anon, authenticated;
+revoke all on function public.reserve_run_slot(int, text, uuid, jsonb) from public, anon, authenticated;
 
 grant all on public.invites to service_role;
 grant all on public.runs to service_role;
 grant all on public.run_artifacts to service_role;
 grant execute on function public.consume_invite_run(uuid) to service_role;
+grant execute on function public.reserve_run_slot(int, text, uuid, jsonb) to service_role;
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
