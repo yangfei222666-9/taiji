@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'run_reservation_failed' }, { status: 500 });
   }
 
-  const runId = reservation.run_id;
+  const data = { id: reservation.run_id };
 
   if (inviteRequired()) {
     const inviteResult = await consumeInviteToken(supabase, inviteToken);
@@ -80,13 +80,13 @@ export async function POST(req: NextRequest) {
           logs: inviteResult.error,
           finished_at: new Date().toISOString()
         })
-        .eq('id', runId);
+        .eq('id', data.id);
 
-      return NextResponse.json({ error: inviteResult.error, run_id: runId }, { status: inviteResult.status });
+      return NextResponse.json({ error: inviteResult.error, run_id: data.id }, { status: inviteResult.status });
     }
   }
 
-  const access = await assertRunAccess(supabase, req, runId, body);
+  const access = await assertRunAccess(supabase, req, data.id, body);
   if (!access.ok) {
     return NextResponse.json({ error: access.error }, { status: access.status });
   }
@@ -95,9 +95,9 @@ export async function POST(req: NextRequest) {
 
   try {
     if (triggerMode === 'mock') {
-      await completeMockRun(runId);
+      await completeMockRun(data.id);
     } else {
-      await triggerRun(runId);
+      await triggerRun(data.id);
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : 'queue_dispatch_failed';
@@ -109,13 +109,13 @@ export async function POST(req: NextRequest) {
         logs: message,
         finished_at: new Date().toISOString()
       })
-      .eq('id', runId);
+      .eq('id', data.id);
 
-    return NextResponse.json({ error: message, run_id: runId }, { status: 502 });
+    return NextResponse.json({ error: message, run_id: data.id }, { status: 502 });
   }
 
   return NextResponse.json({
-    run_id: runId,
+    run_id: data.id,
     trigger_mode: triggerMode
   });
 }
