@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { timestamp } from './report-utils.mjs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
@@ -82,10 +83,6 @@ function buildExpiry(args) {
 
 function safeSlug(input) {
   return input.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'tester';
-}
-
-function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 }
 
 function renderPacket({ email, appUrl, maxRuns, expiresAt, support }) {

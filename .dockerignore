@@ -1,0 +1,21 @@
+# VCS metadata and generated development files do not belong in the build context.
+**/.git
+**/node_modules
+**/.next
+**/.venv
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/*.tsbuildinfo
+
+# Keep environment examples; exclude local credentials at every directory depth.
+**/.env
+**/.env.*
+**/*.key
+**/*.pem
+**/auth.json
+**/api_keys.json
+!**/.env.example

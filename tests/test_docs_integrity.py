@@ -1,8 +1,5 @@
 from pathlib import Path
-import os
 import re
-import subprocess
-import sys
 from urllib.parse import unquote, urlsplit
 
 

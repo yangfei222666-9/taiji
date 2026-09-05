@@ -38,6 +38,13 @@ function expectAbsent(name, path, needles) {
   else fail(name, `forbidden text found: ${found.join(', ')}`, { path });
 }
 
+const reportTests = spawnSync(process.execPath, ['--test', 'tests/report-utils.test.mjs'], {
+  cwd: root,
+  encoding: 'utf8'
+});
+if (reportTests.status === 0) pass('reports:shared_helpers');
+else fail('reports:shared_helpers', reportTests.stderr || reportTests.stdout || 'report tests failed');
+
 [
   'README.md',
   '.env.example',

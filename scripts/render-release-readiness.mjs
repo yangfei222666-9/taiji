@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { parseOutputArgs as parseArgs, timestamp, latestJson } from './report-utils.mjs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 
@@ -59,45 +60,9 @@ Options:
 `;
 }
 
-function parseArgs(argv) {
-  const args = {};
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    if (arg === '--help' || arg === '-h') args.help = true;
-    else if (arg === '--out-dir') {
-      const value = argv[i + 1];
-      if (!value || value.startsWith('--')) throw new Error('--out-dir requires a value');
-      args.outDir = value;
-      i += 1;
-    } else {
-      throw new Error(`unknown option: ${arg}`);
-    }
-  }
-  return args;
-}
-
-function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-}
-
-function collectSummaryFiles(root, dir, files = []) {
-  const absolute = join(root, dir);
-  if (!existsSync(absolute)) return files;
-
-  for (const entry of readdirSync(absolute)) {
-    const full = join(absolute, entry);
-    const stat = statSync(full);
-    const rel = join(dir, entry).replaceAll('\\', '/');
-    if (stat.isDirectory()) collectSummaryFiles(root, rel, files);
-    else if (entry === 'summary.json') files.push({ path: rel, mtimeMs: stat.mtimeMs });
-  }
-
-  return files;
-}
-
 function latestSummary(root, gate) {
-  const files = collectSummaryFiles(root, gate.globRoot).sort((a, b) => b.mtimeMs - a.mtimeMs);
-  if (files.length === 0) {
+  const latest = latestJson(root, gate.globRoot);
+  if (!latest) {
     return {
       gate: gate.name,
       status: 'missing',
@@ -107,8 +72,7 @@ function latestSummary(root, gate) {
     };
   }
 
-  const summaryPath = files[0].path;
-  const data = JSON.parse(readFileSync(join(root, summaryPath), 'utf8'));
+  const { path: summaryPath, data } = latest;
   const ready = gate.readyVerdicts.includes(data.verdict);
   return {
     gate: gate.name,
