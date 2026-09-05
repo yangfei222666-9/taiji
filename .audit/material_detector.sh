@@ -152,32 +152,49 @@ select_github_run_with_artifacts() {
   local repo="$2"
   local runs_json="$WORKDIR/runs.json"
   local current_run_id="${GITHUB_RUN_ID:-}"
-  local workflow_filter="${AUDIT_SOURCE_WORKFLOW:-}"
+  local workflow_filter="${AUDIT_SOURCE_WORKFLOW:-release.yml}"
+  local artifact_prefix="${AUDIT_SOURCE_ARTIFACT_PREFIX:-taiji-evidence-}"
+  local workflow_id candidate_ids candidate_id
+  workflow_id="$(jq -rn --arg workflow "$workflow_filter" '$workflow | @uri')" || return 2
 
-  github_get "https://api.github.com/repos/${owner}/${repo}/actions/runs?status=success&per_page=20" > "$runs_json"
-  cp "$runs_json" "$RUN_PAYLOAD"
+  # Query the producer directly: daily audit runs must not crowd builds out of
+  # the first page, or become the source for the next day's audit.
+  github_get "https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_id}/runs?status=success&per_page=20" > "$runs_json" || return 2
+  jq -e '(.workflow_runs | type) == "array"' "$runs_json" >/dev/null || return 2
+  cp "$runs_json" "$RUN_PAYLOAD" || return 2
 
-  mapfile -t candidate_ids < <(
-    jq -r \
+  candidate_ids="$(jq -r \
       --arg current_run_id "$current_run_id" \
       --arg workflow_filter "$workflow_filter" \
       '.workflow_runs[]
         | select((.id | tostring) != $current_run_id)
-        | select($workflow_filter == "" or .name == $workflow_filter or .path == $workflow_filter or (.path | endswith("/" + $workflow_filter)))
-        | .id' "$runs_json"
-  )
+        | select(.status == "completed" and .conclusion == "success")
+        | select(.name != "taijios-audit-pulse")
+        | select(((.path // "") | split("@")[0] | split("/")[-1]) != "taijios-audit-pulse.yml")
+        | select(($workflow_filter | test("^[0-9]+$")) or
+                 (((.path // "") | split("@")[0] | split("/")[-1]) == $workflow_filter))
+        | .id' "$runs_json")" || return 2
 
-  for candidate_id in "${candidate_ids[@]}"; do
+  # read works on both macOS Bash 3.2 and the GitHub runner's Bash.
+  while IFS= read -r candidate_id; do
+    [ -n "$candidate_id" ] || continue
     local artifacts_json="$WORKDIR/artifacts_${candidate_id}.json"
-    github_get "https://api.github.com/repos/${owner}/${repo}/actions/runs/${candidate_id}/artifacts" > "$artifacts_json"
-    if [ "$(jq -r '.total_count // 0' "$artifacts_json")" -gt 0 ]; then
+    local eligible_json="$WORKDIR/eligible_${candidate_id}.json"
+    github_get "https://api.github.com/repos/${owner}/${repo}/actions/runs/${candidate_id}/artifacts?per_page=100" > "$artifacts_json" || return 2
+    jq -e '(.artifacts | type) == "array"' "$artifacts_json" >/dev/null || return 2
+    jq --arg prefix "$artifact_prefix" \
+      '.artifacts |= map(select(.expired == false)
+        | select(.name | startswith($prefix))
+        | select(.name | startswith("taijios-audit-pulse-") | not))
+       | .total_count = (.artifacts | length)' "$artifacts_json" > "$eligible_json" || return 2
+    if [ "$(jq -r '.total_count' "$eligible_json")" -gt 0 ]; then
+      cp "$eligible_json" "$ARTIFACTS_PAYLOAD" || return 2
       jq -r \
         --arg id "$candidate_id" \
-        '.workflow_runs[] | select((.id | tostring) == $id) | [.id, .created_at] | @tsv' "$runs_json"
-      cp "$artifacts_json" "$ARTIFACTS_PAYLOAD"
+        '.workflow_runs[] | select((.id | tostring) == $id) | [.id, .created_at] | @tsv' "$runs_json" || return 2
       return 0
     fi
-  done
+  done <<< "$candidate_ids"
 
   return 1
 }
@@ -194,11 +211,17 @@ collect_github_artifacts() {
   local repo="${GITHUB_REPOSITORY#*/}"
   local selected
 
-  record_event "github_fetch" "started" "fetching latest successful run with artifacts"
-  if ! selected="$(select_github_run_with_artifacts "$owner" "$repo")"; then
-    record_event "github_fetch" "pending" "no successful run with artifacts found"
-    write_summary "PENDING" "" "no successful run with artifacts found" "0" "0" "" "" ""
-    echo "[audit] no successful run with artifacts found"
+  record_event "github_fetch" "started" "source_workflow=${AUDIT_SOURCE_WORKFLOW:-release.yml}; artifact_prefix=${AUDIT_SOURCE_ARTIFACT_PREFIX:-taiji-evidence-}"
+  if selected="$(select_github_run_with_artifacts "$owner" "$repo")"; then
+    :
+  else
+    local selection_status=$?
+    if [ "$selection_status" -ne 1 ]; then
+      fail_blocked "github_fetch" "source run or artifact lookup failed"
+    fi
+    record_event "github_fetch" "pending" "no eligible source artifacts found"
+    write_summary "PENDING" "" "no eligible source artifacts found" "0" "0" "" "" ""
+    echo "[audit] no eligible source artifacts found"
     exit 0
   fi
 

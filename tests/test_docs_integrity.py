@@ -1,7 +1,9 @@
 from pathlib import Path
 import os
+import re
 import subprocess
 import sys
+from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +11,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
+
+
+def test_reviewer_entry_local_links_resolve_relative_to_document():
+    entry = ROOT / "docs/START_HERE_FOR_REVIEWERS.md"
+    targets = re.findall(r"\[[^\]]+\]\(([^)]+)\)", entry.read_text(encoding="utf-8"))
+    local_paths = [
+        unquote(link.path)
+        for target in targets
+        if not (link := urlsplit(target)).scheme and not link.netloc and link.path
+    ]
+
+    assert local_paths, "Reviewer entry must link to local proof material"
+    missing = [path for path in local_paths if not (entry.parent / path).is_file()]
+    assert not missing, f"Broken reviewer links relative to docs/: {missing}"
 
 
 def test_readme_does_not_publish_missing_github_learning_package():

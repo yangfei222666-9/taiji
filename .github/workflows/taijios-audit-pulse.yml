@@ -16,6 +16,9 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       STATE_DIR: .audit/state
       AUDIT_OUT_DIR: .audit/out/${{ github.run_id }}
+      # Match the build evidence uploaded by release.yml; never audit audit output.
+      AUDIT_SOURCE_WORKFLOW: release.yml
+      AUDIT_SOURCE_ARTIFACT_PREFIX: taiji-evidence-
       MATERIAL_GATE_HOURS: "72"
       REKOR_REQUIRED: "1"
       SIGSTORE_REKOR_SERVER: "https://rekor.sigstore.dev"
