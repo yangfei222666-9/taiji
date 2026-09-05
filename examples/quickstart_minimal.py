@@ -2,13 +2,15 @@
 """
 TaijiOS Quickstart — 3 minutes, no Ollama required.
 
-This demo shows the core TaijiOS loop:
+This deterministic simulation shows the retry and evidence-recording loop:
   1. A task enters the system
-  2. A pipeline processes it (with self-healing retry)
+  2. A fixed validator fails once, then accepts a retry
   3. Evidence and trace are generated
 
-When the aios package is installed (pip install -e .), the demo also
-creates real aios.core.event.Event objects to prove the package works.
+Scores depend only on attempt number, not task content or repair guidance.
+The 0.35 -> 0.90 sequence is not a measured improvement in a model.
+When aios is installed (pip install -e .), the demo also exercises
+aios.core.event.Event creation and serialization.
 
 Run:
     pip install -e .
@@ -67,7 +69,7 @@ class Task:
 # ── 3. Validator (mock — no Ollama needed) ─────────────────────
 
 def validate(data: dict, attempt: int) -> dict:
-    """Mock validator. Fails on first attempt, passes on retry (self-healing demo)."""
+    """Fixed attempt-based scores; does not assess data or repair guidance."""
     score = 0.35 + (attempt - 1) * 0.55  # attempt 1: 0.35, attempt 2: 0.90
     passed = score >= 0.80
     failed_checks = []
@@ -214,6 +216,7 @@ def main():
     print("=" * 60)
     print("  TaijiOS Quickstart — No Ollama Required")
     print("=" * 60)
+    print("  Mode: deterministic_simulation (fixed scores 0.35 -> 0.90; no model evaluation)")
 
     # Setup
     bus = EventBus()
@@ -241,6 +244,7 @@ def main():
 
     # Write evidence
     evidence = {
+        "mode": "deterministic_simulation",
         "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "total_tasks": len(results),
         "succeeded": sum(1 for r in results if r["status"] == "succeeded"),

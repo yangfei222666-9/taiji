@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { timestamp } from './report-utils.mjs';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -86,10 +87,6 @@ function parseArgs(argv) {
     }
   }
   return args;
-}
-
-function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 }
 
 function sha256(buffer) {

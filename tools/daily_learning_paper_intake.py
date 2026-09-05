@@ -5,7 +5,6 @@ import argparse
 import json
 import re
 import subprocess
-import sys
 import time
 import urllib.error
 import urllib.parse
@@ -416,7 +415,8 @@ def _classify_text(text: str) -> list[str]:
         categories.append("Physical AI Sandbox")
     if any(term in text for term in ["space", "satellite", "mission", "rover", "orbital", "mars"]):
         categories.append("SpaceOps Simulation Kernel")
-    ordered = [category for category in TAIJIOS_CATEGORIES if category in set(categories)]
+    matched_categories = set(categories)
+    ordered = [category for category in TAIJIOS_CATEGORIES if category in matched_categories]
     return ordered or ["Archive / Ignore"]
 
 

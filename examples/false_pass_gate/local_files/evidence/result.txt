@@ -1,0 +1,2 @@
+Synthetic example output for local file-hash verification.
+This text is not proof that an external task or test ran.

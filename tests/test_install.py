@@ -1,5 +1,26 @@
 """Smoke tests: does pip install -e . produce a working package?"""
 
+from importlib.metadata import requires
+from pathlib import Path
+
+
+def test_root_dependency_declarations_match():
+    """The editable-package and requirements install paths must stay aligned."""
+    root = Path(__file__).resolve().parents[1]
+    # Inspect the installed package's real metadata. Its optional dev dependency
+    # has an explicit extra marker and is not part of requirements.txt.
+    package_dependencies = [
+        requirement
+        for requirement in requires("taijios") or []
+        if not requirement.partition(";")[2].strip().startswith("extra ==")
+    ]
+    requirements = [
+        line.strip()
+        for line in (root / "requirements.txt").read_text().splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    assert sorted(package_dependencies) == sorted(requirements)
+
 
 def test_aios_importable():
     """The top-level aios package must be importable."""

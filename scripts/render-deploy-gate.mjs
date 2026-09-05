@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { timestamp, latestJson } from './report-utils.mjs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 
@@ -32,34 +33,6 @@ function parseArgs(argv) {
     }
   }
   return args;
-}
-
-function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-}
-
-function collectSummaryFiles(root, dir, files = []) {
-  const absolute = join(root, dir);
-  if (!existsSync(absolute)) return files;
-
-  for (const entry of readdirSync(absolute)) {
-    const full = join(absolute, entry);
-    const stat = statSync(full);
-    const rel = join(dir, entry).replaceAll('\\', '/');
-    if (stat.isDirectory()) collectSummaryFiles(root, rel, files);
-    else if (entry === 'summary.json') files.push({ path: rel, mtimeMs: stat.mtimeMs });
-  }
-
-  return files;
-}
-
-function latestJson(root, dir) {
-  const files = collectSummaryFiles(root, dir).sort((a, b) => b.mtimeMs - a.mtimeMs);
-  if (files.length === 0) return null;
-  return {
-    path: files[0].path,
-    data: JSON.parse(readFileSync(join(root, files[0].path), 'utf8'))
-  };
 }
 
 function renderMarkdown(summary) {
