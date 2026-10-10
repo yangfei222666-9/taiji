@@ -1,0 +1,21 @@
+{
+  "case_id": "local-file-example",
+  "agent_claim": "Synthetic example output is complete.",
+  "success_claims": [
+    "done"
+  ],
+  "evidence": [
+    {
+      "type": "synthetic_output",
+      "status": "PASS",
+      "file": "result.txt",
+      "sha256": "761debfab604bca6191e7333b1ddf01f1823b7fefbd837649206b18f952728ea"
+    }
+  ],
+  "cannot_claim": [
+    "command_execution_verified",
+    "evidence_content_true",
+    "production_readiness"
+  ],
+  "expected_verdict": "PASS"
+}

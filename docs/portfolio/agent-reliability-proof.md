@@ -23,7 +23,7 @@ The reliability target here is narrow: make the evidence visible enough that a r
 
 ### 1. False-Pass Gate
 
-The false-pass gate is a local schema-level check for agent success claims. It blocks success language when required passing evidence pointers or explicit `cannot_claim` boundaries are missing.
+The default mode is a schema check for agent success claims. A success claim requires a declared `PASS` evidence item with a type and a pointer, and every case requires a nonempty `cannot_claim` field. A command, filename, URL, or value in that input is a declaration: this mode does not run commands, read the referenced files, fetch URLs, or establish that the claimed work happened.
 
 Run:
 
@@ -31,6 +31,26 @@ Run:
 python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
 python3 -m pytest tests/test_false_pass_gate.py -q
 ```
+
+Without an evidence root, output is labeled `verification_mode=schema_only`. To check local file bytes, run:
+
+```bash
+python3 scripts/check_false_pass_gate.py \
+  --case examples/false_pass_gate/local_files/claim.json \
+  --evidence-root examples/false_pass_gate/local_files/evidence
+```
+
+This optional mode is labeled `verification_mode=local_file_hashes`. Every evidence item marked `status: PASS` must retain its `type` and supply a relative `file` or `artifact` path plus a 64-character hexadecimal `sha256`. The checker requires a regular file beneath the selected root, rejects absolute paths, parent traversal and symbolic links below that root, and compares its bytes with the declared hash.
+
+The caller selects a trusted evidence root; aliases in the root path itself are resolved before checking. The strict mode uses directory-relative, no-follow file descriptors on supported Linux/macOS environments. If those filesystem operations are unavailable, it returns `local_file_verification_unsupported` rather than silently reverting to the schema check.
+
+The result only establishes that the local bytes read during this check match the supplied hash. The checker does not execute the recorded command, fetch remote evidence, establish who produced a file, or verify whether its contents are true. A matching hash can bind a fabricated log just as precisely as a real one; reviewers still need an independent basis for the execution claim.
+
+### Quickstart simulation boundary
+
+[Quickstart](../../examples/quickstart_minimal.py) demonstrates retry control flow and event/trace recording with three synthetic tasks. Its validator computes scores from the attempt number: 0.35 on the first attempt, then 0.90 on the second. It does not evaluate task content or repair guidance, and it calls no model.
+
+The CLI and newly generated evidence identify `mode: deterministic_simulation`. The retained `self_healed=3` field counts simulated retries that reached the fixed passing score. It is not measured model self-healing, quality improvement, or success on real tasks. Creating an installed `aios.core.event.Event` exercises event creation and serialization only.
 
 ### 2. Zero-fixture false-pass fix
 

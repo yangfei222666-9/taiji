@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { parseOutputArgs as parseArgs, timestamp } from './report-utils.mjs';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -55,27 +56,6 @@ Options:
   --out-dir <path>  Output directory. Default: runs/env_wiring/<timestamp>.
   --help            Show this help.
 `;
-}
-
-function parseArgs(argv) {
-  const args = {};
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    if (arg === '--help' || arg === '-h') args.help = true;
-    else if (arg === '--out-dir') {
-      const value = argv[i + 1];
-      if (!value || value.startsWith('--')) throw new Error('--out-dir requires a value');
-      args.outDir = value;
-      i += 1;
-    } else {
-      throw new Error(`unknown option: ${arg}`);
-    }
-  }
-  return args;
-}
-
-function timestamp() {
-  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 }
 
 function parseEnvNames(path) {

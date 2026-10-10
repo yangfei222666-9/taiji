@@ -5,10 +5,39 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tools.daily_learning_paper_intake import ROOT, build_payload, verify_run_dir, write_run
+from tools.daily_learning_paper_intake import _classify_text
 
 
 SCRIPT = ROOT / "tools" / "daily_learning_paper_intake.py"
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("", ["Archive / Ignore"]),
+        ("unrelated topic", ["Archive / Ignore"]),
+        (
+            "agent workflow verification evidence",
+            ["Evidence Kernel", "Product Spine", "Operator Toolchain"],
+        ),
+        (
+            "mars robotics agent llm workflow evidence",
+            [
+                "Evidence Kernel",
+                "Product Spine",
+                "Local 120B assistant",
+                "Operator Toolchain",
+                "Physical AI Sandbox",
+                "SpaceOps Simulation Kernel",
+            ],
+        ),
+    ],
+)
+def test_classification_preserves_order_deduplication_and_fallback(text, expected):
+    assert _classify_text(text) == expected
 
 
 def _offline_source(tmp_path: Path) -> Path:

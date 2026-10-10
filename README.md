@@ -33,11 +33,11 @@ This repository is the public Agent Reliability entrypoint for TaijiOS. It shows
   - Remote evidence: [PR #43](https://github.com/yangfei222666-9/taiji/pull/43), merge commit [`44dee657`](https://github.com/yangfei222666-9/taiji/commit/44dee657fb112f8ea3bfa207c104684079bd94de), [main CI run 28116696880](https://github.com/yangfei222666-9/taiji/actions/runs/28116696880), [PR #44](https://github.com/yangfei222666-9/taiji/pull/44), merge commit [`fcf2e5c`](https://github.com/yangfei222666-9/taiji/commit/fcf2e5cc7a0b049b61f568bf3d8ba58225cfda9d), and [main CI run 28117951875](https://github.com/yangfei222666-9/taiji/actions/runs/28117951875).
   - Limits: not a prevalence study, not a current Codex product-quality conclusion, and not proof that open issues are confirmed defects.
 - Reviewer start page: [docs/START_HERE_FOR_REVIEWERS.md](docs/START_HERE_FOR_REVIEWERS.md) — 5-minute public review path, exact verdicts, and no-overclaim boundaries.
-- Agent Reliability False-Pass Gate: `python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures` blocks success language when passing evidence pointers or explicit `cannot_claim` boundaries are missing.
+- Agent Reliability False-Pass Gate: the default schema check requires declared passing evidence pointers and `cannot_claim` boundaries. It does not verify whether a referenced command ran or a file exists. See the [proof page](docs/portfolio/agent-reliability-proof.md#1-false-pass-gate) for the optional `--evidence-root DIR` mode that checks local file SHA256 values.
 - Agent Reliability proof: [docs/portfolio/agent-reliability-proof.md](docs/portfolio/agent-reliability-proof.md) maps PR #38, PR #39, PR #40, PR #43, and PR #44 to evidence, commands, limitations, and recruiter-readable claims.
 - Machine-readable proof index: [docs/proof_index.json](docs/proof_index.json)
 
-If you are reviewing the Agent Reliability work, start with the proof page, then run the two local validation commands above.
+If you are reviewing the Agent Reliability work, start with the proof page, then run its documented local checks for each mode.
 
 ---
 
@@ -75,9 +75,11 @@ pip install -e .
 python3 examples/quickstart_minimal.py
 ```
 
-你会看到：
+默认运行是固定模拟，输出节选：
 
 ```text
+  Mode: deterministic_simulation (fixed scores 0.35 -> 0.90; no model evaluation)
+
 --- Task: quickstart-001 ---
   Status: succeeded
   Attempts: 2
@@ -89,9 +91,9 @@ python3 examples/quickstart_minimal.py
   Events logged: 18
 ```
 
-发生了什么：3 个任务进入系统 → 首次验证失败(0.35) → 自动注入修复指导 → 重试成功(0.90) → 生成证据链。
+发生了什么：3 个合成任务进入示例 → 固定验证器首次返回失败(0.35) → 生成指导字段 → 第二次返回成功(0.90) → 记录事件与执行轨迹。分数只由尝试次数计算，验证器不评估任务内容或指导是否有效。
 
-这就是太极OS的核心循环：**任务 → 验证 → 失败 → 指导 → 重试 → 交付 → 证据**。
+这演示了**任务 → 验证 → 失败 → 指导 → 重试 → 留痕**的控制流程。输出中的 `self_healed=3` 表示三个任务经过模拟重试；它不是实际模型自愈增益、质量评分提升或真实任务成功率。新生成的 `quickstart_evidence.json` 带有 `mode: deterministic_simulation`；原有计数字段保持兼容。
 
 ### Learning-only demo
 
