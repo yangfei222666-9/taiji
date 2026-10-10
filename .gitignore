@@ -113,3 +113,5 @@ desktop.ini
 .next/
 node_modules/
 *.tsbuildinfo
+.netlify/
+next-env.d.ts

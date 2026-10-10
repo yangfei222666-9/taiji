@@ -121,12 +121,6 @@ class TaskQueue:
         with open(tmp_file, "w", encoding="utf-8") as f:
             for task in tasks.values():
                 f.write(json.dumps(task.to_dict(), ensure_ascii=False) + "\n")
-        # Windows: 目标文件存在时 replace 可能失败，先删除再替换
-        if self.queue_file.exists():
-            try:
-                self.queue_file.unlink()
-            except Exception:
-                pass
         tmp_file.replace(self.queue_file)
     
     def enqueue_task(

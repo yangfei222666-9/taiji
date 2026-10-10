@@ -7,8 +7,9 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-type RunInsert = {
-  id: string;
+type RunReservation = {
+  run_id: string | null;
+  outcome: 'reserved' | 'active_run_limit_reached';
 };
 
 export async function POST(req: NextRequest) {
@@ -38,40 +39,35 @@ export async function POST(req: NextRequest) {
     inviteId = invite.id;
   }
 
-  const { count, error: countError } = await supabase
-    .from('runs')
-    .select('id', { count: 'exact', head: true })
-    .in('status', ['queued', 'running']);
-
-  if (countError) {
-    return NextResponse.json({ error: countError.message }, { status: 500 });
-  }
-
-  if ((count ?? 0) >= limits.maxActiveRuns) {
-    return NextResponse.json({ error: 'active_run_limit_reached' }, { status: 429 });
-  }
-
   const payload = {
     text: 'hello from taiji',
     requested_at: new Date().toISOString(),
     timeout_seconds: limits.timeoutSeconds
   };
+  const demoId = typeof body.demo_id === 'string' ? body.demo_id : 'starter-demo';
 
-  const { data, error } = await supabase
-    .from('runs')
-    .insert({
-      demo_id: typeof body.demo_id === 'string' ? body.demo_id : 'starter-demo',
-      invite_id: inviteId,
-      payload,
-      status: 'queued',
-      progress: 0
+  const { data: reservation, error } = await supabase
+    .rpc('reserve_run_slot', {
+      p_max_active_runs: limits.maxActiveRuns,
+      p_demo_id: demoId,
+      p_invite_id: inviteId,
+      p_payload: payload
     })
-    .select('id')
-    .single<RunInsert>();
+    .single<RunReservation>();
 
-  if (error || !data) {
-    return NextResponse.json({ error: error?.message ?? 'run_insert_failed' }, { status: 500 });
+  if (error || !reservation) {
+    return NextResponse.json({ error: error?.message ?? 'run_reservation_failed' }, { status: 500 });
   }
+
+  if (reservation.outcome === 'active_run_limit_reached') {
+    return NextResponse.json({ error: reservation.outcome }, { status: 429 });
+  }
+
+  if (reservation.outcome !== 'reserved' || !reservation.run_id) {
+    return NextResponse.json({ error: 'run_reservation_failed' }, { status: 500 });
+  }
+
+  const data = { id: reservation.run_id };
 
   if (inviteRequired()) {
     const inviteResult = await consumeInviteToken(supabase, inviteToken);

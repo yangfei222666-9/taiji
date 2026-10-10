@@ -82,6 +82,8 @@ def query(task_desc: str, top_k: int = 3, task_type: str = None) -> list:
         if not t:
             continue
         score = len(q & t) / max(1, len(q | t))
+        if score <= 0:
+            continue
         scored.append({
             "id": r.get("id", ""),
             "text": r.get("text") or r.get("desc") or "",
