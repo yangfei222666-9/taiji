@@ -4,13 +4,12 @@ Review TaijiOS first as **Agent Reliability Evidence**: a public, evidence-first
 
 ## Five-Minute Path
 
-1. Read the Agent Reliability proof: [docs/portfolio/agent-reliability-proof.md](docs/portfolio/agent-reliability-proof.md)
-2. Check the machine-readable index: [docs/proof_index.json](docs/proof_index.json)
-3. Inspect the Gap Map: [docs/research/codex-reliability-gap-map-01.md](docs/research/codex-reliability-gap-map-01.md)
+1. Read the Agent Reliability proof: [docs/portfolio/agent-reliability-proof.md](portfolio/agent-reliability-proof.md)
+2. Check the machine-readable index: [docs/proof_index.json](proof_index.json)
+3. Inspect the Gap Map: [docs/research/codex-reliability-gap-map-01.md](research/codex-reliability-gap-map-01.md)
 4. Run the local checks:
 
 ```bash
-pip install -e .
 bash scripts/replay_public_demo.sh
 python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
 python3 scripts/check_codex_gap_map.py
