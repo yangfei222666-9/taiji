@@ -147,6 +147,15 @@ def gate_1_window_binding(target: ClickTarget) -> dict:
             "source_window": source_window,
         }
 
+    if not current_window:
+        return {
+            "gate": "window_binding",
+            "passed": False,
+            "reason": "无法读取当前前台窗口标题，拒绝窗口绑定",
+            "current_window": current_window,
+            "source_window": source_window,
+        }
+
     # 窗口标题匹配（包含关系，因为标题可能有动态后缀）
     matched = (
         source_window in current_window

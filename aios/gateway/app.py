@@ -198,23 +198,46 @@ async def chat_completions(request: Request):
 
         if req.stream:
             def _stream_gen():
+                status_code = 200
+                reason_code = GRC.OK
+                error = ""
                 try:
                     yield from provider.stream(req)
-                except Exception as e:
+                except GeneratorExit:
+                    status_code = 499
+                    reason_code = GRC.STREAM_CLIENT_DISCONNECT
+                    error = "client disconnected before stream completion"
+                    raise
+                except GatewayError as e:
+                    status_code = e.status_code
+                    reason_code = e.reason_code
+                    error = str(e)
                     log.error(f"Stream error: {e}")
                     import json as _json
                     err = {"error": {"message": str(e), "type": "stream_error"}}
                     yield f"data: {_json.dumps(err)}\n\n"
                     yield "data: [DONE]\n\n"
+                except Exception as e:
+                    status_code = 502
+                    reason_code = GRC.STREAM_UPSTREAM_ERROR
+                    error = str(e)
+                    log.error(f"Stream error: {e}")
+                    import json as _json
+                    err = {"error": {"message": str(e), "type": "stream_error"}}
+                    yield f"data: {_json.dumps(err)}\n\n"
+                    yield "data: [DONE]\n\n"
+                finally:
+                    latency_ms = (time.time() - start) * 1000
+                    audit_request(
+                        request_id=request_id, identity=identity, model=model,
+                        provider=provider_name, stream=True, status_code=status_code,
+                        reason_code=reason_code, latency_ms=latency_ms, error=error,
+                    )
+                    _record_stat(
+                        model, provider_name, identity.caller_id,
+                        status_code, latency_ms,
+                    )
 
-            # Audit for streaming — record at dispatch time (tokens unknown)
-            latency_ms = (time.time() - start) * 1000
-            audit_request(
-                request_id=request_id, identity=identity, model=model,
-                provider=provider_name, stream=True, status_code=200,
-                reason_code=GRC.OK, latency_ms=latency_ms,
-            )
-            _record_stat(model, provider_name, identity.caller_id, 200, latency_ms)
             return sse_response(_stream_gen())
         else:
             # Non-streaming with failover
