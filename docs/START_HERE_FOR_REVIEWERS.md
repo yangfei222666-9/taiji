@@ -10,7 +10,6 @@ Review TaijiOS first as **Agent Reliability Evidence**: a public, evidence-first
 4. Run the local checks:
 
 ```bash
-pip install -e .
 bash scripts/replay_public_demo.sh
 python3 scripts/check_false_pass_gate.py --self-test examples/false_pass_gate/fixtures
 python3 scripts/check_codex_gap_map.py

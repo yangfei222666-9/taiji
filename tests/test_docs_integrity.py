@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from urllib.parse import unquote, urlsplit
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,18 +10,51 @@ def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
 
 
-def test_reviewer_entry_local_links_resolve_relative_to_document():
-    entry = ROOT / "docs/START_HERE_FOR_REVIEWERS.md"
-    targets = re.findall(r"\[[^\]]+\]\(([^)]+)\)", entry.read_text(encoding="utf-8"))
-    local_paths = [
-        unquote(link.path)
-        for target in targets
-        if not (link := urlsplit(target)).scheme and not link.netloc and link.path
-    ]
+MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
-    assert local_paths, "Reviewer entry must link to local proof material"
-    missing = [path for path in local_paths if not (entry.parent / path).is_file()]
-    assert not missing, f"Broken reviewer links relative to docs/: {missing}"
+
+def test_reviewer_start_relative_links_resolve():
+    doc_path = ROOT / "docs" / "START_HERE_FOR_REVIEWERS.md"
+    text = doc_path.read_text(encoding="utf-8")
+    targets = MARKDOWN_LINK_RE.findall(text)
+    relative_targets = {
+        target
+        for target in targets
+        if not target.startswith("#") and not urlsplit(target).scheme
+    }
+
+    assert relative_targets == {
+        "portfolio/agent-reliability-proof.md",
+        "proof_index.json",
+        "research/codex-reliability-gap-map-01.md",
+    }
+    assert "pip install -e ." not in text
+
+    for target in relative_targets:
+        resolved = (doc_path.parent / target).resolve()
+        try:
+            resolved.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise AssertionError(f"reviewer link escapes repository: {target}") from exc
+        assert resolved.is_file(), f"reviewer link does not resolve: {target}"
+
+
+def test_static_demo_uses_public_absolute_proof_links():
+    demo = read("demo/agent-reliability-gate/index.html")
+
+    assert "../../docs/" not in demo
+    assert (
+        'href="https://github.com/yangfei222666-9/taiji/blob/main/'
+        'docs/portfolio/agent-reliability-proof.md"'
+    ) in demo
+    assert (
+        'href="https://github.com/yangfei222666-9/taiji/blob/main/'
+        'docs/research/codex-reliability-gap-map-01.md"'
+    ) in demo
+    assert (
+        'href="https://github.com/yangfei222666-9/taiji/blob/main/'
+        'docs/START_HERE_FOR_REVIEWERS.md"'
+    ) in demo
 
 
 def test_readme_does_not_publish_missing_github_learning_package():
